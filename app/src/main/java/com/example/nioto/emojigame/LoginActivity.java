@@ -1,10 +1,11 @@
 package com.example.nioto.emojigame;
 
 import android.content.Intent;
-import android.support.design.widget.Snackbar;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.example.nioto.emojigame.api.UserHelper;
 import com.example.nioto.emojigame.base.BaseActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
@@ -17,20 +18,11 @@ import butterknife.BindView;
 public class LoginActivity extends BaseActivity {
 
     // FOR DATA
-    public static final int RC_SIGN_IN = 0612;
+    public static final int RC_SIGN_IN = 1234;
 
     //FOR DESIGN
     // 1 - Get Coordinator Layout
-    @BindView(R.id.login_activity_linear_layout)
-    LinearLayout linearLayout;
-
-    // --------------------
-    // UI
-    // --------------------
-    // Show Snack Bar with a message
-    private void showSnackBar(LinearLayout linearLayout, String message){
-        Snackbar.make(linearLayout, message, Snackbar.LENGTH_SHORT).show();
-    }
+    @BindView(R.id.login_activity_linear_layout) LinearLayout linearLayout;
 
     @Override
     public int getFragmentLayout() { return R.layout.activity_login; }
@@ -83,6 +75,7 @@ public class LoginActivity extends BaseActivity {
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) { // SUCCESS
                 showSnackBar(this.linearLayout, getString(R.string.connection_succeed));
+                this.createUserInFirestore();
                 startMainActivity();
             } else { // ERRORS
                 if (response == null) {
@@ -93,6 +86,22 @@ public class LoginActivity extends BaseActivity {
                     showSnackBar(this.linearLayout, getString(R.string.error_unknown_error));
                 }
             }
+        }
+    }
+
+    // --------------------
+    // REST REQUEST
+    // --------------------
+
+    // 1 - Http request that create user in firestore
+    private void createUserInFirestore(){
+
+        if (this.getCurrentUser() != null){
+
+            String urlPicture = (this.getCurrentUser().getPhotoUrl() != null) ? this.getCurrentUser().getPhotoUrl().toString() : null;
+            String username = this.getCurrentUser().getDisplayName();
+            String uid = this.getCurrentUser().getUid();
+            UserHelper.createUser(uid, username, urlPicture).addOnFailureListener(this.onFailureListener());
         }
     }
 

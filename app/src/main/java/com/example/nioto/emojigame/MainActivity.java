@@ -1,33 +1,29 @@
 package com.example.nioto.emojigame;
 
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.util.Base64;
-import android.util.Log;
+import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.example.nioto.emojigame.auth.ProfileActivity;
 import com.example.nioto.emojigame.base.BaseActivity;
-import com.firebase.ui.auth.AuthUI;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity {
 
 
 
     // FOR DESIGN
-    @BindView(R.id.main_activity_button_settings)
-    ImageButton mainButtonSettings;
+    @BindView(R.id.main_activity_main_linear_layout) LinearLayout mainLinearLayout;
+    @BindView(R.id.main_activity_button_settings) ImageButton mainButtonSettings;
     @BindView(R.id.main_activity_tv_user_point) TextView mainTextViewUserPoints;
     @BindView(R.id.main_activity_button_score) ImageButton mainButtonScore;
     @BindView(R.id.main_activity_image_view_profile) ImageView mainImageViewProfile;
@@ -39,7 +35,12 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.main_activity_button_create) Button mainButtonCreate;
 
 
-
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (!isCurrentUserLogged()) startLoginActivity();
+        this.updateUIWhenCreating();
+    }
 
 
     @Override
@@ -48,9 +49,46 @@ public class MainActivity extends BaseActivity {
     }
 
 
+    // --------------------
+    // UI
+    // --------------------
+
+
+    private void updateUIWhenCreating(){
+
+        if (isCurrentUserLogged()){
+            // Fixed issue with photo blurred
+            String photoUrl = getPhotoUrl();
+
+            //Get picture url from Firebase
+            if (this.getCurrentUser().getPhotoUrl() != null){
+                Glide.with(this)
+                        .load(photoUrl)
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(mainImageViewProfile);
+            }
+            // Get username from FireBase
+            String username = TextUtils.isEmpty(this.getCurrentUser().getDisplayName()) ? getString(R.string.info_no_username_found) : this.getCurrentUser().getDisplayName();
+            mainButtonUsername.setText(username);
+        }
+    }
+    // --------------------
+    //      ACTIONS
+    // --------------------
+
+    @OnClick (R.id.main_activity_button_username)
+    public void onClickUsernameButton(){
+        if (isCurrentUserLogged()) startProfileActivity();
+        else this.showSnackBar(this.mainLinearLayout, "Vous devez vous connecter !");
+    }
 
 
 
+    // --------------------
+    //      NAVIGATION
+    // --------------------
+    private void startLoginActivity() { startActivity(new Intent(this, LoginActivity.class));}
+    private void startProfileActivity() { startActivity(new Intent(this, ProfileActivity.class));}
 
   /*  private void animatedBackground() {
         final ImageView backgroundOne = (ImageView) findViewById(R.id.background_one);

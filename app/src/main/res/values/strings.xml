@@ -12,7 +12,7 @@
     <string name="button_login_text_not_logged">Connexion</string>
 
     <!-- LOGIN ACTIVITY -->
-    <string name="toolbar_title_login_activity">Votre Profil</string>
+    <string name="toolbar_title_profile_activity">Votre Profil</string>
     <string name="text_input_username">Nom d\'utilisateur</string>
     <string name="text_view_email">Adresse email :</string>
     <string name="button_update_account">Mettre à jour le nom d\'utilisateur</string>
