@@ -2,7 +2,9 @@ package com.example.nioto.emojigame;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -11,15 +13,21 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.nioto.emojigame.api.UserHelper;
 import com.example.nioto.emojigame.auth.ProfileActivity;
 import com.example.nioto.emojigame.base.BaseActivity;
+import com.example.nioto.emojigame.models.User;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity {
 
+    private static final String TAG = "MainActivity";
 
+    private String photoUrl;
 
     // FOR DESIGN
     @BindView(R.id.main_activity_main_linear_layout) LinearLayout mainLinearLayout;
@@ -58,20 +66,57 @@ public class MainActivity extends BaseActivity {
 
         if (isCurrentUserLogged()){
             // Fixed issue with photo blurred
-            String photoUrl = getPhotoUrl();
+            photoUrl = getPhotoUrl();
 
             //Get picture url from Firebase
-            if (this.getCurrentUser().getPhotoUrl() != null){
+           if (photoUrl != null){
                 Glide.with(this)
                         .load(photoUrl)
                         .apply(RequestOptions.circleCropTransform())
                         .into(mainImageViewProfile);
             }
             // Get username from FireBase
-            String username = TextUtils.isEmpty(this.getCurrentUser().getDisplayName()) ? getString(R.string.info_no_username_found) : this.getCurrentUser().getDisplayName();
-            mainButtonUsername.setText(username);
+            UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    User currentUser = documentSnapshot.toObject(User.class);
+                    // Set Username
+                    String username = TextUtils.isEmpty(currentUser.getUsername())
+                            ? getString(R.string.info_no_username_found)
+                            : currentUser.getUsername();
+                    mainButtonUsername.setText(username);
+
+                    // Set Photo
+                    String photoFirebaseUrl = currentUser.getUrlPicture();
+                    if (currentUser.getHasChangedPicture()){
+                        if (photoUrl != null){
+                            Glide.with(MainActivity.this)
+                                    .load(photoFirebaseUrl)
+                                    .apply(RequestOptions.circleCropTransform())
+                                    .into(mainImageViewProfile);
+                        }
+                    } else {
+                        if (photoUrl != null){
+                            Glide.with(MainActivity.this)
+                                    .load(photoUrl)
+                                    .apply(RequestOptions.circleCropTransform())
+                                    .into(mainImageViewProfile);
+                        }
+                    }
+                 }
+            });
+
         }
     }
+
+    // --------------------
+    // REST REQUESTS
+    // --------------------
+
+
+
+
+
     // --------------------
     //      ACTIONS
     // --------------------

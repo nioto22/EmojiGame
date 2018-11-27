@@ -13,6 +13,7 @@ public class User {
     @Nullable private String urlPicture;
     private List<String> userEnigmaUidList;
     private List<String> userResolvedEnigmaUidList;
+    private Boolean hasChangedPicture;
 
     public User(){}
 
@@ -23,6 +24,7 @@ public class User {
         this.points = 0;
         userEnigmaUidList = new ArrayList<>();
         userResolvedEnigmaUidList = new ArrayList<>();
+        hasChangedPicture = false;
     }
 
     // ----- GETTERS -----
@@ -31,11 +33,12 @@ public class User {
     public String getUsername() { return username;}
     public int getPoints() { return points;}
     @Nullable public String getUrlPicture() { return urlPicture;}
-    public List<String> getUserEnigmeUidList() { return userEnigmaUidList;}
+    public List<String> getUserEnigmaUidList() { return userEnigmaUidList;}
     public List<String> getUserResolveEnigmaUidList() { return userResolvedEnigmaUidList;}
+    public Boolean getHasChangedPicture() { return hasChangedPicture; }
 
 
-    // ---- SETTERS ----
+// ---- SETTERS ----
 
     public void setUid(String uid) { this.uid = uid;}
     public void setUsername(String username) { this.username = username;}
@@ -47,12 +50,14 @@ public class User {
 
     public void setUrlPicture(@Nullable String urlPicture) { this.urlPicture = urlPicture; }
 
-    public void setUserEnigmaUidList(List<String> userEnigmeUidList) { this.userEnigmaUidList = userEnigmeUidList; }
+    public void setUserEnigmaUidList(List<String> userEnigmaUidList) { this.userEnigmaUidList = userEnigmaUidList; }
     public void addUserEnigmaUidList (String addingUid) {
-        this.getUserEnigmeUidList().add(addingUid);
+        this.getUserEnigmaUidList().add(addingUid);
     }
     public void setUserResolvedEnigmaUidList(List<String> userResolveEnigmeUidList) { this.userResolvedEnigmaUidList = userResolveEnigmeUidList; }
     public void addUserResolvedEnigmaUidList (String addingResolvedUid) {
-        this.getUserEnigmeUidList().add(addingResolvedUid);
+        this.getUserEnigmaUidList().add(addingResolvedUid);
     }
+
+    public void setHasChangedPicture(Boolean hasChangedPicture) { this.hasChangedPicture = hasChangedPicture; }
 }

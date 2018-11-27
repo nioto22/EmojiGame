@@ -10,15 +10,21 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.nioto.emojigame.R;
+import com.example.nioto.emojigame.api.UserHelper;
+import com.example.nioto.emojigame.models.User;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import butterknife.ButterKnife;
 
 public abstract class BaseActivity extends AppCompatActivity {
+    private static final String TAG = "BaseActivity";
 
-
+    @Nullable
+    private User currentUser;
     // --------------------
     // LIFE CYCLE
     // --------------------
@@ -59,6 +65,15 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected Boolean isCurrentUserLogged(){
         return (this.getCurrentUser() !=null);
+    }
+
+    protected void getCurrentUserFromFirestore(){
+        UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                currentUser = documentSnapshot.toObject(User.class);
+            }
+        });
     }
 
     protected String getPhotoUrl(){

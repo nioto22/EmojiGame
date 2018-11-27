@@ -31,6 +31,7 @@
             android:textColor="@color/secondaryTextColor"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:textStyle="bold"
+            android:gravity="center"
             android:padding="8dp"
             android:layout_marginTop="10dp"/>
         <!-- PROGRESS BAR -->
@@ -59,6 +60,19 @@
             android:textColor="#fff"
             android:textSize="@dimen/default_text_size"
             android:background="@drawable/button_radius_primary_color"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_margin="@dimen/default_margin"
+            android:padding="@dimen/default_margin"/>
+
+        <!-- BUTTON UPDATE PHOTO -->
+        <Button
+            android:id="@+id/profile_activity_button_photo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/button_update_photo"
+            android:textColor="#fff"
+            android:textSize="@dimen/default_text_size"
+            android:background="@drawable/button_radius_green_color"
             style="?android:attr/borderlessButtonStyle"
             android:layout_margin="@dimen/default_margin"
             android:padding="@dimen/default_margin"/>
