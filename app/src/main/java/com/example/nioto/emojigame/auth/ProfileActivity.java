@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.nioto.emojigame.MainActivity;
 import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.api.UserHelper;
 import com.example.nioto.emojigame.base.BaseActivity;
@@ -50,8 +51,7 @@ public class ProfileActivity extends BaseActivity {
     private static final int RC_IMAGE_PERMS = 100;
     public static final int RC_CHOOSE_PHOTO = 200;
 
-    @Nullable
-    private User currentUser;
+    private String photoUrl;
 
 
     // FOR DESIGN
@@ -63,7 +63,6 @@ public class ProfileActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.configureToolbar();
-        this.getUserFromFirestore();
         this.updateUIWhenCreating();
     }
 
@@ -156,18 +155,6 @@ public class ProfileActivity extends BaseActivity {
     }
 
 
-    public void getUserFromFirestore(){
-        UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                currentUser = documentSnapshot.toObject(User.class);
-            }
-        });
-    }
-
-
-
-
     // --------------------
     // UI
     // --------------------
@@ -175,8 +162,10 @@ public class ProfileActivity extends BaseActivity {
     private void updateUIWhenCreating() {
         if (isCurrentUserLogged()){
             // Fixed issue with photo blurred
-            String photoUrl = getPhotoUrl();
-            if (this.getCurrentUser().getPhotoUrl() != null){
+            photoUrl = getPhotoUrl();
+
+            //Get picture url from Firebase
+            if (photoUrl != null){
                 Glide.with(this)
                         .load(photoUrl)
                         .apply(RequestOptions.circleCropTransform())
@@ -187,10 +176,29 @@ public class ProfileActivity extends BaseActivity {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                     User currentUser = documentSnapshot.toObject(User.class);
+                    // Set Username
                     String username = TextUtils.isEmpty(currentUser.getUsername())
                             ? getString(R.string.info_no_username_found)
                             : currentUser.getUsername();
                     textInputEditTextUsername.setText(username);
+
+                    // Set Photo
+                    String photoFirebaseUrl = currentUser.getUrlPicture();
+                    if (currentUser.getHasChangedPicture()){
+                        if (photoUrl != null){
+                            Glide.with(ProfileActivity.this)
+                                    .load(photoFirebaseUrl)
+                                    .apply(RequestOptions.circleCropTransform())
+                                    .into(imageViewProfile);
+                        }
+                    } else {
+                        if (photoUrl != null){
+                            Glide.with(ProfileActivity.this)
+                                    .load(photoUrl)
+                                    .apply(RequestOptions.circleCropTransform())
+                                    .into(imageViewProfile);
+                        }
+                    }
                 }
             });
         }

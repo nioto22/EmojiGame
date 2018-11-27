@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/create_enigma_activity_rl_global"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.CreateEnigmaActivity">
+
+    <android.support.design.widget.TextInputEditText
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:text="ENIGMA"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1">
+       <RelativeLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal"
+           android:layout_margin="10dp">
+           <TextView
+               android:id="@+id/create_activity_tv_title_solution"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginEnd="5dp"
+               android:layout_alignParentStart="true"
+               android:text="Solution : "
+               android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+               />
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/create_activity_et_solution"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_toRightOf="@+id/create_activity_tv_title_solution"
+            android:text="Solution"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+       </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp">
+            <TextView
+                android:id="@+id/create_activity_tv_title_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_alignParentStart="true"
+                android:text="Category : "
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                />
+            <MultiAutoCompleteTextView
+                android:id="@+id/multiAutoCompleteTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/create_activity_tv_title_category"
+                android:layout_marginStart="5dp"
+                android:text="MultiAutoCompleteTextView" />
+        </RelativeLayout>
+    </android.support.design.widget.TextInputLayout>
+
+
+</LinearLayout>
