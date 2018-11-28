@@ -165,12 +165,12 @@ public class ProfileActivity extends BaseActivity {
             photoUrl = getPhotoUrl();
 
             //Get picture url from Firebase
-            if (photoUrl != null){
+        /*    if (photoUrl != null){
                 Glide.with(this)
                         .load(photoUrl)
                         .apply(RequestOptions.circleCropTransform())
                         .into(imageViewProfile);
-            }
+            }*/
             // Get username from FireBase
             UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
@@ -261,7 +261,7 @@ public class ProfileActivity extends BaseActivity {
     private void uploadPhotoInFirebase() {
         if (this.getCurrentUser() != null) {
             final String userUid = getCurrentUser().getUid();
-            String uuid = UUID.randomUUID().toString(); // GENERATE UNIQUE STRING
+            String uuid = generateUniqueUid();
             // A - UPLOAD TO GCS
             StorageReference mImageRef = FirebaseStorage.getInstance().getReference(uuid);
             mImageRef.putFile(this.uriImageSelected)

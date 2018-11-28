@@ -38,5 +38,7 @@
     <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb205811963639659</string>
     <string name="button_update_photo">Mettre à jour la photo</string>
     <string name="toolbar_title_create_enigma_activity">Créer une Enigme</string>
+    <string name="create_button">CREATE</string>
+    <string name="tv_category_choosed">Category ...</string>
 
 </resources>

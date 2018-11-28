@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.nioto.emojigame.activities.CreateEnigmaActivity;
 import com.example.nioto.emojigame.api.UserHelper;
 import com.example.nioto.emojigame.auth.ProfileActivity;
 import com.example.nioto.emojigame.base.BaseActivity;
@@ -37,10 +38,10 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.main_activity_image_view_profile) ImageView mainImageViewProfile;
     @BindView(R.id.main_activity_button_username) Button mainButtonUsername;
     @BindView(R.id.main_activity_button_play) Button mainButtonPlay;
-    @BindView(R.id.main_activity_button_play_theme) Button mainButtonPlayTheme;
-    @BindView(R.id.main_activity_button_play_random) Button mainButtonPlayRandom;
-    @BindView(R.id.main_activity_button_play_player) Button mainButtonPlayPlayer;
     @BindView(R.id.main_activity_button_create) Button mainButtonCreate;
+
+    // FOR DATA
+    public static final int INTENT_CREATE_ACTIVITY_KEY = 10;
 
 
     @Override
@@ -69,12 +70,12 @@ public class MainActivity extends BaseActivity {
             photoUrl = getPhotoUrl();
 
             //Get picture url from Firebase
-           if (photoUrl != null){
+       /*    if (photoUrl != null){
                 Glide.with(this)
                         .load(photoUrl)
                         .apply(RequestOptions.circleCropTransform())
                         .into(mainImageViewProfile);
-            }
+            }*/
             // Get username from FireBase
             UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
@@ -125,6 +126,13 @@ public class MainActivity extends BaseActivity {
     public void onClickUsernameButton(){
         if (isCurrentUserLogged()) startProfileActivity();
         else this.showSnackBar(this.mainLinearLayout, "Vous devez vous connecter !");
+    }
+    @OnClick (R.id.main_activity_image_view_profile)
+    public void onClickImagePicture(){ onClickUsernameButton();}
+
+    @OnClick (R.id.main_activity_button_create)
+    public void onClickCreateButton(){
+        startActivityForResult(new Intent(this, CreateEnigmaActivity.class), INTENT_CREATE_ACTIVITY_KEY);
     }
 
 

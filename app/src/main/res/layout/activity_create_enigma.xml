@@ -1,49 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/create_enigma_activity_rl_global"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".activities.CreateEnigmaActivity">
-
-    <android.support.design.widget.TextInputEditText
+    <!-- ENIGMA LAYOUT  -->
+    <FrameLayout
+        android:id="@+id/create_activity_enigma_frame_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="2"
-        android:gravity="center"
-        android:text="ENIGMA"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+        android:layout_weight="2">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/create_activity_et_enigma"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:hint="ENIGMA"
+            android:inputType="textShortMessage|textAutoCorrect|textCapSentences|textMultiLine"
+            android:imeOptions="actionSend|flagNoEnterAction"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+        <ImageButton
+            android:id="@+id/create_activity_enigma_help"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_help_24dp"
+            android:background="@color/colorTransparent"
+            android:layout_gravity="end"
+            android:layout_margin="20dp" />
+        <ImageView
+            android:id="@+id/create_activity_enigma_asterisk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/asterisk"
+            android:layout_gravity="center"
+            android:layout_marginStart="75dp"
+            android:layout_marginBottom="25dp"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+    <!-- Text Inputs Layout  -->
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_weight="1">
-       <RelativeLayout
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:orientation="horizontal"
-           android:layout_margin="10dp">
-           <TextView
-               android:id="@+id/create_activity_tv_title_solution"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_marginEnd="5dp"
-               android:layout_alignParentStart="true"
-               android:text="Solution : "
-               android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-               />
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/create_activity_et_solution"
-            android:layout_width="wrap_content"
+        <!-- SOLUTION LAYOUT  -->
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_toRightOf="@+id/create_activity_tv_title_solution"
-            android:text="Solution"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
-       </RelativeLayout>
+            android:orientation="horizontal"
+            android:layout_margin="10dp">
+            <TextView
+                android:id="@+id/create_activity_tv_title_solution"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="Solution : "
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                />
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/create_activity_et_solution"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_toEndOf="@+id/create_activity_solution_asterisk"
+                android:layout_toStartOf="@+id/create_activity_solution_help"
+                android:hint="Solution"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+            <ImageButton
+                android:id="@+id/create_activity_solution_help"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_help_24dp"
+                android:background="@color/colorTransparent"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="5dp"/>
+            <ImageView
+                android:id="@+id/create_activity_solution_asterisk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/asterisk"
+                android:layout_toEndOf="@+id/create_activity_tv_title_solution"
+                android:visibility="gone"/>
+        </RelativeLayout>
+        <!-- CATEGORY LAYOUT  -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -58,13 +104,96 @@
                 android:text="Category : "
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 />
-            <MultiAutoCompleteTextView
-                android:id="@+id/multiAutoCompleteTextView"
+            <FrameLayout
+                android:id="@+id/create_activity_frame_category_list"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/create_activity_tv_title_category"
+                android:layout_toEndOf="@+id/create_activity_category_asterisk"
+                android:layout_toStartOf="@+id/create_activity_category_help">
+                <TextView
+                    android:id="@+id/create_activity_tv_category_choosed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:text="@string/tv_category_choosed"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    />
+                <ExpandableListView
+                    android:id="@+id/create_activity_list_category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:divider="@android:color/darker_gray"
+                    android:dividerHeight="0.5dp"/>
+
+            </FrameLayout>
+            <ImageButton
+                android:id="@+id/create_activity_category_help"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_help_24dp"
+                android:background="@color/colorTransparent"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="5dp"/>
+            <ImageView
+                android:id="@+id/create_activity_category_asterisk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/asterisk"
+                android:layout_toEndOf="@+id/create_activity_tv_title_category"
+                android:visibility="gone"/>
+        </RelativeLayout>
+        <!-- MESSAGE LAYOUT  -->
+        <RelativeLayout
+            android:id="@+id/create_activity_rl_solution_cat_mess"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp">
+            <TextView
+                android:id="@+id/create_activity_tv_title_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="Message : "
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                />
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/create_activity_et_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:text="MultiAutoCompleteTextView" />
+                android:layout_toEndOf="@+id/create_activity_tv_title_message"
+                android:layout_toStartOf="@+id/create_activity_message_help"
+                android:hint ="Message"
+                android:inputType="textMultiLine"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+            <ImageButton
+                android:id="@+id/create_activity_message_help"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_help_24dp"
+                android:background="@color/colorTransparent"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="5dp"/>
+        </RelativeLayout>
+        <!-- BUTTON LAYOUT  -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <Button
+                android:id="@+id/create_activity_create_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_main_edit"
+                android:layout_margin="10dp"
+                android:layout_centerInParent="true"
+                android:text="@string/create_button"
+                android:textColor="@color/primaryTextColor"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
         </RelativeLayout>
     </android.support.design.widget.TextInputLayout>
 

@@ -61,7 +61,9 @@
             android:id="@+id/main_activity_image_view_profile"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            app:srcCompat="@drawable/ic_anon_user_48dp" />
+            app:srcCompat="@drawable/ic_anon_user_48dp"
+            android:clickable="true"
+            android:focusable="true"/>
         <Button
             android:id="@+id/main_activity_button_username"
             android:layout_width="wrap_content"
@@ -83,76 +85,28 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center_horizontal">
-        <RelativeLayout
-            android:id="@+id/main_activity_rl_menu_play"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/main_activity_button_play"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:paddingBottom="16dp">
-            <Button
-                android:id="@+id/main_activity_button_play"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/button_main_play"
-                android:text="PLAY"
-                android:textColor="@color/primaryTextColor"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="4dp"/>
-            <Button
-                android:id="@+id/main_activity_button_play_theme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/main_activity_button_play_player"
-                android:background="@drawable/button_main_play"
-                android:text="by Theme"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                android:textColor="@color/primaryTextColor"
-                android:layout_below="@+id/main_activity_button_play"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="30dp"
-                android:visibility="gone"/>
-            <Button
-                android:id="@+id/main_activity_button_play_random"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/button_main_play"
-                android:text="Random"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                android:textColor="@color/primaryTextColor"
-                android:layout_below="@+id/main_activity_button_play"
-                android:layout_centerHorizontal="true"
-                android:visibility="gone"/>
-            <Button
-                android:id="@+id/main_activity_button_play_player"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/main_activity_button_play"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="30dp"
-                android:background="@drawable/button_main_play"
-                android:text="by Player"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                android:textColor="@color/primaryTextColor"
-                android:visibility="gone"/>
+            android:background="@drawable/button_main_play"
+            android:text="PLAY"
+            android:textColor="@color/primaryTextColor"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"/>
 
-        </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/main_activity_rl_menu_create"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/main_activity_rl_menu_play">
         <Button
             android:id="@+id/main_activity_button_create"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/button_main_edit"
-            android:text="CREATE"
+            android:text="@string/create_button"
             android:textColor="@color/primaryTextColor"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/main_activity_button_play"/>
 
-        </RelativeLayout>
     </RelativeLayout>
 
 </LinearLayout>

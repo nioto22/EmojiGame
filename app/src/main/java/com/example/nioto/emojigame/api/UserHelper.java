@@ -64,6 +64,10 @@ public class UserHelper {
     public static Task<Void> updateUserHasChangedPicture(Boolean hasChangedPicture, String uid) {
         return UserHelper.getUsersCollection().document(uid).update("hasChangedPicture", hasChangedPicture);
     }
+
+    public static Task<Void> updateUserEnigmaUidList(List<String> userEnigmaUidList, String uid) {
+        return UserHelper.getUsersCollection().document(uid).update("userEnigmaUidList", userEnigmaUidList);
+    }
     // --- DELETE ---
 
     public static Task<Void> deleteUser(String uid) {

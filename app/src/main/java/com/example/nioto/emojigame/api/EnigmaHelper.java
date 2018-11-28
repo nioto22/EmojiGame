@@ -11,7 +11,7 @@ public class EnigmaHelper {
 
     private static final String TAG = "EnigmaHelper";
 
-    private static final String COLLECTION_NAME = "users";
+    private static final String COLLECTION_NAME = "enigmas";
 
     // --- COLLECTION REFERENCE ---
 

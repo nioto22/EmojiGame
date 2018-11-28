@@ -18,6 +18,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.util.UUID;
+
 import butterknife.ButterKnife;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -90,6 +92,11 @@ public abstract class BaseActivity extends AppCompatActivity {
             photoUrl = this.getCurrentUser().getPhotoUrl().toString();
         }
         return photoUrl;
+    }
+
+    protected String generateUniqueUid(){
+        String uuid = UUID.randomUUID().toString(); // GENERATE UNIQUE STRING
+        return uuid;
     }
 
 
