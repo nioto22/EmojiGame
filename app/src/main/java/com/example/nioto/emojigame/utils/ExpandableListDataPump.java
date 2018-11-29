@@ -15,7 +15,7 @@ public class ExpandableListDataPump {
         categories.add("Cinéma");
         categories.add("Musique");
         categories.add("Expressions");
-        categories.add("Mots");
+        categories.add("Objet");
         categories.add("Autres");
 
 

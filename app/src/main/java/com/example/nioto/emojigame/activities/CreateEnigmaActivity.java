@@ -1,5 +1,6 @@
 package com.example.nioto.emojigame.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.util.Log;
@@ -8,6 +9,8 @@ import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,8 +18,11 @@ import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.api.EnigmaHelper;
 import com.example.nioto.emojigame.api.UserHelper;
 import com.example.nioto.emojigame.base.BaseActivity;
+import com.example.nioto.emojigame.models.User;
 import com.example.nioto.emojigame.utils.CustomExpandableListAdapter;
 import com.example.nioto.emojigame.utils.ExpandableListDataPump;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +45,9 @@ public class CreateEnigmaActivity extends BaseActivity {
     @BindView(R.id.create_activity_solution_asterisk) ImageView ivSolutionAsterisk;
     @BindView(R.id.create_activity_category_asterisk) ImageView ivCategoryAsterisk;
     @BindView(R.id.create_activity_enigma_frame_layout) FrameLayout flEnigmaLayout;
+    @BindView(R.id.create_activity_rl_other) RelativeLayout rlOtherLayout;
+    @BindView(R.id.create_activity_et_other) TextInputEditText etOther;
+    @BindView(R.id.create_activity_progressbar) ProgressBar progressBar;
 
 
     // FOR CATEGORY LIST VIEW
@@ -93,6 +102,10 @@ public class CreateEnigmaActivity extends BaseActivity {
                 textViewCategoryChoosed.setText(expandableListDetail.get(
                         expandableListTitle.get(groupPosition)).get(
                         childPosition));
+                String categoryHint = "Autres";
+                if (textViewCategoryChoosed.getText().toString().equals(categoryHint)){
+                    rlOtherLayout.setVisibility(View.VISIBLE);
+                }
                 return false;
             }
         });
@@ -106,12 +119,24 @@ public class CreateEnigmaActivity extends BaseActivity {
     @OnClick (R.id.create_activity_create_button)
     public void onClickCreateButton(){
         if(checkMandatoryInputsNotNull()){
-            String uid = generateUniqueUid();
-            String userUid = this.getCurrentUser().getUid();
+            progressBar.setVisibility(View.VISIBLE);
+            final String uid = generateUniqueUid();
+            final String userUid = this.getCurrentUser().getUid();
             EnigmaHelper.createEnigma(uid, userUid, mEnigma,mSolution, mCategory, mMessage);
-            //UserHelper.updateUserEnigmaUidList()
-            //Intent to Main
-
+            UserHelper.getUser(userUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    User currentUser = documentSnapshot.toObject(User.class);
+                    List<String> userEnigmaUidList = currentUser.getUserEnigmaUidList();
+                    userEnigmaUidList.add(uid);
+                    currentUser.addPoints(10);
+                    UserHelper.updateUserEnigmaUidList(userEnigmaUidList,userUid);
+                    UserHelper.updateUserPoints(currentUser.getPoints(), userUid);
+                }
+            });
+            Intent intent = new Intent();
+            setResult(RESULT_OK, intent);
+            finish();
         }
     }
 
@@ -161,7 +186,7 @@ public class CreateEnigmaActivity extends BaseActivity {
         mEnigma = etEnigma.getText().toString();
         Log.d(TAG, "checkMandatoryInputsNotNull: enigma = " + mEnigma);
         mSolution = etSolution.getText().toString();
-        mCategory = textViewCategoryChoosed.getText().toString();
+        mCategory = textViewCategoryChoosed.getText().toString() + " : " + etOther.getText().toString() ;
         mMessage = etMessage.getText().toString();
 
         String categoryHint = getResources().getString(R.string.tv_category_choosed);

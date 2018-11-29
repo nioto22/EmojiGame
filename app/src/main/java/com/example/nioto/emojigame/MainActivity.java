@@ -2,7 +2,6 @@ package com.example.nioto.emojigame;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Button;
@@ -10,6 +9,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -47,7 +47,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!isCurrentUserLogged()) startLoginActivity();
+        if (this.getCurrentUser() == null) startLoginActivity();
         this.updateUIWhenCreating();
     }
 
@@ -55,6 +55,21 @@ public class MainActivity extends BaseActivity {
     @Override
     public int getFragmentLayout() {
         return R.layout.activity_main;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == INTENT_CREATE_ACTIVITY_KEY){
+            if (resultCode == RESULT_OK){
+                Toast.makeText(this, "Nouvelle énigme enregistrée, bravo, vous gagnez 10 points !", Toast.LENGTH_SHORT).show();
+                this.updateUIWhenCreating();
+            }else {
+                Toast.makeText(this, "Enigme non sauvegardée !", Toast.LENGTH_SHORT).show();
+                this.updateUIWhenCreating();
+            }
+        }
     }
 
 
@@ -66,16 +81,8 @@ public class MainActivity extends BaseActivity {
     private void updateUIWhenCreating(){
 
         if (isCurrentUserLogged()){
-            // Fixed issue with photo blurred
             photoUrl = getPhotoUrl();
 
-            //Get picture url from Firebase
-       /*    if (photoUrl != null){
-                Glide.with(this)
-                        .load(photoUrl)
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(mainImageViewProfile);
-            }*/
             // Get username from FireBase
             UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
@@ -90,21 +97,28 @@ public class MainActivity extends BaseActivity {
                     // Set Photo
                     String photoFirebaseUrl = currentUser.getUrlPicture();
                     if (currentUser.getHasChangedPicture()){
-                        if (photoUrl != null){
+                        if (photoFirebaseUrl != null){
                             Glide.with(MainActivity.this)
                                     .load(photoFirebaseUrl)
                                     .apply(RequestOptions.circleCropTransform())
                                     .into(mainImageViewProfile);
                         }
                     } else {
-                        if (photoUrl != null){
+                        photoUrl = getPhotoUrl();
+                        if (photoUrl != null) {
                             Glide.with(MainActivity.this)
                                     .load(photoUrl)
                                     .apply(RequestOptions.circleCropTransform())
                                     .into(mainImageViewProfile);
                         }
                     }
-                 }
+
+                    // Set points
+                    int userPoints = currentUser.getPoints();
+                    String stringUserPoints = "" + userPoints + ((userPoints>0)? " points" : " point");
+                    mainTextViewUserPoints.setText(stringUserPoints);
+
+                }
             });
 
         }
@@ -140,6 +154,7 @@ public class MainActivity extends BaseActivity {
     // --------------------
     //      NAVIGATION
     // --------------------
+    
     private void startLoginActivity() { startActivity(new Intent(this, LoginActivity.class));}
     private void startProfileActivity() { startActivity(new Intent(this, ProfileActivity.class));}
 

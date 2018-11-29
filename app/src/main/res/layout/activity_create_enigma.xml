@@ -143,9 +143,37 @@
                 android:layout_toEndOf="@+id/create_activity_tv_title_category"
                 android:visibility="gone"/>
         </RelativeLayout>
+        <!-- OTHER LAYOUT  -->
+        <RelativeLayout
+            android:id="@+id/create_activity_rl_other"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp"
+            android:visibility="gone">
+            <TextView
+                android:id="@+id/create_activity_tv_title_other"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="Autre : "
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                />
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/create_activity_et_other"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_toEndOf="@+id/create_activity_tv_title_other"
+                android:hint ="Précisez votre catégorie"
+                android:inputType="textMultiLine"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+        </RelativeLayout>
         <!-- MESSAGE LAYOUT  -->
         <RelativeLayout
-            android:id="@+id/create_activity_rl_solution_cat_mess"
+            android:id="@+id/create_activity_rl_mess"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -157,7 +185,7 @@
                 android:layout_marginEnd="5dp"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:text="Message : "
+                android:text="Explication : "
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 />
             <android.support.design.widget.TextInputEditText
@@ -167,7 +195,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_toEndOf="@+id/create_activity_tv_title_message"
                 android:layout_toStartOf="@+id/create_activity_message_help"
-                android:hint ="Message"
+                android:hint ="Explication"
                 android:inputType="textMultiLine"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
             <ImageButton
@@ -194,6 +222,14 @@
                 android:text="@string/create_button"
                 android:textColor="@color/primaryTextColor"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+            <ProgressBar
+                android:id="@+id/create_activity_progressbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_below="@+id/create_activity_create_button"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"/>
         </RelativeLayout>
     </android.support.design.widget.TextInputLayout>
 

@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.nioto.emojigame.LoginActivity;
 import com.example.nioto.emojigame.MainActivity;
 import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.api.UserHelper;
@@ -124,6 +125,7 @@ public class ProfileActivity extends BaseActivity {
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnSuccessListener(this, this.updateUIAfterRESTRequestsCompleted(SIGN_OUT_TASK));
+
     }
 
     private void deleteUserFromFirebase(){
@@ -212,7 +214,7 @@ public class ProfileActivity extends BaseActivity {
             public void onSuccess(Void aVoid) {
                 switch (origin){
                     case SIGN_OUT_TASK:
-                        finish();
+                        startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
                         break;
                     case DELETE_USER_TASK:
                         finish();

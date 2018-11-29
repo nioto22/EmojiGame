@@ -28,10 +28,12 @@
             android:label="@string/toolbar_title_profile_activity"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme" />
-        <activity android:name=".activities.CreateEnigmaActivity"
+        <activity
+            android:name=".activities.CreateEnigmaActivity"
             android:label="@string/toolbar_title_create_enigma_activity"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme" />
+        <activity android:name=".activities.PlayActivity"></activity>
     </application>
 
 </manifest>

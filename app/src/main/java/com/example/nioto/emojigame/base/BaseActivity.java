@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.FirebaseUserMetadata;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.UUID;
@@ -65,6 +66,22 @@ public abstract class BaseActivity extends AppCompatActivity {
         return FirebaseAuth.getInstance().getCurrentUser();
     }
 
+    @Nullable
+    protected Boolean isNewUser() {
+        Boolean result;
+        FirebaseUserMetadata metadata = this.getCurrentUser().getMetadata();
+        if (metadata != null) {
+            if (metadata.getCreationTimestamp() == metadata.getLastSignInTimestamp()) {
+                result = true; // It's a new user
+            } else {
+                result = false; // It's not
+            }
+        } else {
+            result = false;
+        }
+        return result;
+    }
+
     protected Boolean isCurrentUserLogged(){
         return (this.getCurrentUser() !=null);
     }
@@ -80,7 +97,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected String getPhotoUrl(){
         // Some issue with blurred with facebook or Google photo
-        String photoUrl;
+        String photoUrl = null;
         String provider = this.getCurrentUser().getProviders().get(0);
         if (provider.equals("facebook.com")) {
             photoUrl = this.getCurrentUser().getPhotoUrl() + "?height=500";
@@ -89,7 +106,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             //Remove thumbnail url and replace the original part of the Url with the new part
             photoUrl = photoUrl.substring(0, photoUrl.length() - 15) + "s400-c/photo.jpg";
         } else {
-            photoUrl = this.getCurrentUser().getPhotoUrl().toString();
+            if (this.getCurrentUser().getPhotoUrl() != null) {
+                photoUrl = this.getCurrentUser().getPhotoUrl().toString();
+            }
         }
         return photoUrl;
     }
