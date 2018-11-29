@@ -33,7 +33,9 @@
             android:label="@string/toolbar_title_create_enigma_activity"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme" />
-        <activity android:name=".activities.PlayActivity"></activity>
+        <activity android:name=".activities.PlayActivity"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

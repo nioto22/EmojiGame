@@ -3,7 +3,6 @@ package com.example.nioto.emojigame;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -14,6 +13,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.nioto.emojigame.activities.CreateEnigmaActivity;
+import com.example.nioto.emojigame.activities.PlayActivity;
 import com.example.nioto.emojigame.api.UserHelper;
 import com.example.nioto.emojigame.auth.ProfileActivity;
 import com.example.nioto.emojigame.base.BaseActivity;
@@ -42,6 +42,7 @@ public class MainActivity extends BaseActivity {
 
     // FOR DATA
     public static final int INTENT_CREATE_ACTIVITY_KEY = 10;
+    public static final int INTENT_PLAY_ACTIVITY_KEY = 11;
 
 
     @Override
@@ -149,12 +150,17 @@ public class MainActivity extends BaseActivity {
         startActivityForResult(new Intent(this, CreateEnigmaActivity.class), INTENT_CREATE_ACTIVITY_KEY);
     }
 
+    @OnClick (R.id.main_activity_button_play)
+    public void onClickPlayButton(){
+        startActivityForResult(new Intent(this, PlayActivity.class),INTENT_PLAY_ACTIVITY_KEY);
+    }
+
 
 
     // --------------------
     //      NAVIGATION
     // --------------------
-    
+
     private void startLoginActivity() { startActivity(new Intent(this, LoginActivity.class));}
     private void startProfileActivity() { startActivity(new Intent(this, ProfileActivity.class));}
 

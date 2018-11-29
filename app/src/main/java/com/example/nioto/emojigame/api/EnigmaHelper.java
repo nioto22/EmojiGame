@@ -6,6 +6,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 public class EnigmaHelper {
 
@@ -30,6 +31,25 @@ public class EnigmaHelper {
 
     public static Task<DocumentSnapshot> getEnigma(String uid){
         return EnigmaHelper.getEnigmaCollection().document(uid).get();
+    }
+
+    // ----   GET   ----
+
+    public static Query getAllEnigma(String filterWay){
+        Query query;
+        switch (filterWay){
+            case "byCategory" :
+                query =  EnigmaHelper.getEnigmaCollection()
+                        .orderBy("category")
+                        .limit(50);
+                break;
+            default:
+                query =  EnigmaHelper.getEnigmaCollection()
+                        .orderBy("category")
+                        .limit(50);
+                break;
+        }
+        return query;
     }
 
     // --- UPDATE ---

@@ -40,6 +40,11 @@ public class Enigma {
     public String getCategory() { return category;}
     @Nullable public String getMessage() { return message;}
     public List<String> getResolvedUserUid() { return resolvedUserUid; }
+    public int getNumbersOfResolvedUserUid() { return this.resolvedUserUid.size(); }
+    public String getDifficultyFormarted() {
+        String result = "" + getNumbersOfResolvedUserUid() + "fois";
+        return result;
+    }
 
     //   ---- SETTERS   ----
 

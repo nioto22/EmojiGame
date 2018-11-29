@@ -32,5 +32,6 @@
     <color name="buttonGreenLight">#6BB18C</color>
     <color name="buttonOrangeDark">#c63f17</color>
     <color name="buttonOrangeLight">#ffa270</color>
+    <color name="colorSandClearLight">#FFFFE8</color>
 
 </resources>
