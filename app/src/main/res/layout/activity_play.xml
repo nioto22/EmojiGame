@@ -6,61 +6,13 @@
     android:layout_height="match_parent"
     tools:context="com.example.nioto.emojigame.activities.PlayActivity">
 
-    <!-- BUTTONS ENIGMA CONTAINER -->
-    <LinearLayout
-        android:id="@+id/activity_play_enigma_buttons_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center">
-
-        <!-- BUTTON ENIGMA RANDOM -->
-        <Button
-            android:id="@+id/activity_play_enigma_android_enigma_button"
-            android:layout_width="wrap_content"
-            android:layout_height="50dip"
-            android:layout_weight="1"
-            android:background="@color/buttonGreenLight"
-            android:text="ALEATOIRE"
-            android:textColor="@color/primaryTextColor"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:tag="10"/>
-
-        <!-- BUTTON ENIGMA CATEGORY -->
-        <Button
-            android:id="@+id/activity_play_enigma_firebase_enigma_button"
-            android:layout_width="wrap_content"
-            android:layout_height="50dip"
-            android:layout_weight="1"
-            android:background="@color/colorSandLight"
-            android:text="PAR CATEGORIE"
-            android:textColor="@color/primaryTextColor"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:tag="20"/>
-
-        <!-- BUTTON ENIGMA PLAYER -->
-        <Button
-            android:id="@+id/activity_play_enigma_bug_enigma_button"
-            android:layout_width="wrap_content"
-            android:layout_height="50dip"
-            android:layout_weight="1"
-            android:background="@color/colorSand"
-            android:text="PAR JOUEUR"
-            android:textColor="@color/primaryTextColor"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:tag="30"/>
-
-    </LinearLayout>
-
-
     <!-- RECYCLER VIEW CONTAINER -->
     <LinearLayout
         android:id="@+id/activity_play_enigma_recycler_view_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_below="@id/activity_play_enigma_buttons_container">
-        <!--android:layout_above="@id/activity_play_enigma_add_message_container"-->
-
+        android:layout_alignParentStart="true">
 
         <!-- MESSAGE RECYCLER VIEW EMPTY -->
         <TextView

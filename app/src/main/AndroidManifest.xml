@@ -16,7 +16,6 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -33,8 +32,13 @@
             android:label="@string/toolbar_title_create_enigma_activity"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme" />
-        <activity android:name=".activities.PlayActivity"
+        <activity
+            android:name=".activities.PlayActivity"
             android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".activities.SolveEnigmaActivity"
+            android:label="Résoudre une Enigme"
+            android:parentActivityName=".activities.PlayActivity"
             android:theme="@style/AppTheme"/>
     </application>
 

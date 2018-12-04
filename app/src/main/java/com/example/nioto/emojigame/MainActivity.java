@@ -32,9 +32,7 @@ public class MainActivity extends BaseActivity {
 
     // FOR DESIGN
     @BindView(R.id.main_activity_main_linear_layout) LinearLayout mainLinearLayout;
-    @BindView(R.id.main_activity_button_settings) ImageButton mainButtonSettings;
     @BindView(R.id.main_activity_tv_user_point) TextView mainTextViewUserPoints;
-    @BindView(R.id.main_activity_button_score) ImageButton mainButtonScore;
     @BindView(R.id.main_activity_image_view_profile) ImageView mainImageViewProfile;
     @BindView(R.id.main_activity_button_username) Button mainButtonUsername;
     @BindView(R.id.main_activity_button_play) Button mainButtonPlay;

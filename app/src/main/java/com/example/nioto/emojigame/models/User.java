@@ -34,7 +34,7 @@ public class User {
     public int getPoints() { return points;}
     @Nullable public String getUrlPicture() { return urlPicture;}
     public List<String> getUserEnigmaUidList() { return userEnigmaUidList;}
-    public List<String> getUserResolveEnigmaUidList() { return userResolvedEnigmaUidList;}
+    public List<String> getUserResolvedEnigmaUidList() { return userResolvedEnigmaUidList;}
     public Boolean getHasChangedPicture() { return hasChangedPicture; }
 
 
@@ -54,7 +54,7 @@ public class User {
     public void addUserEnigmaUidList (String addingUid) {
         this.getUserEnigmaUidList().add(addingUid);
     }
-    public void setUserResolvedEnigmaUidList(List<String> userResolveEnigmeUidList) { this.userResolvedEnigmaUidList = userResolveEnigmeUidList; }
+    public void setUserResolvedEnigmaUidList(List<String> userResolvedEnigmaUidList) { this.userResolvedEnigmaUidList = userResolvedEnigmaUidList; }
     public void addUserResolvedEnigmaUidList (String addingResolvedUid) {
         this.getUserEnigmaUidList().add(addingResolvedUid);
     }

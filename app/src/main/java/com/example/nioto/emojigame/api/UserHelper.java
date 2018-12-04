@@ -69,6 +69,10 @@ public class UserHelper {
         return UserHelper.getUsersCollection().document(uid).update("userEnigmaUidList", userEnigmaUidList);
     }
 
+    public static Task<Void> updateUserResolvedEnigmaUidList(List<String>  userResolvedEnigmaUidList, String uid) {
+        return UserHelper.getUsersCollection().document(uid).update("userResolvedEnigmaUidList", userResolvedEnigmaUidList);
+    }
+
     public static Task<Void> updateUserPoints(int points, String uid) {
         return UserHelper.getUsersCollection().document(uid).update("points", points);
     }

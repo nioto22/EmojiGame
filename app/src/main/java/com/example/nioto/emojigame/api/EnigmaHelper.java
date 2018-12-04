@@ -8,6 +8,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.util.List;
+
 public class EnigmaHelper {
 
     private static final String TAG = "EnigmaHelper";
@@ -38,14 +40,14 @@ public class EnigmaHelper {
     public static Query getAllEnigma(String filterWay){
         Query query;
         switch (filterWay){
-            case "byCategory" :
+            case "byDateDesc" :
                 query =  EnigmaHelper.getEnigmaCollection()
-                        .orderBy("category")
+                        .orderBy("dateCreated", Query.Direction.DESCENDING)
                         .limit(50);
                 break;
             default:
                 query =  EnigmaHelper.getEnigmaCollection()
-                        .orderBy("category")
+                        .orderBy("dateCreated", Query.Direction.DESCENDING)
                         .limit(50);
                 break;
         }
@@ -68,11 +70,8 @@ public class EnigmaHelper {
 
     // --- ADD ---
 
-    public static Task<DocumentReference> addResolvedUserUid (String userUid, String uid){
-        return EnigmaHelper.getEnigmaCollection()
-                .document(uid)
-                .collection("resolvedUserUid")
-                .add(userUid);
+    public static Task<Void> updateResolvedUserUidList(List<String> resolvedUserUidList, String uid) {
+        return EnigmaHelper.getEnigmaCollection().document(uid).update("resolvedUserUid", resolvedUserUidList);
     }
 
     // --- DELETE ---

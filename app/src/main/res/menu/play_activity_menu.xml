@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/play_menu_search"
+        android:icon="@drawable/ic_search"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/play_menu_filter"
+        android:title="Filter"
+        app:showAsAction="ifRoom">
+        <menu>
+    <item android:id="@+id/filter_menu_category"
+        android:title="Catégories"/>
+    <group android:id="@+id/filter_menu_category_group"
+        android:checkableBehavior="all">
+        <item android:id="@+id/filter_menu_category_group_personnage"
+            android:title="Personnage"/>
+        <item android:id="@+id/filter_menu_category_group_cinema"
+            android:title="Cinéma"/>
+        <item android:id="@+id/filter_menu_category_group_music"
+            android:title="Musique"/>
+        <item android:id="@+id/filter_menu_category_group_expression"
+            android:title="Expression"/>
+        <item android:id="@+id/filter_menu_category_group_object"
+            android:title="Objet"/>
+        <item android:id="@+id/filter_menu_category_group_other"
+            android:title="Autre"/>
+    </group>
+
+</menu>
+</item>
+
+</menu>
