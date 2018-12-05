@@ -23,27 +23,27 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.7">
-        <TextView
-            android:id="@+id/solve_enigma_activity_enigma_layout_category"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="2dp"
-            android:layout_marginTop="3dp"
-            android:gravity="center"
-            android:text="Catégorie"
-            android:textColor="@color/secondaryTextColor"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textStyle="bold"/>
-        <TextView
-            android:id="@+id/solve_enigma_activity_enigma_layout_tv_enigma"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/solve_enigma_activity_enigma_layout_category"
-            android:gravity="center"
-            android:text="Chargement ..."
-            android:textColor="@color/secondaryTextColor"
-            android:textSize="35sp"
-            android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/solve_enigma_activity_enigma_layout_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:layout_marginTop="3dp"
+                android:gravity="center"
+                android:text="Catégorie"
+                android:textColor="@color/secondaryTextColor"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/solve_enigma_activity_enigma_layout_tv_enigma"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/solve_enigma_activity_enigma_layout_category"
+                android:gravity="center"
+                android:text="Chargement ..."
+                android:textColor="@color/secondaryTextColor"
+                android:textSize="35sp"
+                android:textStyle="bold"/>
         </RelativeLayout>
         <LinearLayout
             android:id="@+id/solve_enigma_activity_enigma_layout_info_layout"
@@ -103,14 +103,14 @@
     </LinearLayout>
 
 
-    <!-- BUTTONS CHAT CONTAINER -->
+    <!-- BUTTONS CONTAINER -->
     <LinearLayout
         android:id="@+id/solve_enigma_activity_buttons_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center">
 
-        <!-- BUTTON CHAT ANDROID -->
+        <!-- BUTTON RESOLVE ANDROID -->
         <ImageButton
             android:id="@+id/solve_enigma_activity_enigma_button"
             android:layout_width="wrap_content"
@@ -118,7 +118,7 @@
             android:layout_weight="1"
             android:background="@color/colorGreen"
             android:src="@drawable/ic_question"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:tag="10"/>
 
         <!-- BUTTON CHAT FIREBASE -->
@@ -129,10 +129,10 @@
             android:layout_weight="1"
             android:background="@color/colorSandLight"
             android:src="@drawable/ic_chat"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:tag="20"/>
 
-        <!-- BUTTON CHAT BUG -->
+        <!-- BUTTON PODIUM -->
         <ImageButton
             android:id="@+id/solve_enigma_activity_podium_button"
             android:layout_width="wrap_content"
@@ -140,12 +140,13 @@
             android:layout_weight="1"
             android:background="@color/colorSand"
             android:src="@drawable/ic_podium"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:tag="30"/>
     </LinearLayout>
 
     <!-- LinearLayout ONGLETS -->
-    <LinearLayout
+    <ViewFlipper
+        android:id="@+id/solve_enigma_activity_onglet_view_flipper"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="60"
@@ -153,10 +154,9 @@
 
         <!-- ONGLET RESOLVE -->
         <RelativeLayout
-            android:id="@+id/solve_enigma_activity_onglet_layout_rl_resolve"
+            android:id="@+id/solve_enigma_activity_onglet_resolve_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible"
             android:background="@color/colorSandClearLight"
             android:gravity="center">
             <TextView
@@ -191,11 +191,195 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textStyle="bold"
                 android:background="@drawable/button_radius_green_color"/>
-
-
-
         </RelativeLayout>
 
-    </LinearLayout>
+        <!-- ONGLET CHAT  -->
+        <RelativeLayout
+            android:id="@+id/solve_enigma_activity_onglet_chat_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorSandClearLight">
+            <LinearLayout
+                android:id="@+id/solve_enigma_activity_chat_recycler_view_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <!-- MESSAGE RECYCLER VIEW EMPTY -->
+                <TextView
+                    android:id="@+id/solve_enigma_activity_chat_text_view_recycler_view_empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_view_mentor_chat_error"
+                    android:textAlignment="center"
+                    android:layout_margin="@dimen/default_large_margin"/>
+
+                <!-- RECYCLER VIEW -->
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/solve_enigma_activity_chat_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+
+            <!-- ADD MESSAGE CONTAINER -->
+            <LinearLayout
+                android:id="@+id/solve_enigma_activity_chat_add_message_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="@dimen/default_margin">
+
+                <!-- TEXT MESSAGE EDIT TEXT -->
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/solve_enigma_activity_chat_message_edit_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:imeOptions="actionDone"
+                    android:inputType="textMultiLine"
+                    android:textSize="@dimen/default_text_size"
+                    android:hint="@string/text_input_title_mentor_chat_activity"/>
+
+                <!-- ADD MESSAGE BUTTON -->
+                <Button
+                    android:id="@+id/solve_enigma_activity_chat_send_button"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/button_title_mentor_chat_activity" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <!-- ONGLET PODIUM -->
+        <RelativeLayout
+            android:id="@+id/solve_enigma_activity_onglet_podium_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorSandClearLight">
+
+            <!-- MESSAGE RECYCLER NO RESOLUTION -->
+            <TextView
+                android:id="@+id/solve_enigma_activity_onglet_podium_tv_no_resolution"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Persone n'a résolu cet énigme pour l'instant ! \n A vous de jouer ..."
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textAlignment="center"
+                android:layout_margin="@dimen/default_large_margin"/>
+            <!-- MESSAGE DIFFICULTY -->
+            <LinearLayout
+                android:id="@+id/solve_enigma_activity_onglet_podium_layout_difficulty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_below="@+id/solve_enigma_activity_onglet_podium_tv_no_resolution"
+                android:layout_marginBottom="25dp"
+                android:gravity="center_horizontal">
+                <TextView
+                    android:id="@+id/solve_enigma_activity_onglet_podium_tv_difficulty_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cet énigme a été résolue : "
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textAlignment="center"
+                    android:layout_margin="@dimen/default_margin"/>
+                <TextView
+                    android:id="@+id/solve_enigma_activity_onglet_podium_tv_difficulty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="chargement ..."
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textAlignment="center"
+                    android:textStyle="bold"
+                    android:layout_margin="@dimen/default_margin"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/solve_enigma_activity_onglet_podium_layout_users"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="@dimen/default_margin"
+                android:layout_below="@+id/solve_enigma_activity_onglet_podium_layout_difficulty">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal">
+                    <TextView
+                        android:id="@+id/solve_enigma_activity_onglet_podium_tv_user1_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Première place :"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/blue_point_dark"
+                        android:textStyle="bold"
+                        android:textAlignment="center"
+                        android:layout_margin="@dimen/default_margin"/>
+                    <TextView
+                        android:id="@+id/solve_enigma_activity_onglet_podium_tv_user1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="USER"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/blue_point_dark"
+                        android:textStyle="bold"
+                        android:textAlignment="center"
+                        android:layout_margin="@dimen/default_margin"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal">
+                    <TextView
+                        android:id="@+id/solve_enigma_activity_onglet_podium_tv_user2_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Seconde place :"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/colorGreen"
+                        android:textStyle="bold"
+                        android:textAlignment="center"
+                        android:layout_margin="@dimen/default_margin"/>
+                    <TextView
+                        android:id="@+id/solve_enigma_activity_onglet_podium_tv_user2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="_"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/colorGreen"
+                        android:textStyle="bold"
+                        android:textAlignment="center"
+                        android:layout_margin="@dimen/default_margin"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal">
+                    <TextView
+                        android:id="@+id/solve_enigma_activity_onglet_podium_tv_user3_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Troisième place :"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/buttonOrangeLight"
+                        android:textStyle="bold"
+                        android:textAlignment="center"
+                        android:layout_margin="@dimen/default_margin"/>
+                    <TextView
+                        android:id="@+id/solve_enigma_activity_onglet_podium_tv_user3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="_"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/buttonOrangeLight"
+                        android:textStyle="bold"
+                        android:textAlignment="center"
+                        android:layout_margin="@dimen/default_margin"/>
+                </LinearLayout>
+            </LinearLayout>
+        </RelativeLayout>
+
+    </ViewFlipper>
 
 </LinearLayout>
