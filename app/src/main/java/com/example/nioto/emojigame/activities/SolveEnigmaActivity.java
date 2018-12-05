@@ -12,8 +12,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +43,9 @@ import butterknife.OnClick;
 public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Listener{
 
     private static final String TAG = "SolveEnigmaActivity";
+    // EXTRA_BUNDLE
+    public static final String EXTRA_BUNDLE_EDIT_ENIGMA_ACTIVITY = "EXTRA_BUNDLE_EDIT_ENIGMA_ACTIVITY";
+    public static final int INTENT_UPDATE_ACTIVITY_KEY = 14;
 
     // FOR DESIGN
     // ENIGMA UI
@@ -53,6 +57,11 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
     @BindView(R.id.solve_enigma_activity_onglet_view_flipper) ViewFlipper viewFlipper;
     // RESOLVE UI
     @BindView(R.id.solve_enigma_activity_onglet_resolve_response) EditText enigmaResponse;
+    @BindView(R.id.solve_enigma_activity_onglet_resolve_response_title) TextView enigmaResponseTitle;
+    @BindView(R.id.solve_enigma_activity_onglet_resolve_edit_response) TextView enigmaEditResponse;
+    @BindView(R.id.solve_enigma_activity_onglet_resolve_send_button) Button enigmaResolveSendButton;
+    @BindView(R.id.solve_enigma_activity_onglet_resolve_edit_button) Button enigmaResolveEditButton;
+    @BindView(R.id.solve_enigma_activity_enigma_button) ImageButton enigmaOngletEditButton;
     // CHAT UI
     @BindView(R.id.solve_enigma_activity_chat_recycler_view) RecyclerView recyclerView;
     @BindView(R.id.solve_enigma_activity_chat_text_view_recycler_view_empty) TextView textViewRecyclerViewEmpty;
@@ -85,6 +94,21 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == INTENT_UPDATE_ACTIVITY_KEY){
+            if (resultCode == RESULT_OK){
+                Toast.makeText(this, "Nouvelle énigme enregistrée!", Toast.LENGTH_SHORT).show();
+                getEnigmaUI();
+            }else {
+                Toast.makeText(this, "Enigme non sauvegardée !", Toast.LENGTH_SHORT).show();
+                getEnigmaUI();
+            }
+        }
+
+    }
+
+    @Override
     public int getFragmentLayout() {
         return R.layout.activity_solve_enigma;
     }
@@ -100,19 +124,36 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
         if (null != intent){
             if (intent.hasExtra(PlayActivity.EXTRA_ENIGMA_PATH)) {
                 enigmaUid = intent.getStringExtra(PlayActivity.EXTRA_ENIGMA_PATH);
-
-                EnigmaHelper.getEnigma(enigmaUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                // is User the enigma owner
+                UserHelper.getUser(currentUserUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        Enigma enigma = documentSnapshot.toObject(Enigma.class);
-                        enigmaCategory.setText(enigma.getCategory());
-                        enigmaEnigma.setText(enigma.getEnigma());
-                        enigmaDifficulty.setText(enigma.getDifficultyFormarted());
-                        UserHelper.getUser(enigma.getUserUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        User user = documentSnapshot.toObject(User.class);
+                        if (user.getUserEnigmaUidList().contains(enigmaUid)){
+                            enigmaResponseTitle.setText("La solution : ");
+                            enigmaResponse.setVisibility(View.GONE);
+                            enigmaEditResponse.setVisibility(View.VISIBLE);
+                            enigmaResolveSendButton.setVisibility(View.GONE);
+                            enigmaResolveEditButton.setVisibility(View.VISIBLE);
+                            enigmaOngletEditButton.setBackgroundColor(getResources().getColor(R.color.primaryLightColor));
+                            enigmaOngletEditButton.setImageResource(R.drawable.ic_edit);
+                        }
+                        EnigmaHelper.getEnigma(enigmaUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                             @Override
                             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                User user = documentSnapshot.toObject(User.class);
-                                enigmaUser.setText(user.getUsername());
+                                Enigma enigma = documentSnapshot.toObject(Enigma.class);
+
+                                enigmaCategory.setText(enigma.getCategory());
+                                enigmaEnigma.setText(enigma.getEnigma());
+                                enigmaDifficulty.setText(enigma.getDifficultyFormarted());
+                                enigmaEditResponse.setText(enigma.getSolution());
+                                UserHelper.getUser(enigma.getUserUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                        User user = documentSnapshot.toObject(User.class);
+                                        enigmaUser.setText(user.getUsername());
+                                    }
+                                });
                             }
                         });
                     }
@@ -131,7 +172,7 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         Enigma enigma = documentSnapshot.toObject(Enigma.class);
-                        List <String> userPodiumList = enigma.getResolvedUserUid();
+                        List<String> userPodiumList = enigma.getResolvedUserUid();
                         if (userPodiumList.size() == 0){
                             tvPodiumNobody.setVisibility(View.VISIBLE);
                             layoutPodiumDifficulty.setVisibility(View.GONE);
@@ -215,9 +256,9 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
                 .build();
     }
 
-    // --------------------
-    // CALLBACK
-    // --------------------
+// --------------------
+// CALLBACK
+// --------------------
 
     @Override
     public void onDataChanged() {
@@ -228,9 +269,17 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
 
 
     // --------------------
-    //       ACTION
-    // --------------------
-    // RESOLVE PART
+//       ACTION
+// --------------------
+// RESOLVE PART
+    @OnClick (R.id.solve_enigma_activity_onglet_resolve_edit_button)
+    public void onClickResolvedEditButton(){
+        Intent intent = new Intent(SolveEnigmaActivity.this, CreateEnigmaActivity.class);
+        intent.putExtra(EXTRA_BUNDLE_EDIT_ENIGMA_ACTIVITY, enigmaUid);
+        startActivityForResult(intent, INTENT_UPDATE_ACTIVITY_KEY);
+    }
+
+
     @OnClick (R.id.solve_enigma_activity_onglet_resolve_send_button)
     public void onClickResolvedSendButton(){
         if (enigmaResponse.getText()!= null) {
@@ -321,8 +370,8 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
     @OnClick(R.id.solve_enigma_activity_chat_send_button)
     public void onClickSendMessage() {
         if (!TextUtils.isEmpty(editTextMessage.getText()) && currentUser != null) {
-                MessageHelper.createMessageForChat(editTextMessage.getText().toString(), enigmaUid, currentUser).addOnFailureListener(this.onFailureListener());
-                this.editTextMessage.setText("");
+            MessageHelper.createMessageForChat(editTextMessage.getText().toString(), enigmaUid, currentUser).addOnFailureListener(this.onFailureListener());
+            this.editTextMessage.setText("");
         }
     }
 
@@ -357,9 +406,9 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
     }
 
     // --------------------
-    // REST REQUESTS
-    // --------------------
-    // 4 - Get Current User from Firestore
+// REST REQUESTS
+// --------------------
+// 4 - Get Current User from Firestore
     private void getFirestoreUser(){
         UserHelper.getUser(getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override

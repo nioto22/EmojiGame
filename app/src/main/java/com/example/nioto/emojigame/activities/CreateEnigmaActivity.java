@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
@@ -18,6 +19,7 @@ import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.api.EnigmaHelper;
 import com.example.nioto.emojigame.api.UserHelper;
 import com.example.nioto.emojigame.base.BaseActivity;
+import com.example.nioto.emojigame.models.Enigma;
 import com.example.nioto.emojigame.models.User;
 import com.example.nioto.emojigame.utils.CustomExpandableListAdapter;
 import com.example.nioto.emojigame.utils.ExpandableListDataPump;
@@ -48,6 +50,8 @@ public class CreateEnigmaActivity extends BaseActivity {
     @BindView(R.id.create_activity_rl_other) RelativeLayout rlOtherLayout;
     @BindView(R.id.create_activity_et_other) TextInputEditText etOther;
     @BindView(R.id.create_activity_progressbar) ProgressBar progressBar;
+    @BindView(R.id.create_activity_create_button) Button createButton;
+    @BindView(R.id.create_activity_update_button) Button updateButton;
 
 
     // FOR CATEGORY LIST VIEW
@@ -61,12 +65,22 @@ public class CreateEnigmaActivity extends BaseActivity {
     private String mSolution;
     private String mCategory;
     private String mMessage;
+    private String enigmaUid;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.initiateListView();
+        Intent intent = getIntent();
+        if (null != intent){
+            if (intent.hasExtra(SolveEnigmaActivity.EXTRA_BUNDLE_EDIT_ENIGMA_ACTIVITY)) {
+                enigmaUid = intent.getStringExtra(SolveEnigmaActivity.EXTRA_BUNDLE_EDIT_ENIGMA_ACTIVITY);
+                createButton.setVisibility(View.GONE);
+                updateButton.setVisibility(View.VISIBLE);
+                initiateViewWithEnigma(enigmaUid);
+            }
+        }
     }
 
     @Override
@@ -111,7 +125,18 @@ public class CreateEnigmaActivity extends BaseActivity {
         });
     }
 
-
+    private void initiateViewWithEnigma(String enigmaUid){
+        EnigmaHelper.getEnigma(enigmaUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Enigma enigma = documentSnapshot.toObject(Enigma.class);
+                etEnigma.setText(enigma.getEnigma());
+                etSolution.setText(enigma.getSolution());
+                etMessage.setText(enigma.getMessage());
+                textViewCategoryChoosed.setText(enigma.getCategory());
+            }
+        });
+    }
     // ------------------
     //      ACTION
     // ------------------
@@ -132,6 +157,26 @@ public class CreateEnigmaActivity extends BaseActivity {
                     currentUser.addPoints(10);
                     UserHelper.updateUserEnigmaUidList(userEnigmaUidList,userUid);
                     UserHelper.updateUserPoints(currentUser.getPoints(), userUid);
+                }
+            });
+            Intent intent = new Intent();
+            setResult(RESULT_OK, intent);
+            finish();
+        }
+    }
+
+    @OnClick (R.id.create_activity_update_button)
+    public void onClickUpdateButton(){
+        if (checkMandatoryInputsNotNull()){
+            progressBar.setVisibility(View.VISIBLE);
+            EnigmaHelper.getEnigma(enigmaUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    Enigma enigma = documentSnapshot.toObject(Enigma.class);
+                    if (mEnigma != enigma.getEnigma()) EnigmaHelper.updateEnigma(mEnigma, enigmaUid);
+                    if (mSolution != enigma.getSolution()) EnigmaHelper.updateSolution(mSolution, enigmaUid);
+                    if (mCategory != enigma.getCategory()) EnigmaHelper.updateCategory(mCategory, enigmaUid);
+                    if (mMessage != enigma.getMessage()) EnigmaHelper.updateMessage(mMessage, enigmaUid);
                 }
             });
             Intent intent = new Intent();

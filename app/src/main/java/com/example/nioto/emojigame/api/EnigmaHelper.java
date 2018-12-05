@@ -68,6 +68,10 @@ public class EnigmaHelper {
         return EnigmaHelper.getEnigmaCollection().document(uid).update("category", category);
     }
 
+    public static Task<Void> updateMessage(String message, String uid) {
+        return EnigmaHelper.getEnigmaCollection().document(uid).update("message", message);
+    }
+
     // --- ADD ---
 
     public static Task<Void> updateResolvedUserUidList(List<String> resolvedUserUidList, String uid) {
