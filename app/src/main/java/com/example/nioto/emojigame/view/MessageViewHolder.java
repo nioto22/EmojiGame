@@ -30,9 +30,9 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
     //PROFILE CONTAINER
     @BindView(R.id.activity_chat_item_profile_container)
     LinearLayout profileContainer;
-    @BindView(R.id.activity_chat_item_profile_container_profile_image)
-    ImageView imageViewProfile;
+    @BindView(R.id.activity_chat_item_profile_container_profile_image) ImageView imageViewProfile;
     @BindView(R.id.activity_chat_item_profile_container_is_mentor_image) ImageView imageViewIsMentor;
+    @BindView(R.id.activity_chat_item_profile_container_username) TextView textViewUsername;
 
     //MESSAGE CONTAINER
     @BindView(R.id.activity_chat_item_message_container) RelativeLayout messageContainer;
@@ -72,8 +72,9 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
         if (message.getDateCreated() != null) this.textViewDate.setText(this.convertDateToHour(message.getDateCreated()));
 
         // Update isMentor ImageView
-        this.imageViewIsMentor.setVisibility(message.getUserSender().getUserEnigmaUidList().contains(message.getEnigmaUid()) ? View.VISIBLE : View.INVISIBLE);
-
+        this.imageViewIsMentor.setVisibility(message.getUserSender().getUserEnigmaUidList().contains(message.getEnigmaUid()) ? View.VISIBLE : View.GONE);
+        // Update username TextView
+        this.textViewUsername.setText(message.getUserSender().getUsername());
         // Update profile picture ImageView
         if (message.getUserSender().getUrlPicture() != null)
             glide.load(message.getUserSender().getUrlPicture())
@@ -107,6 +108,11 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
         RelativeLayout.LayoutParams paramsLayoutContent = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         paramsLayoutContent.addRule(isSender ? RelativeLayout.LEFT_OF : RelativeLayout.RIGHT_OF, R.id.activity_chat_item_profile_container);
         this.messageContainer.setLayoutParams(paramsLayoutContent);
+
+        // SENDER USERNAME
+        RelativeLayout.LayoutParams paramsUsernameView = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        paramsUsernameView.addRule(isSender ? RelativeLayout.ALIGN_RIGHT : RelativeLayout.ALIGN_LEFT, R.id.activity_chat_item_message_container_text_message_container);
+        this.textViewUsername.setLayoutParams(paramsUsernameView);
 
         // CARDVIEW IMAGE SEND
         RelativeLayout.LayoutParams paramsImageView = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);

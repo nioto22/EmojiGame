@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -59,6 +60,9 @@ public class ProfileActivity extends BaseActivity {
     @BindView(R.id.profile_activity_image_view_profile) ImageView imageViewProfile;
     @BindView(R.id.profile_activity_edit_text_username) TextInputEditText textInputEditTextUsername;
     @BindView(R.id.profile_activity_progress_bar) ProgressBar progressBar;
+    @BindView(R.id.profile_activity_tv_nb_enigma_create) TextView tvUserEnigmaCreationNumber;
+    @BindView(R.id.profile_activity_tv_nb_enigma_resolved) TextView tvUserEnigmaResolvedNumber;
+    @BindView(R.id.profile_activity_tv_points) TextView tvUserPointsNumber;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -166,13 +170,6 @@ public class ProfileActivity extends BaseActivity {
             // Fixed issue with photo blurred
             photoUrl = getPhotoUrl();
 
-            //Get picture url from Firebase
-        /*    if (photoUrl != null){
-                Glide.with(this)
-                        .load(photoUrl)
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(imageViewProfile);
-            }*/
             // Get username from FireBase
             UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
@@ -201,6 +198,13 @@ public class ProfileActivity extends BaseActivity {
                                     .into(imageViewProfile);
                         }
                     }
+
+                    // SET INFOS
+                    String nbPoints = String.valueOf(currentUser.getPoints()) + " point" + ((currentUser.getPoints()!= 0) ? "s" : "" );
+                    tvUserPointsNumber.setText(nbPoints);
+                    tvUserEnigmaCreationNumber.setText(String.valueOf(currentUser.getUserEnigmaUidList().size()));
+                    tvUserEnigmaResolvedNumber.setText(String.valueOf(currentUser.getUserResolvedEnigmaUidList().size()));
+
                 }
             });
         }

@@ -17,11 +17,24 @@
         android:orientation="vertical"
         android:gravity="center"
         android:layout_weight="1">
-        <ImageView
-            android:id="@+id/profile_activity_image_view_profile"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="160dp"
-            app:srcCompat="@drawable/ic_anon_user_48dp" />
+            android:layout_height="160dp">
+            <ImageView
+                android:id="@+id/profile_activity_image_view_profile"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:layout_centerInParent="true"
+                app:srcCompat="@drawable/ic_anon_user_48dp" />
+            <ProgressBar
+                android:id="@+id/profile_activity_progress_bar"
+                android:layout_width="30dip"
+                android:layout_height="30dip"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:visibility="invisible"
+                android:layout_marginEnd="30dp"/>
+        </RelativeLayout>
         <android.support.design.widget.TextInputEditText
             android:id="@+id/profile_activity_edit_text_username"
             android:layout_width="wrap_content"
@@ -34,13 +47,76 @@
             android:gravity="center"
             android:padding="8dp"
             android:layout_marginTop="5dp"/>
-        <!-- PROGRESS BAR -->
-        <ProgressBar
-            android:id="@+id/profile_activity_progress_bar"
-            android:layout_width="30dip"
-            android:layout_height="30dip"
-            android:visibility="invisible"
-            android:layout_marginTop="@dimen/default_small_margin"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/text_view_main_profile"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="35dp"
+            android:layout_marginEnd="35dp">
+            <TextView
+                android:id="@+id/profile_activity_tv_points"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/secondaryTextColor"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:padding="8dp"/>
+            <LinearLayout
+                android:id="@+id/profile_activity_user_enigma_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_below="@id/profile_activity_tv_points"
+                android:gravity="center_horizontal">
+                <TextView
+                    android:id="@+id/profile_activity_tv_nb_enigma_create_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Enigme créées"
+                    android:textColor="@color/secondaryTextColor"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:gravity="center"
+                    android:padding="8dp"/>
+                <TextView
+                android:id="@+id/profile_activity_tv_nb_enigma_create"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/secondaryTextColor"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:gravity="center"
+                android:padding="8dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/profile_activity_user_resolved_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_below="@id/profile_activity_user_enigma_layout"
+                android:gravity="center">
+                <TextView
+                    android:id="@+id/profile_activity_tv_nb_enigma_resolved_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Enigme résolues"
+                    android:textColor="@color/secondaryTextColor"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:gravity="center"
+                    android:padding="8dp"/>
+                <TextView
+                    android:id="@+id/profile_activity_tv_nb_enigma_resolved"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/secondaryTextColor"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:gravity="center"
+                    android:padding="8dp"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+
 
     </LinearLayout>
     <!-- BUTTONS CONTAINER -->
