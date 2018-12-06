@@ -1,5 +1,7 @@
 package com.example.nioto.emojigame.api;
 
+import android.util.Log;
+
 import com.example.nioto.emojigame.models.Enigma;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -44,14 +46,40 @@ public class EnigmaHelper {
                 query =  EnigmaHelper.getEnigmaCollection()
                         .orderBy("dateCreated", Query.Direction.DESCENDING)
                         .limit(50);
-                break;
+                return query;
+            case "byCategoryPersonage" :
+                query =  EnigmaHelper.getEnigmaCollection()
+                        .whereEqualTo("category", "Personnage" )
+                        .limit(50);
+                return query;
+            case "byCategoryCinema" :
+                query =  EnigmaHelper.getEnigmaCollection()
+                        .whereEqualTo("category", "Cinéma");
+                return query;
+            case "byCategoryMusic" :
+                query =  EnigmaHelper.getEnigmaCollection()
+                        .whereEqualTo("category", "Musique");
+                return query;
+            case "byCategoryExpressions" :
+                query =  EnigmaHelper.getEnigmaCollection()
+                        .whereEqualTo("category", "Expressions");
+                return query;
+            case "byCategoryObject" :
+                query =  EnigmaHelper.getEnigmaCollection()
+                        .whereEqualTo("category", "Objet");
+                return query;
+            case "byCategoryOther" :
+                query =  EnigmaHelper.getEnigmaCollection()
+                        .orderBy("category")
+                        .endBefore("Cinéma")
+                        .limit(50);
+                return query;
             default:
                 query =  EnigmaHelper.getEnigmaCollection()
                         .orderBy("dateCreated", Query.Direction.DESCENDING)
                         .limit(50);
-                break;
+                return query;
         }
-        return query;
     }
 
     // --- UPDATE ---
