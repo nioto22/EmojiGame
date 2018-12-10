@@ -3,31 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/category_all"
         android:title="Toutes"
-        android:checked="true"
         android:checkable="true"/>
     <item android:id="@+id/category_personnage"
         android:title="Personnage"
-        android:checked="false"
         android:checkable="true"/>
     <item android:id="@+id/category_cinéma"
         android:title="Cinéma"
-        android:checked="false"
         android:checkable="true"/>
     <item android:id="@+id/category_musique"
         android:title="Musique"
-        android:checked="false"
         android:checkable="true"/>
     <item android:id="@+id/category_expressions"
         android:title="Expressions"
-        android:checked="false"
         android:checkable="true"/>
     <item android:id="@+id/category_objet"
         android:title="Objet"
-        android:checked="false"
         android:checkable="true"/>
     <item android:id="@+id/category_autres"
         android:title="Autres"
-        android:checked="false"
         android:checkable="true"/>
 
 

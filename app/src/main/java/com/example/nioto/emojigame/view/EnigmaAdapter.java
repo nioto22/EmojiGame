@@ -59,6 +59,8 @@ public class EnigmaAdapter extends FirestoreRecyclerAdapter <Enigma, EnigmaAdapt
         });
     }
 
+
+
     @Override
     public EnigmaHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.enigma_item,

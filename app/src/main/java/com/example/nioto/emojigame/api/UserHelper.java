@@ -49,6 +49,12 @@ public class UserHelper {
         return UserHelper.getUsersCollection().document(uid).get();
     }
 
+    public static Query getAllUser(){
+       Query query =  EnigmaHelper.getEnigmaCollection()
+                .limit(50);
+        return query;
+    }
+
 
 
     // --- UPDATE ---
