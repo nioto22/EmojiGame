@@ -47,6 +47,7 @@
                 android:layout_toEndOf="@+id/enigma_item_tv_category_title"
                 android:layout_margin="4dp"
                 android:text="Chargement..."
+                android:ellipsize="end"
                 android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/secondaryTextColor"
