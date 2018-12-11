@@ -44,7 +44,8 @@
         android:layout_height="wrap_content"
         android:text="Aucune énigme ne correspond à ces catégories"
         android:layout_centerInParent="true"
-        android:gravity="center_horizontal"/>
+        android:gravity="center_horizontal"
+        android:visibility="gone"/>
     <LinearLayout
         android:id="@+id/activity_play_enigma_recycler_view_container"
         android:layout_width="match_parent"

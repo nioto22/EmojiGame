@@ -274,7 +274,7 @@ public class ProfileActivity extends BaseActivity {
                     .addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            String pathImageSavedInFirebase = taskSnapshot.getMetadata().getDownloadUrl().toString();
+                            String pathImageSavedInFirebase = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
                             // B - Update Image of User
                             UserHelper.updateUserPhoto(pathImageSavedInFirebase, userUid).addOnFailureListener(onFailureListener());
                             UserHelper.updateUserHasChangedPicture(true, userUid);

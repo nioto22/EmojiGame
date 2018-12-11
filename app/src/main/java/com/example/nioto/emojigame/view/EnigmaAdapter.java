@@ -1,19 +1,14 @@
 package com.example.nioto.emojigame.view;
 
-import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.example.nioto.emojigame.R;
-import com.example.nioto.emojigame.activities.PlayActivity;
 import com.example.nioto.emojigame.api.UserHelper;
 import com.example.nioto.emojigame.models.Enigma;
 import com.example.nioto.emojigame.models.User;
@@ -25,6 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 public class EnigmaAdapter extends FirestoreRecyclerAdapter <Enigma, EnigmaAdapter.EnigmaHolder> {
+
 
     private OnItemClickListener listener;
 
@@ -48,7 +44,7 @@ public class EnigmaAdapter extends FirestoreRecyclerAdapter <Enigma, EnigmaAdapt
                 if (enigma.getUserUid().equals(currentUserUid)) {
                     holder.tvState.setText("CREE PAR VOUS");
                     holder.tvState.setTextColor(Color.parseColor("#6BB18C"));
-                } else if (enigma.getResolvedUserUid().contains(currentUserUid)){
+                } else if (enigma.getResolvedUserUid().contains(currentUserUid)) {
                     holder.tvState.setText("RESOLUE");
                     holder.tvState.setTextColor(Color.parseColor("#c63f17"));
                 } else {

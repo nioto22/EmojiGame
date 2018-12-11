@@ -7,9 +7,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.api.EnigmaHelper;
@@ -20,6 +20,7 @@ import com.example.nioto.emojigame.view.EnigmaAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -28,6 +29,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import butterknife.BindView;
 
 public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemClickListener {
 
@@ -38,6 +41,8 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     public static final int INTENT_SOLVE_ACTIVITY_KEY = 12;
 
     // FOR DESIGN
+    @BindView(R.id.activity_play_text_view_no_enigma)
+    TextView tvNoEnigma;
     private PopupMenu popupMenuCategory2;
     MenuItem itemAll ;
     MenuItem itemPersonage;
@@ -160,6 +165,18 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                                 displayRecyclerView(query);
                                 adapter.startListening();
                                 break;
+                            case R.id.menu_enigma_resolved :
+                                query = EnigmaHelper.getAllEnigma(filterCategory)
+                                        .whereArrayContains("resolvedUserUid", getCurrentUser().getUid());
+                                displayRecyclerView(query);
+                                adapter.startListening();
+                                break;
+                            /*case R.id.menu_enigma_unresolved :
+                                query = EnigmaHelper.getAllEnigma(filterCategory)
+                                        .whereArrayContains("resolvedUserUid", getCurrentUser().getUid());
+                                displayRecyclerView(query);
+                                adapter.startListening();
+                                break;*/
                         }
                         return false;
                     }
@@ -230,20 +247,20 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     private void setUpCategoryMenus(){
         itemAll = popupMenuCategory2.getMenu().findItem(R.id.category_all);
         itemPersonage = popupMenuCategory2.getMenu().findItem(R.id.category_personnage);
-         itemCinema = popupMenuCategory2.getMenu().findItem(R.id.category_cinéma);
+        itemCinema = popupMenuCategory2.getMenu().findItem(R.id.category_cinéma);
         itemMusic = popupMenuCategory2.getMenu().findItem(R.id.category_musique);
         itemExpressions = popupMenuCategory2.getMenu().findItem(R.id.category_expressions);
         itemObject = popupMenuCategory2.getMenu().findItem(R.id.category_objet);
-         itemOther = popupMenuCategory2.getMenu().findItem(R.id.category_autres);
+        itemOther = popupMenuCategory2.getMenu().findItem(R.id.category_autres);
     }
-   private void getAllItemUnchecked() {
-       if (itemAll.isChecked()) itemAll.setChecked(false) ;
-       if (itemPersonage.isChecked()) itemPersonage.setChecked(false);
-       if (itemCinema.isChecked()) itemCinema.setChecked(false);
-       if (itemMusic.isChecked()) itemMusic.setChecked(false);
-       if (itemExpressions.isChecked()) itemExpressions.setChecked(false);
-       if (itemObject.isChecked()) itemObject.setChecked(false);
-       if (itemOther.isChecked()) itemOther.setChecked(false);
+    private void getAllItemUnchecked() {
+        if (itemAll.isChecked()) itemAll.setChecked(false) ;
+        if (itemPersonage.isChecked()) itemPersonage.setChecked(false);
+        if (itemCinema.isChecked()) itemCinema.setChecked(false);
+        if (itemMusic.isChecked()) itemMusic.setChecked(false);
+        if (itemExpressions.isChecked()) itemExpressions.setChecked(false);
+        if (itemObject.isChecked()) itemObject.setChecked(false);
+        if (itemOther.isChecked()) itemOther.setChecked(false);
     }
 
     public void setUpRecyclerView(String filterCategory){
@@ -287,7 +304,6 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                 new FirestoreRecyclerOptions.Builder<Enigma>()
                         .setQuery(query, Enigma.class)
                         .build();
-
         adapter = new EnigmaAdapter(options);
         RecyclerView recyclerView = findViewById(R.id.activity_play_enigma_recycler_view);
         recyclerView.setHasFixedSize(true);

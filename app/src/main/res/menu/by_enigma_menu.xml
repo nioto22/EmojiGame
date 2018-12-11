@@ -5,12 +5,10 @@
         android:title="Toutes"/>
     <item android:id="@+id/menu_enigma_own"
         android:title="Créée par vous"/>
-   <!-- <item android:id="@+id/menu_enigma_resolved"
-        android:title="Résolue"
-        android:checked="false"
-        android:checkable="true"/>
-    <item android:id="@+id/menu_enigma_unresolved"
+   <item android:id="@+id/menu_enigma_resolved"
+        android:title="Résolue"/>
+ <!--   <item android:id="@+id/menu_enigma_unresolved"
         android:title="Non résolue"
         android:checked="false"
-        android:checkable="true"/> -->
+        android:checkable="true"/>  -->
 </menu>
