@@ -8,6 +8,6 @@ android:shape="rectangle"
 <corners android:radius="20dp"/>
     <stroke
         android:width="3dp"
-        android:color="@color/blue_point_dark"
+        android:color="@color/primaryDarkColor"
         />
 </shape>

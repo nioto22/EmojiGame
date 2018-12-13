@@ -86,7 +86,6 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         this.getFirestoreUser();
         getEnigmaUI();
         getChatUI();
@@ -98,10 +97,14 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == INTENT_UPDATE_ACTIVITY_KEY){
             if (resultCode == RESULT_OK){
-                Toast.makeText(this, "Nouvelle énigme enregistrée!", Toast.LENGTH_SHORT).show();
+                Toast toastOk = Toast.makeText(this, "Nouvelle énigme enregistrée!", Toast.LENGTH_SHORT);
+                toastOk.setGravity(Gravity.CENTER, 0, 0);
+                toastOk.show();
                 getEnigmaUI();
             }else {
-                Toast.makeText(this, "Enigme non sauvegardée !", Toast.LENGTH_SHORT).show();
+                Toast toastNotOk =  Toast.makeText(this, "Enigme non sauvegardée !", Toast.LENGTH_SHORT);
+                toastNotOk.setGravity(Gravity.CENTER, 0, 0);
+                toastNotOk.show();
                 getEnigmaUI();
             }
         }
@@ -282,89 +285,104 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
 
     @OnClick (R.id.solve_enigma_activity_onglet_resolve_send_button)
     public void onClickResolvedSendButton(){
-        if (enigmaResponse.getText()!= null) {
-            final String response = enigmaResponse.getText().toString();
-            EnigmaHelper.getEnigma(enigmaUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    Log.d(TAG, "onSuccess: EnigmaUid" + enigmaUid );
-                    final Enigma enigma = documentSnapshot.toObject(Enigma.class);
-                    if (enigma.getSolution() != null){
-                        if (enigma.getSolution().equalsIgnoreCase(response)){
-                            // Add ResolvedUID to enigma
-                            List<String> resolvedUserUidList = enigma.getResolvedUserUid();
-                            resolvedUserUidList.add(currentUserUid);
-                            final int numberOfResolvedTimes = resolvedUserUidList.size();
-                            EnigmaHelper.updateResolvedUserUidList(resolvedUserUidList, enigmaUid);
-                            // Add enigmaUid to userResolvedEnigma
-                            UserHelper.getUser(currentUserUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                @Override
-                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                    User currentUser = documentSnapshot.toObject(User.class);
-                                    List<String> userResolvedEnigmaList = currentUser.getUserResolvedEnigmaUidList();
-                                    userResolvedEnigmaList.add(enigmaUid);
-                                    UserHelper.updateUserResolvedEnigmaUidList(userResolvedEnigmaList, currentUserUid).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Log.d(TAG, "onSuccess: User resolved enigmas list updated");
-                                        }
-                                    });
-                                    // Update number of points
-                                    int points = (numberOfResolvedTimes == 1 ) ? 50 : (numberOfResolvedTimes == 2) ? 30 : (numberOfResolvedTimes == 3 ) ? 20 : 10;
-                                    currentUser.addPoints(points);
-                                    UserHelper.updateUserPoints(currentUser.getPoints(), currentUserUid).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Log.d(TAG, "onSuccess: User points updated");
-                                        }
-                                    });
-                                    // AlertDialog
-                                    String message;
-                                    switch (numberOfResolvedTimes){
-                                        case (1):
-                                            message  =  "Vous êtes le premier à résoudre cette énigme, \n vous remportez 50 points";
-                                            break;
-                                        case (2):
-                                            message = "Vous êtes le second à résoudre cette énigme, \n vous remportez 30 points";
-                                            break;
-                                        case (3):
-                                            message = "Vous êtes le troisième à résoudre cette énigme, \n vous remportez 20 points";
-                                            break;
-                                        default:
-                                            message = "Vous avez résolu l'énigme, \n vous remportez 10 points";
+        UserHelper.getUser(currentUserUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                currentUser = documentSnapshot.toObject(User.class);
+                if (currentUser.getUserResolvedEnigmaUidList().contains(enigmaUid)){
+                    Toast toast = Toast.makeText(SolveEnigmaActivity.this, "Vous avez déjà répondu à cette énigme"
+                            , Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
+                }else if(enigmaResponse.getText()!=null) {
+                    final String response = enigmaResponse.getText().toString();
+                EnigmaHelper.getEnigma(enigmaUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Log.d(TAG, "onSuccess: EnigmaUid" + enigmaUid);
+                        final Enigma enigma = documentSnapshot.toObject(Enigma.class);
+                        if (enigma.getSolution() != null) {
+                            if (enigma.getSolution().equalsIgnoreCase(response)) {
+                                // Add ResolvedUID to enigma
+                                List<String> resolvedUserUidList = enigma.getResolvedUserUid();
+                                resolvedUserUidList.add(currentUserUid);
+                                final int numberOfResolvedTimes = resolvedUserUidList.size();
+                                EnigmaHelper.updateResolvedUserUidList(resolvedUserUidList, enigmaUid);
+                                // Add enigmaUid to userResolvedEnigma
+                                UserHelper.getUser(currentUserUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                        User currentUser = documentSnapshot.toObject(User.class);
+                                        List<String> userResolvedEnigmaList = currentUser.getUserResolvedEnigmaUidList();
+                                        userResolvedEnigmaList.add(enigmaUid);
+                                        UserHelper.updateUserResolvedEnigmaUidList(userResolvedEnigmaList, currentUserUid).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d(TAG, "onSuccess: User resolved enigmas list updated");
+                                            }
+                                        });
+                                        // Update number of points
+                                        int points = (numberOfResolvedTimes == 1) ? 50 : (numberOfResolvedTimes == 2) ? 30 : (numberOfResolvedTimes == 3) ? 20 : 10;
+                                        currentUser.addPoints(points);
+                                        UserHelper.updateUserPoints(currentUser.getPoints(), currentUserUid).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d(TAG, "onSuccess: User points updated");
+                                            }
+                                        });
+                                        // AlertDialog
+                                        String message;
+                                        switch (numberOfResolvedTimes) {
+                                            case (1):
+                                                message = "Vous êtes le premier à résoudre cette énigme, \n vous remportez 50 points";
+                                                break;
+                                            case (2):
+                                                message = "Vous êtes le second à résoudre cette énigme, \n vous remportez 30 points";
+                                                break;
+                                            case (3):
+                                                message = "Vous êtes le troisième à résoudre cette énigme, \n vous remportez 20 points";
+                                                break;
+                                            default:
+                                                message = "Vous avez résolu l'énigme, \n vous remportez 10 points";
 
+                                        }
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(SolveEnigmaActivity.this);
+                                        TextView alertMessage = new TextView(SolveEnigmaActivity.this);
+                                        alertMessage.setText(message);
+                                        alertMessage.setGravity(Gravity.CENTER);
+                                        builder.setTitle("Félicitations !")
+                                                .setView(alertMessage)
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialogInterface, int which) {
+                                                        //End of activity
+                                                        Intent intent = new Intent();
+                                                        // intent.putExtra(BUNDLE_EXTRA_SCORE, numberOfResolvedTimes);
+                                                        setResult(RESULT_OK, intent);
+                                                        finish();
+                                                    }
+                                                })
+                                                .create()
+                                                .show();
                                     }
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(SolveEnigmaActivity.this);
-                                    TextView alertMessage = new TextView(SolveEnigmaActivity.this);
-                                    alertMessage.setText(message);
-                                    alertMessage.setGravity(Gravity.CENTER);
-                                    builder.setTitle("Félicitations !")
-                                            .setView(alertMessage)
-                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialogInterface, int which) {
-                                                    //End of activity
-                                                    Intent intent = new Intent();
-                                                    // intent.putExtra(BUNDLE_EXTRA_SCORE, numberOfResolvedTimes);
-                                                    setResult(RESULT_OK, intent);
-                                                    finish();
-                                                }
-                                            })
-                                            .create()
-                                            .show();
-                                }
-                            });
-                        } else {
-                            Toast.makeText(SolveEnigmaActivity.this, "Désolé mais cette réponse n'est pas exacte !! ", Toast.LENGTH_SHORT).show();
+                                });
+                            } else {
+                                Toast toast = Toast.makeText(SolveEnigmaActivity.this, "Désolé mais cette réponse n'est pas exacte !! ", Toast.LENGTH_SHORT);
+                                toast.setGravity(Gravity.CENTER, 0, 0);
+                                toast.show();
+                            }
                         }
-                    }
 
-                }
-            });
-        } else {
-            Toast.makeText(this, "Merci d'entrer une réponse !!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Toast toast = Toast.makeText(SolveEnigmaActivity.this, "Merci d'entrer une réponse !!", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+            }
         }
-    }
+    });
+}
 
     // CHAT PART
     @OnClick(R.id.solve_enigma_activity_chat_send_button)

@@ -19,14 +19,17 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.util.ArrayList;
+
 public class EnigmaAdapter extends FirestoreRecyclerAdapter <Enigma, EnigmaAdapter.EnigmaHolder> {
 
-
     private OnItemClickListener listener;
+    private ArrayList<Enigma> mEnigmaArrayList;
 
     public EnigmaAdapter(@NonNull FirestoreRecyclerOptions<Enigma> options) {
         super(options);
     }
+
 
     @Override
     protected void onBindViewHolder(@NonNull final EnigmaHolder holder, int position, @NonNull final Enigma enigma) {

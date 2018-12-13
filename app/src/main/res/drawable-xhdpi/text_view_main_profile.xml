@@ -5,7 +5,7 @@
     android:padding="10dp">
 
     <solid
-        android:color="@color/white"
+        android:color="@color/primaryLightColor"
         />
     <padding
         android:left="0dp"
@@ -15,7 +15,7 @@
         />
     <corners android:radius="10dp"/>
     <stroke
-        android:width="2dp"
-        android:color="@color/colorGreen"
+        android:width="3dp"
+        android:color="@color/primaryDarkColor"
         />
 </shape>

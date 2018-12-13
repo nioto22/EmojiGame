@@ -8,7 +8,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@color/primaryLightColor">
 
 
     <RelativeLayout
@@ -69,10 +70,10 @@
             android:id="@+id/main_activity_button_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/text_view_main_username"
+            android:background="@drawable/text_view_main_blue_color"
             android:text="Username"
-            android:textColor="@color/secondaryTextColor"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/primaryTextColor"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
             android:textStyle="bold"
             android:padding="8dp"
             android:layout_marginTop="10dp"/>
@@ -91,22 +92,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/button_main_play"
-            android:text="PLAY"
+            android:text="JOUER"
             android:textColor="@color/primaryTextColor"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp"/>
+            android:layout_marginBottom="20dp"
+            android:padding="@dimen/default_large_margin"/>
 
         <Button
             android:id="@+id/main_activity_button_create"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/button_main_edit"
-            android:text="@string/create_button"
+            android:text="CREER"
             android:textColor="@color/primaryTextColor"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
             android:layout_centerHorizontal="true"
-            android:layout_below="@+id/main_activity_button_play"/>
+            android:layout_below="@+id/main_activity_button_play"
+            android:padding="@dimen/default_large_margin"/>
 
     </RelativeLayout>
 

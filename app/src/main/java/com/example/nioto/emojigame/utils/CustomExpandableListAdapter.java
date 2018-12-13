@@ -1,7 +1,11 @@
 package com.example.nioto.emojigame.utils;
 
+import android.app.Application;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +13,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
 import com.example.nioto.emojigame.R;
+import com.example.nioto.emojigame.activities.CreateEnigmaActivity;
 
 import java.util.HashMap;
 import java.util.List;

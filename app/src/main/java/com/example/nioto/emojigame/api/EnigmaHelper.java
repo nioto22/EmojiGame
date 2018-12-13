@@ -82,6 +82,7 @@ public class EnigmaHelper {
         }
     }
 
+
     // --- UPDATE ---
 
     public static Task<Void> updateEnigma(String enigma, String uid) {

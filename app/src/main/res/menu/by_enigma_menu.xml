@@ -4,14 +4,15 @@
     <item android:id="@+id/menu_enigma_all"
         android:title="Toutes"
         android:checkable="true"/>
+    <item android:id="@+id/menu_enigma_unresolved"
+        android:title="Non résolue"
+        android:checked="false"
+        android:checkable="true"/>
+    <item android:id="@+id/menu_enigma_resolved"
+        android:title="Résolue"
+        android:checkable="true"/>
     <item android:id="@+id/menu_enigma_own"
         android:title="Créée par vous"
         android:checkable="true"/>
-   <item android:id="@+id/menu_enigma_resolved"
-        android:title="Résolue"
-       android:checkable="true"/>
- <!--   <item android:id="@+id/menu_enigma_unresolved"
-        android:title="Non résolue"
-        android:checked="false"
-        android:checkable="true"/>  -->
+
 </menu>

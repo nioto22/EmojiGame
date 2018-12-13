@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.nioto.emojigame.activities.PlayActivity">
+    tools:context="com.example.nioto.emojigame.activities.PlayActivity"
+    android:background="@color/primaryLightColor">
     <LinearLayout
         android:id="@+id/activity_play_filter_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/primaryLightColor"
+        android:background="@color/primaryColor"
         android:layout_alignParentStart="true"
         android:gravity="center_horizontal"
         android:padding="8dp">
@@ -38,14 +39,6 @@
 
     </LinearLayout>
     <!-- RECYCLER VIEW CONTAINER -->
-    <TextView
-        android:id="@+id/activity_play_text_view_no_enigma"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Aucune énigme ne correspond à ces catégories"
-        android:layout_centerInParent="true"
-        android:gravity="center_horizontal"
-        android:visibility="gone"/>
     <LinearLayout
         android:id="@+id/activity_play_enigma_recycler_view_container"
         android:layout_width="match_parent"

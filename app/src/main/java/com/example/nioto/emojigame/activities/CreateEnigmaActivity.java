@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ExpandableListAdapter;
@@ -204,18 +205,27 @@ public class CreateEnigmaActivity extends BaseActivity {
     }
 
     private void onClickHelpButton(String buttonCategory){
+        Toast toast;
         switch (buttonCategory){
             case "enigma" :
-                Toast.makeText(this, "Help Enigma clicked", Toast.LENGTH_SHORT).show();
+                toast = Toast.makeText(this, "Help Enigma clicked", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
                 break;
             case "solution" :
-                Toast.makeText(this, "Help Solution clicked", Toast.LENGTH_SHORT).show();
+                toast = Toast.makeText(this, "Help Solution clicked", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
                 break;
             case "category" :
-                Toast.makeText(this, "Help Category clicked", Toast.LENGTH_SHORT).show();
+                toast = Toast.makeText(this, "Help Category clicked", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
                 break;
             case "message" :
-                Toast.makeText(this, "Help Message clicked", Toast.LENGTH_SHORT).show();
+                toast = Toast.makeText(this, "Help Message clicked", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
                 break;
             default:
                 break;
@@ -240,7 +250,9 @@ public class CreateEnigmaActivity extends BaseActivity {
             ivEnigmaAsterisk.setVisibility(View.VISIBLE);
             ivSolutionAsterisk.setVisibility(View.VISIBLE);
             ivCategoryAsterisk.setVisibility(View.VISIBLE);
-            Toast.makeText(this, "Veuillez remplir tous les champs marqués d'un astérisque !", Toast.LENGTH_SHORT).show();
+            Toast toast = Toast.makeText(this, "Veuillez remplir tous les champs marqués d'un astérisque !", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
             return false;
         } else return true;
     }

@@ -3,6 +3,7 @@ package com.example.nioto.emojigame;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -61,10 +62,14 @@ public class MainActivity extends BaseActivity {
 
         if (requestCode == INTENT_CREATE_ACTIVITY_KEY){
             if (resultCode == RESULT_OK){
-                Toast.makeText(this, "Nouvelle énigme enregistrée, bravo, vous gagnez 10 points !", Toast.LENGTH_SHORT).show();
+                Toast toast = Toast.makeText(this, "Nouvelle énigme enregistrée, bravo, vous gagnez 10 points !", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
                 this.updateUIWhenCreating();
             }else {
-                Toast.makeText(this, "Enigme non sauvegardée !", Toast.LENGTH_SHORT).show();
+                Toast toast = Toast.makeText(this, "Enigme non sauvegardée !", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
                 this.updateUIWhenCreating();
             }
         }
