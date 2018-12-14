@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/category_all"
         android:title="Toutes"
         android:checkable="true"/>
@@ -18,6 +17,9 @@
         android:checkable="true"/>
     <item android:id="@+id/category_objet"
         android:title="Objet"
+        android:checkable="true"/>
+    <item android:id="@+id/category_mot"
+        android:title="Nom Commun"
         android:checkable="true"/>
     <item android:id="@+id/category_autres"
         android:title="Autres"

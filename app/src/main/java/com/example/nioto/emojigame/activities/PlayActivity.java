@@ -55,6 +55,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     MenuItem itemMusic;
     MenuItem itemExpressions;
     MenuItem itemObject ;
+    MenuItem itemWord ;
     MenuItem itemOther;
     MenuItem itemEnigmaAll;
     MenuItem itemEnigmaOwn;
@@ -80,6 +81,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     public static final String ITEM_MUSIC_NAME = "itemMusic";
     public static final String ITEM_EXPRESSION_NAME = "itemExpressions";
     public static final String ITEM_OBJECT_NAME = "itemObject";
+    public static final String ITEM_WORD_NAME = "itemWord";
     public static final String ITEM_OTHER_NAME = "itemOther";
     public static final String SORT_CATEGORY_ALL_NAME = "byDateDesc";
     public static final String SORT_CATEGORY_PERSONAGE_NAME = "byCategoryPersonage";
@@ -87,6 +89,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     public static final String SORT_CATEGORY_MUSIC_NAME = "byCategoryMusic";
     public static final String SORT_CATEGORY_EXPRESSION_NAME = "byCategoryExpressions";
     public static final String SORT_CATEGORY_OBJECT_NAME = "byCategoryObject";
+    public static final String SORT_CATEGORY_WORD_NAME = "byCategoryWord";
     public static final String SORT_CATEGORY_OTHER_NAME = "byCategoryOther";
     public static final String ITEM_ENIGMA_ALL_NAME = "itemEnigmaAll";
     public static final String ITEM_ENIGMA_OWN_NAME = "itemEnigmaOwn";
@@ -102,6 +105,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     public static final String BUTTON_CATEGORY_MUSIC_TEXT = "MUSIQUE";
     public static final String BUTTON_CATEGORY_EXPRESSION_TEXT = "EXPRESSIONS";
     public static final String BUTTON_CATEGORY_OBJECT_TEXT = "OBJET";
+    public static final String BUTTON_CATEGORY_WORD_TEXT = "NOM COMMUN";
     public static final String BUTTON_CATEGORY_OTHER_TEXT = "AUTRE";
 
 
@@ -270,6 +274,16 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                 setUpRecyclerView();
                 adapter.startListening();
                 break;
+            case R.id.category_mot :
+                getAllItemUnchecked(FILTER_CATEGORY);
+                categoryChecked = ITEM_WORD_NAME;
+                filterCategory = SORT_CATEGORY_WORD_NAME;
+                categoryButtonString = BUTTON_CATEGORY_WORD_TEXT;
+                updateButtonText(FILTER_CATEGORY);
+                setUpFilterChecked(categoryChecked);
+                setUpRecyclerView();
+                adapter.startListening();
+                break;
             case R.id.category_autres :
                 getAllItemUnchecked(FILTER_CATEGORY);
                 categoryChecked = ITEM_OTHER_NAME;
@@ -332,6 +346,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                 itemMusic = popupMenuCategory2.getMenu().findItem(R.id.category_musique);
                 itemExpressions = popupMenuCategory2.getMenu().findItem(R.id.category_expressions);
                 itemObject = popupMenuCategory2.getMenu().findItem(R.id.category_objet);
+                itemWord = popupMenuCategory2.getMenu().findItem(R.id.category_mot);
                 itemOther = popupMenuCategory2.getMenu().findItem(R.id.category_autres);
                 setUpFilterChecked(FILTER_CATEGORY);
                 break;

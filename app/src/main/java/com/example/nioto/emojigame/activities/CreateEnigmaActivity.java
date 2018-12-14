@@ -30,7 +30,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -67,6 +66,7 @@ public class CreateEnigmaActivity extends BaseActivity {
     private String mCategory;
     private String mMessage;
     private String enigmaUid;
+    public static final String categoryOtherText = "Autres";
 
 
     @Override
@@ -117,8 +117,7 @@ public class CreateEnigmaActivity extends BaseActivity {
                 textViewCategoryChoosed.setText(expandableListDetail.get(
                         expandableListTitle.get(groupPosition)).get(
                         childPosition));
-                String categoryHint = "Autres";
-                if (textViewCategoryChoosed.getText().toString().equals(categoryHint)){
+                if (textViewCategoryChoosed.getText().toString().equals(categoryOtherText)){
                     rlOtherLayout.setVisibility(View.VISIBLE);
                 }
                 return false;
@@ -241,7 +240,9 @@ public class CreateEnigmaActivity extends BaseActivity {
         mEnigma = etEnigma.getText().toString();
         Log.d(TAG, "checkMandatoryInputsNotNull: enigma = " + mEnigma);
         mSolution = etSolution.getText().toString();
-        mCategory = textViewCategoryChoosed.getText().toString() + " : " + etOther.getText().toString() ;
+        mCategory = textViewCategoryChoosed.getText().toString() +
+                ((textViewCategoryChoosed.getText().equals(categoryOtherText) && etOther != null) ?
+                        " : " + etOther.getText().toString() : "") ;
         mMessage = etMessage.getText().toString();
 
         String categoryHint = getResources().getString(R.string.tv_category_choosed);

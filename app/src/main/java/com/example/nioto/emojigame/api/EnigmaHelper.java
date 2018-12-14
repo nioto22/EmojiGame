@@ -68,6 +68,10 @@ public class EnigmaHelper {
                 query =  EnigmaHelper.getEnigmaCollection()
                         .whereEqualTo("category", "Objet");
                 return query;
+            case "byCategoryWord" :
+                query =  EnigmaHelper.getEnigmaCollection()
+                        .whereEqualTo("category", "Nom Commun");
+                return query;
             case "byCategoryOther" :
                 query =  EnigmaHelper.getEnigmaCollection()
                         .orderBy("category")
