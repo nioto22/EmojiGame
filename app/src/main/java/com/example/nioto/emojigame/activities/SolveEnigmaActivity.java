@@ -290,11 +290,11 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 currentUser = documentSnapshot.toObject(User.class);
                 if (currentUser.getUserResolvedEnigmaUidList().contains(enigmaUid)){
-                    Toast toast = Toast.makeText(SolveEnigmaActivity.this, "Vous avez déjà répondu à cette énigme"
+                    Toast toast = Toast.makeText(SolveEnigmaActivity.this, R.string.enigma_already_solved
                             , Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();
-                }else if(enigmaResponse.getText()!=null) {
+                }else if(!enigmaResponse.getText().toString().equals("")) {
                     final String response = enigmaResponse.getText().toString();
                 EnigmaHelper.getEnigma(enigmaUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override

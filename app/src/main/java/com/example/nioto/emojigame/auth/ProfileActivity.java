@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
@@ -25,7 +26,9 @@ import com.example.nioto.emojigame.api.UserHelper;
 import com.example.nioto.emojigame.base.BaseActivity;
 import com.example.nioto.emojigame.models.User;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -274,11 +277,17 @@ public class ProfileActivity extends BaseActivity {
                     .addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            String pathImageSavedInFirebase = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
-                            // B - Update Image of User
-                            UserHelper.updateUserPhoto(pathImageSavedInFirebase, userUid).addOnFailureListener(onFailureListener());
-                            UserHelper.updateUserHasChangedPicture(true, userUid);
-                            progressBar.setVisibility(View.INVISIBLE);
+                           // String pathImageSavedInFirebase = taskSnapshot.getStorage().getDownloadUrl().getResult();
+                            Task<Uri> urlTask = taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Uri> task) {
+                                    String pathImageSavedInFirebase = task.getResult().toString();
+                                    // B - Update Image of User
+                                    UserHelper.updateUserPhoto(pathImageSavedInFirebase, userUid).addOnFailureListener(onFailureListener());
+                                    UserHelper.updateUserHasChangedPicture(true, userUid);
+                                    progressBar.setVisibility(View.INVISIBLE);
+                                }
+                            });
                         }
                     }).addOnFailureListener(this.onFailureListener());
         }

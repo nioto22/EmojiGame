@@ -12,6 +12,7 @@ import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.api.UserHelper;
 import com.example.nioto.emojigame.models.Enigma;
 import com.example.nioto.emojigame.models.User;
+import com.firebase.ui.common.BaseChangeEventListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,8 +22,11 @@ import java.util.ArrayList;
 
 public class UnsolvedEnigmaAdapter extends RecyclerView.Adapter<UnsolvedEnigmaAdapter.UnsolvedEnigmaVIewHolder> {
 
+
+
     private OnItemClickListener mListener;
     private ArrayList <Enigma> mEnigmaArrayList;
+
 
     public static class UnsolvedEnigmaVIewHolder extends RecyclerView.ViewHolder{
         public TextView tvEnigma;
@@ -99,13 +103,14 @@ public class UnsolvedEnigmaAdapter extends RecyclerView.Adapter<UnsolvedEnigmaAd
     }
 
 
+
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
 
+
+
     public void setOnItemClickListener(OnItemClickListener onItemClickListener){
         this.mListener = onItemClickListener;
     }
-
-
 }

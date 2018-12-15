@@ -33,7 +33,7 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 
-public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemClickListener {
+public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemClickListener, EnigmaAdapter.Listener {
 
     private static final String TAG = "PlayActivity";
 
@@ -107,6 +107,10 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     public static final String BUTTON_CATEGORY_OBJECT_TEXT = "OBJET";
     public static final String BUTTON_CATEGORY_WORD_TEXT = "NOM COMMUN";
     public static final String BUTTON_CATEGORY_OTHER_TEXT = "AUTRE";
+    public static final String ALL_TEXT = "Tous";
+    public static final String USER_COLLECTION = "users";
+    public static final String FIREBASE_FIELD_USERUID = "userUid";
+    public static final String FIREBASE_FIELD_RESOLVED_USERUID = "resolvedUserUid";
 
 
     @Override
@@ -115,11 +119,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
 
         setUpRecyclerView();
         setUpFilterButtonsViews();
-
-
     }
-
-
 
     @Override
     public int getFragmentLayout() {
@@ -141,12 +141,11 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
             public void onClick(View view) {
 
                 final PopupMenu popupMenuPlayer = new PopupMenu(PlayActivity.this, buttonByPlayer);
-                FirebaseFirestore.getInstance().collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                FirebaseFirestore.getInstance().collection(USER_COLLECTION).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        Log.d(TAG, "onComplete: task ok");
                         if(task.isSuccessful()){
-                            popupMenuPlayer.getMenu().add("Tous");
+                            popupMenuPlayer.getMenu().add(ALL_TEXT);
                             for (DocumentSnapshot documentSnapshot : task.getResult()){
                                 User user = documentSnapshot.toObject(User.class);
                                 userList.put(user.getUsername(), user.getUid());
@@ -164,13 +163,12 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                                 updateButtonText(FILTER_ENIGMA);
                                 setUpFilterChecked(FILTER_CATEGORY);
                                 setUpFilterChecked(FILTER_ENIGMA);
-                                if (item.getTitle().toString() == "Tous"){
+                                if (item.getTitle().toString().equals(ALL_TEXT)){
                                     Query query = EnigmaHelper.getAllEnigma(SORT_CATEGORY_ALL_NAME);
                                     displayRecyclerView(query);
                                     adapter.startListening();
                                 } else {
                                     String userUid = userList.get(item.getTitle().toString());
-                                    Log.d(TAG, "onMenuItemClick: player = " + userUid);
                                     Query query = EnigmaHelper.getAllEnigma(SORT_CATEGORY_ALL_NAME)
                                             .whereEqualTo("userUid", userUid);
                                     displayRecyclerView(query);
@@ -457,10 +455,10 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                 query = query;
                 break;
             case ITEM_ENIGMA_OWN_NAME :
-                query = query.whereEqualTo("userUid", getCurrentUser().getUid());
+                query = query.whereEqualTo(FIREBASE_FIELD_USERUID, getCurrentUser().getUid());
                 break;
             case ITEM_ENIGMA_RESOLVED_NAME :
-                query = query.whereArrayContains("resolvedUserUid", getCurrentUser().getUid());
+                query = query.whereArrayContains(FIREBASE_FIELD_RESOLVED_USERUID, getCurrentUser().getUid());
                 break;
             case ITEM_ENIGMA_UNRESOLVED_NAME :
                 adapter.stopListening();
@@ -470,13 +468,13 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                         if (task.isSuccessful()) {
                             final ArrayList <Enigma> unsolvedEnigmaList = new ArrayList<>();
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("TAG", "Document Id: " + document.getId());
                                 Enigma enigma = document.toObject(Enigma.class);
                                 if (!enigma.getResolvedUserUid().contains(getCurrentUser().getUid())
                                         && !enigma.getUserUid().equals(getCurrentUser().getUid())){
                                     unsolvedEnigmaList.add(enigma);
                                 }
                             }
+                            tvNoEnigma.setVisibility(unsolvedEnigmaList.size() == 0 ? View.VISIBLE : View.GONE);
                             unsolvedRecyclerView = findViewById(R.id.activity_play_enigma_recycler_view);
                             unsolvedRecyclerView.setHasFixedSize(true);
                             unsolvedLayoutManager = new LinearLayoutManager(PlayActivity.this);
@@ -485,6 +483,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                             unsolvedRecyclerView.setLayoutManager(unsolvedLayoutManager);
                             unsolvedEnigmaAdapter.notifyDataSetChanged();
                             unsolvedRecyclerView.setAdapter(unsolvedEnigmaAdapter);
+
 
                             unsolvedEnigmaAdapter.setOnItemClickListener(new UnsolvedEnigmaAdapter.OnItemClickListener() {
                                 @Override
@@ -509,13 +508,15 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                 new FirestoreRecyclerOptions.Builder<Enigma>()
                         .setQuery(query, Enigma.class)
                         .build();
-        adapter = new EnigmaAdapter(options);
+        adapter = new EnigmaAdapter(options, this);
         RecyclerView recyclerView = findViewById(R.id.activity_play_enigma_recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter.notifyDataSetChanged();
-        tvNoEnigma.setVisibility((this.adapter.getItemCount() == 0)? View.GONE : View.VISIBLE);
+
         recyclerView.setAdapter(adapter);
+
+
 
         this.adapter.setOnItemClickListener(new EnigmaAdapter.OnItemClickListener() {
             @Override
@@ -532,6 +533,11 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     protected void onStart() {
         super.onStart();
         adapter.startListening();
+    }
+
+    @Override
+    public void onDataChanged(){
+        tvNoEnigma.setVisibility(this.adapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
     }
 
     @Override

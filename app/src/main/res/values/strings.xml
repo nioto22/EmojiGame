@@ -40,6 +40,11 @@
     <string name="toolbar_title_create_enigma_activity">Créer une Enigme</string>
     <string name="create_button">CREATE</string>
     <string name="tv_category_choosed">Category ...</string>
+    <string name="login_welcome">Bienvenue</string>
+    <string name="login_text_game">Venez défier vos amis   dans ce jeu de rébus d\'un nouveau genre</string>
+    <string name="login_text_connexion">Pour commencer à vous amuser, connectez vous : </string>
+    <string name="enigma_already_solved">Vous avez déjà répondu à cette énigme</string>
+    <string name="no_enigma_filter">Il n\'y a pour le moment aucune énigme correspondante</string>
 
 
 </resources>

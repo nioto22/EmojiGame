@@ -23,11 +23,18 @@ import java.util.ArrayList;
 
 public class EnigmaAdapter extends FirestoreRecyclerAdapter <Enigma, EnigmaAdapter.EnigmaHolder> {
 
+    public interface Listener {
+        void onDataChanged();
+    }
+
     private OnItemClickListener listener;
     private ArrayList<Enigma> mEnigmaArrayList;
+    //FOR COMMUNICATION
+    private Listener callback;
 
-    public EnigmaAdapter(@NonNull FirestoreRecyclerOptions<Enigma> options) {
+    public EnigmaAdapter(@NonNull FirestoreRecyclerOptions<Enigma> options, Listener callback) {
         super(options);
+        this.callback = callback;
     }
 
 
@@ -103,5 +110,10 @@ public class EnigmaAdapter extends FirestoreRecyclerAdapter <Enigma, EnigmaAdapt
         this.listener = listener;
     }
 
+    @Override
+    public void onDataChanged() {
+        super.onDataChanged();
+        this.callback.onDataChanged();
+    }
 
 }
