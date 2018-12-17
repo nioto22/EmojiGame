@@ -45,6 +45,7 @@
     <string name="login_text_connexion">Pour commencer à vous amuser, connectez vous : </string>
     <string name="enigma_already_solved">Vous avez déjà répondu à cette énigme</string>
     <string name="no_enigma_filter">Il n\'y a pour le moment aucune énigme correspondante</string>
+    <string name="create_activity_update_button">UPDATE</string>
 
 
 </resources>

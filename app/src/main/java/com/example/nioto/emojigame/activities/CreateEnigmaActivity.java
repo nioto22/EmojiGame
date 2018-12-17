@@ -1,16 +1,26 @@
 package com.example.nioto.emojigame.activities;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
+import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -52,7 +62,9 @@ public class CreateEnigmaActivity extends BaseActivity {
     @BindView(R.id.create_activity_progressbar) ProgressBar progressBar;
     @BindView(R.id.create_activity_create_button) Button createButton;
     @BindView(R.id.create_activity_update_button) Button updateButton;
+    @BindView(R.id.create_activity_enigma_help) ImageButton enigmaHelp;
 
+    PopupWindow helpPopUpWindow;
 
     // FOR CATEGORY LIST VIEW
     ExpandableListView expandableListView;
@@ -137,6 +149,45 @@ public class CreateEnigmaActivity extends BaseActivity {
             }
         });
     }
+
+    private void showSortPopup(final Activity context, Point p)
+    {
+        // Inflate the popup_layout.xml
+        LinearLayout viewGroup = (LinearLayout) context.findViewById(R.id.help_popu_create_enigma_activity_rl_global);
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = layoutInflater.inflate(R.layout.popup_help_create_enigma, viewGroup);
+
+        // Creating the PopupWindow
+        helpPopUpWindow = new PopupWindow(context);
+        helpPopUpWindow.setContentView(layout);
+        helpPopUpWindow.setWidth(LinearLayout.LayoutParams.WRAP_CONTENT);
+        helpPopUpWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
+        helpPopUpWindow.setFocusable(true);
+
+        // Some offset to align the popup a bit to the left, and a bit down, relative to button's position.
+        int OFFSET_X = -20;
+        int OFFSET_Y = 95;
+
+        // Clear the default translucent background
+        helpPopUpWindow.setBackgroundDrawable(new BitmapDrawable());
+
+        // Displaying the popup at the specified location, + offsets.
+        helpPopUpWindow.showAtLocation(layout, Gravity.NO_GRAVITY, p.x + OFFSET_X, p.y + OFFSET_Y);
+
+
+        // Getting a reference to Close button, and close the popup when clicked.
+        Button close = (Button) layout.findViewById(R.id.help_popup_close);
+        close.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                helpPopUpWindow.dismiss();
+            }
+        });
+
+    }
+
+
     // ------------------
     //      ACTION
     // ------------------
@@ -207,6 +258,9 @@ public class CreateEnigmaActivity extends BaseActivity {
         Toast toast;
         switch (buttonCategory){
             case "enigma" :
+                int mWidth= this.getResources().getDisplayMetrics().widthPixels;
+                int mHeight= this.getResources().getDisplayMetrics().heightPixels;
+                showSortPopup(this, new Point(mWidth,mHeight));
                 toast = Toast.makeText(this, "Help Enigma clicked", Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/create_enigma_activity_rl_global"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/help_popu_create_enigma_activity_rl_global"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -23,24 +24,14 @@
             android:inputType="textShortMessage|textAutoCorrect|textCapSentences|textMultiLine"
             android:imeOptions="actionSend|flagNoEnterAction"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
-        <ImageButton
-            android:id="@+id/create_activity_enigma_help"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_help_24dp"
-            android:background="@color/primaryLightColor"
-            android:layout_gravity="end"
-            android:layout_margin="20dp" />
-        <ImageView
-            android:id="@+id/create_activity_enigma_asterisk"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/asterisk"
-            android:layout_gravity="center"
-            android:layout_marginStart="75dp"
-            android:layout_marginBottom="25dp"
-            android:visibility="gone"/>
 
+    <Button
+        android:id="@+id/help_popup_close"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="top|end"
+        android:background="@drawable/close"
+        android:layout_margin="@dimen/default_margin"/>
     </FrameLayout>
     <!-- Text Inputs Layout  -->
     <android.support.design.widget.TextInputLayout
@@ -239,10 +230,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                android:background="@drawable/button_create_update"
+                android:background="@drawable/button_radius_primary_light_color"
                 android:layout_margin="10dp"
                 android:layout_centerInParent="true"
-                android:text="@string/create_activity_update_button"
+                android:text="UPDATE"
                 android:textColor="@color/secondaryTextColor"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
             <ProgressBar
