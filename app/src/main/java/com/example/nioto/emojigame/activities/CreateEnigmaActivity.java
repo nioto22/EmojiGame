@@ -7,12 +7,15 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
@@ -26,6 +29,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.nioto.emojigame.MainActivity;
 import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.api.EnigmaHelper;
 import com.example.nioto.emojigame.api.UserHelper;
@@ -150,8 +154,10 @@ public class CreateEnigmaActivity extends BaseActivity {
         });
     }
 
-    private void showSortPopup(final Activity context, Point p)
+    private void showSortPopup(final Activity context)
     {
+        hideKeyboardwithoutPopulate(CreateEnigmaActivity.this);
+
         // Inflate the popup_layout.xml
         LinearLayout viewGroup = (LinearLayout) context.findViewById(R.id.help_popu_create_enigma_activity_rl_global);
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -164,16 +170,11 @@ public class CreateEnigmaActivity extends BaseActivity {
         helpPopUpWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
         helpPopUpWindow.setFocusable(true);
 
-        // Some offset to align the popup a bit to the left, and a bit down, relative to button's position.
-        int OFFSET_X = -20;
-        int OFFSET_Y = 95;
-
         // Clear the default translucent background
         helpPopUpWindow.setBackgroundDrawable(new BitmapDrawable());
 
         // Displaying the popup at the specified location, + offsets.
-        helpPopUpWindow.showAtLocation(layout, Gravity.NO_GRAVITY, p.x + OFFSET_X, p.y + OFFSET_Y);
-
+        helpPopUpWindow.showAtLocation(layout, Gravity.CENTER, 0,0);
 
         // Getting a reference to Close button, and close the popup when clicked.
         Button close = (Button) layout.findViewById(R.id.help_popup_close);
@@ -239,50 +240,19 @@ public class CreateEnigmaActivity extends BaseActivity {
 
     @OnClick (R.id.create_activity_enigma_help)
     public void onClickEnigmaHelpButton(){
-        onClickHelpButton("enigma");
+        showSortPopup(this);
     }
     @OnClick (R.id.create_activity_solution_help)
     public void onClickSolutionHelpButton(){
-        onClickHelpButton("solution");
+        showSortPopup(this);
     }
     @OnClick (R.id.create_activity_category_help)
     public void onClickCategoryHelpButton(){
-        onClickHelpButton("category");
+        showSortPopup(this);
     }
     @OnClick (R.id.create_activity_message_help)
     public void onClickMessageHelpButton(){
-        onClickHelpButton("message");
-    }
-
-    private void onClickHelpButton(String buttonCategory){
-        Toast toast;
-        switch (buttonCategory){
-            case "enigma" :
-                int mWidth= this.getResources().getDisplayMetrics().widthPixels;
-                int mHeight= this.getResources().getDisplayMetrics().heightPixels;
-                showSortPopup(this, new Point(mWidth,mHeight));
-                toast = Toast.makeText(this, "Help Enigma clicked", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
-                break;
-            case "solution" :
-                toast = Toast.makeText(this, "Help Solution clicked", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
-                break;
-            case "category" :
-                toast = Toast.makeText(this, "Help Category clicked", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
-                break;
-            case "message" :
-                toast = Toast.makeText(this, "Help Message clicked", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
-                break;
-            default:
-                break;
-        }
+        showSortPopup(this);
     }
 
 
@@ -310,6 +280,14 @@ public class CreateEnigmaActivity extends BaseActivity {
             toast.show();
             return false;
         } else return true;
+    }
+
+    public static void hideKeyboardwithoutPopulate(Activity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(
+                activity.getCurrentFocus().getWindowToken(), 0);
     }
 
 }
