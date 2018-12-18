@@ -19,16 +19,6 @@
         android:padding="15dp"
         android:orientation="horizontal"
         android:gravity="center">
-        <!-- No Image Button
-        <ImageButton
-            android:id="@+id/main_activity_button_settings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:background="@drawable/button_radius_yellow_color"
-            android:src="@drawable/outline_settings_black_48dp"
-            android:padding="2dp"
-            /> -->
         <TextView
             android:id="@+id/main_activity_tv_user_point"
             android:layout_width="wrap_content"
@@ -40,16 +30,6 @@
             android:textColor="@color/primaryTextColor"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             />
-        <!-- No Image Button
-    <ImageButton
-    android:id="@+id/main_activity_button_score"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentEnd="true"
-    android:background="@drawable/button_radius_yellow_color"
-    android:src="@drawable/star_black_48dp"
-    android:padding="2dp"
-    /> -->
     </RelativeLayout>
     <!-- PROFILE IMAGE -->
     <LinearLayout
