@@ -13,9 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -24,6 +22,7 @@ import com.example.nioto.emojigame.api.EnigmaHelper;
 import com.example.nioto.emojigame.base.BaseActivity;
 import com.example.nioto.emojigame.models.Enigma;
 import com.example.nioto.emojigame.models.User;
+import com.example.nioto.emojigame.utils.Constants;
 import com.example.nioto.emojigame.view.EnigmaAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -70,54 +69,16 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     MenuItem itemEnigmaUnresolved;
     TextView tvEnigmaButton;
     TextView tvCategoryButton;
-    private String filterCategory = SORT_CATEGORY_ALL_NAME;
-    private String categoryChecked = ITEM_ALL_NAME;
-    private String enigmaItemChecked = ITEM_ENIGMA_ALL_NAME;
-    private String enigmaButtonString = BUTTON_ENIGMA_ALL_TEXT;
-    private String categoryButtonString = BUTTON_CATEGORY_ALL_TEXT;
+    private String filterCategory = Constants.SORT_CATEGORY_ALL_NAME;
+    private String categoryChecked = Constants.ITEM_ALL_NAME;
+    private String enigmaItemChecked = Constants.ITEM_ENIGMA_UNRESOLVED_NAME;
+    private String enigmaButtonString = Constants.BUTTON_ENIGMA_UNRESOLVED_TEXT;
+    private String categoryButtonString = Constants.BUTTON_CATEGORY_ALL_TEXT;
     private final ArrayList<User> userList = new ArrayList<>();
     private final HashMap<String, String> userHashMapList = new HashMap<>();
     private InputMethodManager imm;
 
-    // FOR DATA
-    public static final String POPUP_CATEGORY_MENU_NAME = "POPUP_CATEGORY_MENU_NAME";
-    public static final String POPUP_ENIGMA_MENU_NAME = "POPUP_ENIGMA_MENU_NAME";
-    public static final String FILTER_CATEGORY = "FILTER_CATEGORY";
-    public static final String FILTER_ENIGMA = "FILTER_ENIGMA";
-    public static final String ITEM_ALL_NAME = "itemAll";
-    public static final String ITEM_PERSONAGE_NAME = "itemPersonage";
-    public static final String ITEM_CINEMA_NAME = "itemCinema";
-    public static final String ITEM_MUSIC_NAME = "itemMusic";
-    public static final String ITEM_EXPRESSION_NAME = "itemExpressions";
-    public static final String ITEM_OBJECT_NAME = "itemObject";
-    public static final String ITEM_WORD_NAME = "itemWord";
-    public static final String ITEM_OTHER_NAME = "itemOther";
-    public static final String SORT_CATEGORY_ALL_NAME = "byDateDesc";
-    public static final String SORT_CATEGORY_PERSONAGE_NAME = "byCategoryPersonage";
-    public static final String SORT_CATEGORY_CINEMA_NAME = "byCategoryCinema";
-    public static final String SORT_CATEGORY_MUSIC_NAME = "byCategoryMusic";
-    public static final String SORT_CATEGORY_EXPRESSION_NAME = "byCategoryExpressions";
-    public static final String SORT_CATEGORY_OBJECT_NAME = "byCategoryObject";
-    public static final String SORT_CATEGORY_WORD_NAME = "byCategoryWord";
-    public static final String SORT_CATEGORY_OTHER_NAME = "byCategoryOther";
-    public static final String ITEM_ENIGMA_ALL_NAME = "itemEnigmaAll";
-    public static final String ITEM_ENIGMA_OWN_NAME = "itemEnigmaOwn";
-    public static final String ITEM_ENIGMA_RESOLVED_NAME = "itemEnigmaResolved";
-    public static final String ITEM_ENIGMA_UNRESOLVED_NAME = "itemEnigmaUnresolved";
-    public static final String BUTTON_ENIGMA_ALL_TEXT = "TOUTES";
-    public static final String BUTTON_ENIGMA_OWN_TEXT = "PAR VOUS";
-    public static final String BUTTON_ENIGMA_RESOLVED_TEXT = "RESOLUE";
-    public static final String BUTTON_ENIGMA_UNRESOLVED_TEXT = "NON RESOLUE";
-    public static final String BUTTON_CATEGORY_ALL_TEXT = "CATEGORIE";
-    public static final String BUTTON_CATEGORY_PERSONAGE_TEXT = "PERSONNAGE";
-    public static final String BUTTON_CATEGORY_CINEMA_TEXT = "CINEMA";
-    public static final String BUTTON_CATEGORY_MUSIC_TEXT = "MUSIQUE";
-    public static final String BUTTON_CATEGORY_EXPRESSION_TEXT = "EXPRESSIONS";
-    public static final String BUTTON_CATEGORY_OBJECT_TEXT = "OBJET";
-    public static final String BUTTON_CATEGORY_WORD_TEXT = "NOM COMMUN";
-    public static final String BUTTON_CATEGORY_OTHER_TEXT = "AUTRE";
-    public static final String ALL_TEXT = "Tous";
-    public static final String USER_COLLECTION = "users";
+
 
 
     @Override
@@ -125,6 +86,8 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
         super.onCreate(savedInstanceState);
 
         setUpRecyclerView();
+        updateButtonText(Constants.FILTER_ENIGMA);
+        updateButtonText(Constants.FILTER_CATEGORY);
         setUpFilterButtonsViews();
 
 
@@ -180,7 +143,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                         final String stSearch = editable.toString().toLowerCase();
                         final ArrayList<Enigma> enigmaFilteredList = new ArrayList<>();
                         final ArrayList<String> enigmaUidFilteredList = new ArrayList<>();
-                        FirebaseFirestore.getInstance().collection(USER_COLLECTION).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        FirebaseFirestore.getInstance().collection(Constants.USER_COLLECTION).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
@@ -244,12 +207,13 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
         buttonByCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                relativeLayoutPlayerSearch.setVisibility(View.GONE);
                 etPlayerSearch.setVisibility(View.GONE);
                 buttonByPlayer.setVisibility(View.VISIBLE);
                 PopupMenu popupMenuCategory = new PopupMenu(PlayActivity.this, buttonByCategory);
                 popupMenuCategory.setOnMenuItemClickListener(PlayActivity.this);
                 popupMenuCategory.inflate(R.menu.by_category_menu);
-                setUpCategoryMenus(popupMenuCategory, POPUP_CATEGORY_MENU_NAME);
+                setUpCategoryMenus(popupMenuCategory, Constants.POPUP_CATEGORY_MENU_NAME);
                 popupMenuCategory.show();
 
             }
@@ -257,10 +221,13 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
         buttonByEnigma.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                relativeLayoutPlayerSearch.setVisibility(View.GONE);
+                etPlayerSearch.setVisibility(View.GONE);
+                buttonByPlayer.setVisibility(View.VISIBLE);
                 final PopupMenu popupMenuEnigma = new PopupMenu(PlayActivity.this, buttonByEnigma);
                 popupMenuEnigma.setOnMenuItemClickListener(PlayActivity.this);
                 popupMenuEnigma.inflate(R.menu.by_enigma_menu);
-                setUpCategoryMenus(popupMenuEnigma, POPUP_ENIGMA_MENU_NAME);
+                setUpCategoryMenus(popupMenuEnigma, Constants.POPUP_ENIGMA_MENU_NAME);
                 popupMenuEnigma.show();
             }
         });
@@ -273,107 +240,107 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
         switch  (item.getItemId()){
             // Category item
             case  R.id.category_all:
-                getAllItemUnchecked(FILTER_CATEGORY);
-                categoryChecked = ITEM_ALL_NAME;
-                filterCategory = SORT_CATEGORY_ALL_NAME;
-                categoryButtonString = BUTTON_CATEGORY_ALL_TEXT;
-                updateButtonText(FILTER_CATEGORY);
+                getAllItemUnchecked(Constants.FILTER_CATEGORY);
+                categoryChecked = Constants.ITEM_ALL_NAME;
+                filterCategory = Constants.SORT_CATEGORY_ALL_NAME;
+                categoryButtonString = Constants.BUTTON_CATEGORY_ALL_TEXT;
+                updateButtonText(Constants.FILTER_CATEGORY);
                 setUpFilterChecked(categoryChecked);
                 setUpRecyclerView();
                 return false;
             case R.id.category_personnage :
-                getAllItemUnchecked(FILTER_CATEGORY);
-                categoryChecked = ITEM_PERSONAGE_NAME;
-                filterCategory = SORT_CATEGORY_PERSONAGE_NAME;
-                categoryButtonString = BUTTON_CATEGORY_PERSONAGE_TEXT;
-                updateButtonText(FILTER_CATEGORY);
+                getAllItemUnchecked(Constants.FILTER_CATEGORY);
+                categoryChecked = Constants.ITEM_PERSONAGE_NAME;
+                filterCategory = Constants.SORT_CATEGORY_PERSONAGE_NAME;
+                categoryButtonString = Constants.BUTTON_CATEGORY_PERSONAGE_TEXT;
+                updateButtonText(Constants.FILTER_CATEGORY);
                 setUpFilterChecked(categoryChecked);
                 setUpRecyclerView();
                 return false;
             case R.id.category_cinéma :
-                getAllItemUnchecked(FILTER_CATEGORY);
-                categoryChecked = ITEM_CINEMA_NAME;
-                filterCategory = SORT_CATEGORY_CINEMA_NAME;
-                categoryButtonString = BUTTON_CATEGORY_CINEMA_TEXT;
-                updateButtonText(FILTER_CATEGORY);
+                getAllItemUnchecked(Constants.FILTER_CATEGORY);
+                categoryChecked = Constants.ITEM_CINEMA_NAME;
+                filterCategory = Constants.SORT_CATEGORY_CINEMA_NAME;
+                categoryButtonString = Constants.BUTTON_CATEGORY_CINEMA_TEXT;
+                updateButtonText(Constants.FILTER_CATEGORY);
                 setUpFilterChecked(categoryChecked);
                 setUpRecyclerView();
                 return false;
             case R.id.category_musique :
-                getAllItemUnchecked(FILTER_CATEGORY);
-                categoryChecked = ITEM_MUSIC_NAME;
-                filterCategory = SORT_CATEGORY_MUSIC_NAME;
-                categoryButtonString = BUTTON_CATEGORY_MUSIC_TEXT;
-                updateButtonText(FILTER_CATEGORY);
+                getAllItemUnchecked(Constants.FILTER_CATEGORY);
+                categoryChecked = Constants.ITEM_MUSIC_NAME;
+                filterCategory = Constants.SORT_CATEGORY_MUSIC_NAME;
+                categoryButtonString = Constants.BUTTON_CATEGORY_MUSIC_TEXT;
+                updateButtonText(Constants.FILTER_CATEGORY);
                 setUpFilterChecked(categoryChecked);
                 setUpRecyclerView();
                 return false;
             case R.id.category_expressions :
-                getAllItemUnchecked(FILTER_CATEGORY);
-                categoryChecked = ITEM_EXPRESSION_NAME;
-                filterCategory = SORT_CATEGORY_EXPRESSION_NAME;
-                categoryButtonString = BUTTON_CATEGORY_EXPRESSION_TEXT;
-                updateButtonText(FILTER_CATEGORY);
+                getAllItemUnchecked(Constants.FILTER_CATEGORY);
+                categoryChecked = Constants.ITEM_EXPRESSION_NAME;
+                filterCategory = Constants.SORT_CATEGORY_EXPRESSION_NAME;
+                categoryButtonString = Constants.BUTTON_CATEGORY_EXPRESSION_TEXT;
+                updateButtonText(Constants.FILTER_CATEGORY);
                 setUpFilterChecked(categoryChecked);
                 setUpRecyclerView();
                 return false;
             case R.id.category_objet :
-                getAllItemUnchecked(FILTER_CATEGORY);
-                categoryChecked = ITEM_OBJECT_NAME;
-                filterCategory = SORT_CATEGORY_OBJECT_NAME;
-                categoryButtonString = BUTTON_CATEGORY_OBJECT_TEXT;
-                updateButtonText(FILTER_CATEGORY);
+                getAllItemUnchecked(Constants.FILTER_CATEGORY);
+                categoryChecked = Constants.ITEM_OBJECT_NAME;
+                filterCategory = Constants.SORT_CATEGORY_OBJECT_NAME;
+                categoryButtonString = Constants.BUTTON_CATEGORY_OBJECT_TEXT;
+                updateButtonText(Constants.FILTER_CATEGORY);
                 setUpFilterChecked(categoryChecked);
                 setUpRecyclerView();
                 return false;
             case R.id.category_mot :
-                getAllItemUnchecked(FILTER_CATEGORY);
-                categoryChecked = ITEM_WORD_NAME;
-                filterCategory = SORT_CATEGORY_WORD_NAME;
-                categoryButtonString = BUTTON_CATEGORY_WORD_TEXT;
-                updateButtonText(FILTER_CATEGORY);
+                getAllItemUnchecked(Constants.FILTER_CATEGORY);
+                categoryChecked = Constants.ITEM_WORD_NAME;
+                filterCategory = Constants.SORT_CATEGORY_WORD_NAME;
+                categoryButtonString = Constants.BUTTON_CATEGORY_WORD_TEXT;
+                updateButtonText(Constants.FILTER_CATEGORY);
                 setUpFilterChecked(categoryChecked);
                 setUpRecyclerView();
                 return false;
             case R.id.category_autres :
-                getAllItemUnchecked(FILTER_CATEGORY);
-                categoryChecked = ITEM_OTHER_NAME;
-                filterCategory = SORT_CATEGORY_OTHER_NAME;
-                categoryButtonString = BUTTON_CATEGORY_OTHER_TEXT;
-                updateButtonText(FILTER_CATEGORY);
+                getAllItemUnchecked(Constants.FILTER_CATEGORY);
+                categoryChecked = Constants.ITEM_OTHER_NAME;
+                filterCategory = Constants.SORT_CATEGORY_OTHER_NAME;
+                categoryButtonString = Constants.BUTTON_CATEGORY_OTHER_TEXT;
+                updateButtonText(Constants.FILTER_CATEGORY);
                 setUpFilterChecked(categoryChecked);
                 setUpRecyclerView();
                 return false;
             // ENIGMA ITEM
             case R.id.menu_enigma_all :
-                getAllItemUnchecked(FILTER_ENIGMA);
-                enigmaItemChecked = ITEM_ENIGMA_ALL_NAME;
-                enigmaButtonString = BUTTON_ENIGMA_ALL_TEXT;
-                updateButtonText(FILTER_ENIGMA);
+                getAllItemUnchecked(Constants.FILTER_ENIGMA);
+                enigmaItemChecked = Constants.ITEM_ENIGMA_ALL_NAME;
+                enigmaButtonString = Constants.BUTTON_ENIGMA_ALL_TEXT;
+                updateButtonText(Constants.FILTER_ENIGMA);
                 setUpFilterChecked(enigmaItemChecked);
                 setUpRecyclerView();
                 return false;
             case R.id.menu_enigma_own :
-                getAllItemUnchecked(FILTER_ENIGMA);
-                enigmaItemChecked = ITEM_ENIGMA_OWN_NAME;
-                enigmaButtonString = BUTTON_ENIGMA_OWN_TEXT;
-                updateButtonText(FILTER_ENIGMA);
+                getAllItemUnchecked(Constants.FILTER_ENIGMA);
+                enigmaItemChecked = Constants.ITEM_ENIGMA_OWN_NAME;
+                enigmaButtonString = Constants.BUTTON_ENIGMA_OWN_TEXT;
+                updateButtonText(Constants.FILTER_ENIGMA);
                 setUpFilterChecked(enigmaItemChecked);
                 setUpRecyclerView();
                 return false;
             case R.id.menu_enigma_resolved :
-                getAllItemUnchecked(FILTER_ENIGMA);
-                enigmaItemChecked = ITEM_ENIGMA_RESOLVED_NAME;
-                enigmaButtonString = BUTTON_ENIGMA_RESOLVED_TEXT;
-                updateButtonText(FILTER_ENIGMA);
+                getAllItemUnchecked(Constants.FILTER_ENIGMA);
+                enigmaItemChecked = Constants.ITEM_ENIGMA_RESOLVED_NAME;
+                enigmaButtonString = Constants.BUTTON_ENIGMA_RESOLVED_TEXT;
+                updateButtonText(Constants.FILTER_ENIGMA);
                 setUpFilterChecked(enigmaItemChecked);
                 setUpRecyclerView();
                 return false;
             case R.id.menu_enigma_unresolved :
-                getAllItemUnchecked(FILTER_ENIGMA);
-                enigmaItemChecked = ITEM_ENIGMA_UNRESOLVED_NAME;
-                enigmaButtonString = BUTTON_ENIGMA_UNRESOLVED_TEXT;
-                updateButtonText(FILTER_ENIGMA);
+                getAllItemUnchecked(Constants.FILTER_ENIGMA);
+                enigmaItemChecked = Constants.ITEM_ENIGMA_UNRESOLVED_NAME;
+                enigmaButtonString = Constants.BUTTON_ENIGMA_UNRESOLVED_TEXT;
+                updateButtonText(Constants.FILTER_ENIGMA);
                 setUpFilterChecked(enigmaItemChecked);
                 setUpRecyclerView();
                 return false;
@@ -386,7 +353,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
 
     private void setUpCategoryMenus(PopupMenu popupMenuCategory2, String menuName){
         switch (menuName) {
-            case POPUP_CATEGORY_MENU_NAME :
+            case Constants.POPUP_CATEGORY_MENU_NAME :
                 itemAll = popupMenuCategory2.getMenu().findItem(R.id.category_all);
                 itemPersonage = popupMenuCategory2.getMenu().findItem(R.id.category_personnage);
                 itemCinema = popupMenuCategory2.getMenu().findItem(R.id.category_cinéma);
@@ -395,61 +362,61 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                 itemObject = popupMenuCategory2.getMenu().findItem(R.id.category_objet);
                 itemWord = popupMenuCategory2.getMenu().findItem(R.id.category_mot);
                 itemOther = popupMenuCategory2.getMenu().findItem(R.id.category_autres);
-                setUpFilterChecked(FILTER_CATEGORY);
+                setUpFilterChecked(Constants.FILTER_CATEGORY);
                 break;
-            case POPUP_ENIGMA_MENU_NAME :
+            case Constants.POPUP_ENIGMA_MENU_NAME :
                 itemEnigmaAll = popupMenuCategory2.getMenu().findItem(R.id.menu_enigma_all);
                 itemEnigmaOwn = popupMenuCategory2.getMenu().findItem(R.id.menu_enigma_own);
                 itemEnigmaResolved = popupMenuCategory2.getMenu().findItem(R.id.menu_enigma_resolved);
                 itemEnigmaUnresolved = popupMenuCategory2.getMenu().findItem(R.id.menu_enigma_unresolved);
-                setUpFilterChecked(FILTER_ENIGMA);
+                setUpFilterChecked(Constants.FILTER_ENIGMA);
         }
     }
 
     private void setUpFilterChecked(String filter) {
         switch (filter) {
-            case FILTER_CATEGORY :
+            case Constants.FILTER_CATEGORY :
                 switch (categoryChecked) {
-                    case ITEM_ALL_NAME:
+                    case Constants.ITEM_ALL_NAME:
                         itemAll.setChecked(true);
                         break;
-                    case ITEM_PERSONAGE_NAME:
+                    case Constants.ITEM_PERSONAGE_NAME:
                         itemPersonage.setChecked(true);
                         break;
-                    case ITEM_CINEMA_NAME:
+                    case Constants.ITEM_CINEMA_NAME:
                         itemCinema.setChecked(true);
                         break;
-                    case ITEM_MUSIC_NAME:
+                    case Constants.ITEM_MUSIC_NAME:
                         itemMusic.setChecked(true);
                         break;
-                    case ITEM_EXPRESSION_NAME:
+                    case Constants.ITEM_EXPRESSION_NAME:
                         itemExpressions.setChecked(true);
                         break;
-                    case ITEM_OBJECT_NAME:
+                    case Constants.ITEM_OBJECT_NAME:
                         itemObject.setChecked(true);
                         break;
-                    case ITEM_OTHER_NAME:
+                    case Constants.ITEM_OTHER_NAME:
                         itemOther.setChecked(true);
                         break;
                 }
                 break;
-            case FILTER_ENIGMA :
+            case Constants.FILTER_ENIGMA :
                 switch (enigmaItemChecked){
-                    case ITEM_ENIGMA_ALL_NAME :
+                    case Constants.ITEM_ENIGMA_ALL_NAME :
                         itemEnigmaAll.setChecked(true);
-                        enigmaButtonString = BUTTON_ENIGMA_ALL_TEXT;
+                        enigmaButtonString = Constants.BUTTON_ENIGMA_ALL_TEXT;
                         break;
-                    case ITEM_ENIGMA_OWN_NAME :
+                    case Constants.ITEM_ENIGMA_OWN_NAME :
                         itemEnigmaOwn.setChecked(true);
-                        enigmaButtonString = BUTTON_ENIGMA_OWN_TEXT;
+                        enigmaButtonString = Constants.BUTTON_ENIGMA_OWN_TEXT;
                         break;
-                    case ITEM_ENIGMA_RESOLVED_NAME :
+                    case Constants.ITEM_ENIGMA_RESOLVED_NAME :
                         itemEnigmaResolved.setChecked(true);
-                        enigmaButtonString = BUTTON_ENIGMA_RESOLVED_TEXT;
+                        enigmaButtonString = Constants.BUTTON_ENIGMA_RESOLVED_TEXT;
                         break;
-                    case ITEM_ENIGMA_UNRESOLVED_NAME :
+                    case Constants.ITEM_ENIGMA_UNRESOLVED_NAME :
                         itemEnigmaUnresolved.setChecked(true);
-                        enigmaButtonString = BUTTON_ENIGMA_UNRESOLVED_TEXT;
+                        enigmaButtonString = Constants.BUTTON_ENIGMA_UNRESOLVED_TEXT;
                         break;
                 }
                 break;
@@ -458,7 +425,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
 
     private void getAllItemUnchecked(String filter) {
         switch (filter) {
-            case FILTER_CATEGORY :
+            case Constants.FILTER_CATEGORY :
                 if (itemAll.isChecked()) itemAll.setChecked(false);
                 if (itemPersonage.isChecked()) itemPersonage.setChecked(false);
                 if (itemCinema.isChecked()) itemCinema.setChecked(false);
@@ -467,7 +434,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                 if (itemObject.isChecked()) itemObject.setChecked(false);
                 if (itemOther.isChecked()) itemOther.setChecked(false);
                 break;
-            case FILTER_ENIGMA :
+            case Constants.FILTER_ENIGMA :
                 if (itemEnigmaAll.isChecked()) itemEnigmaAll.setChecked(false);
                 if (itemEnigmaOwn.isChecked()) itemEnigmaOwn.setChecked(false);
                 if (itemEnigmaResolved.isChecked()) itemEnigmaResolved.setChecked(false);
@@ -479,11 +446,11 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     private void updateButtonText(String filter) {
         RelativeLayout linearLayout = findViewById(R.id.activity_play_filter_layout);
         switch (filter){
-            case FILTER_CATEGORY :
+            case Constants.FILTER_CATEGORY :
                 tvCategoryButton = linearLayout.findViewById(R.id.category_button_text_view);
                 tvCategoryButton.setText(categoryButtonString);
                 break;
-            case FILTER_ENIGMA :
+            case Constants.FILTER_ENIGMA :
                 tvEnigmaButton = linearLayout.findViewById(R.id.enigma_button_text_view);
                 tvEnigmaButton.setText(enigmaButtonString);
                 break;
@@ -501,20 +468,20 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Enigma enigma = document.toObject(Enigma.class);
                         switch (enigmaItemChecked) {
-                            case ITEM_ENIGMA_ALL_NAME:
+                            case Constants.ITEM_ENIGMA_ALL_NAME:
                                 enigmaList.add(enigma);
                                 break;
-                            case ITEM_ENIGMA_OWN_NAME:
+                            case Constants.ITEM_ENIGMA_OWN_NAME:
                                 if(enigma.getUserUid().equals(getCurrentUser().getUid())) {
                                     enigmaList.add(enigma);
                                 }
                                 break;
-                            case ITEM_ENIGMA_RESOLVED_NAME :
+                            case Constants.ITEM_ENIGMA_RESOLVED_NAME :
                                 if(enigma.getResolvedUserUid().contains(getCurrentUser().getUid())) {
                                     enigmaList.add(enigma);
                                 }
                                 break;
-                            case ITEM_ENIGMA_UNRESOLVED_NAME :
+                            case Constants.ITEM_ENIGMA_UNRESOLVED_NAME :
                                 if (!enigma.getResolvedUserUid().contains(getCurrentUser().getUid())
                                         && !enigma.getUserUid().equals(getCurrentUser().getUid())){
                                     enigmaList.add(enigma);

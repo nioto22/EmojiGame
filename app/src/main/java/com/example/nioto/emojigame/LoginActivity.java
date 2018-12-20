@@ -21,7 +21,6 @@ public class LoginActivity extends BaseActivity {
 
     // FOR DATA
     public static final int RC_SIGN_IN = 1234;
-    private List<String> usersId;
 
     //FOR DESIGN
     // 1 - Get Coordinator Layout
@@ -106,7 +105,4 @@ public class LoginActivity extends BaseActivity {
             UserHelper.createUser(uid, username, urlPicture).addOnFailureListener(this.onFailureListener());
         }
     }
-
-
-
 }

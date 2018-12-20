@@ -2,14 +2,10 @@ package com.example.nioto.emojigame.activities;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.TextInputEditText;
-import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -29,13 +25,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.nioto.emojigame.MainActivity;
 import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.api.EnigmaHelper;
 import com.example.nioto.emojigame.api.UserHelper;
 import com.example.nioto.emojigame.base.BaseActivity;
 import com.example.nioto.emojigame.models.Enigma;
 import com.example.nioto.emojigame.models.User;
+import com.example.nioto.emojigame.utils.Constants;
 import com.example.nioto.emojigame.utils.CustomExpandableListAdapter;
 import com.example.nioto.emojigame.utils.ExpandableListDataPump;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -82,17 +78,19 @@ public class CreateEnigmaActivity extends BaseActivity {
     private String mCategory;
     private String mMessage;
     private String enigmaUid;
-    public static final String categoryOtherText = "Autres";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Hide the keyboard.
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        );
         this.initiateListView();
         Intent intent = getIntent();
         if (null != intent){
-            if (intent.hasExtra(SolveEnigmaActivity.EXTRA_BUNDLE_EDIT_ENIGMA_ACTIVITY)) {
-                enigmaUid = intent.getStringExtra(SolveEnigmaActivity.EXTRA_BUNDLE_EDIT_ENIGMA_ACTIVITY);
+            if (intent.hasExtra(Constants.EXTRA_BUNDLE_EDIT_ENIGMA_ACTIVITY)) {
+                enigmaUid = intent.getStringExtra(Constants.EXTRA_BUNDLE_EDIT_ENIGMA_ACTIVITY);
                 createButton.setVisibility(View.GONE);
                 updateButton.setVisibility(View.VISIBLE);
                 initiateViewWithEnigma(enigmaUid);
@@ -133,7 +131,7 @@ public class CreateEnigmaActivity extends BaseActivity {
                 textViewCategoryChoosed.setText(expandableListDetail.get(
                         expandableListTitle.get(groupPosition)).get(
                         childPosition));
-                if (textViewCategoryChoosed.getText().toString().equals(categoryOtherText)){
+                if (textViewCategoryChoosed.getText().toString().equals(Constants.categoryOtherText)){
                     rlOtherLayout.setVisibility(View.VISIBLE);
                 }
                 return false;
@@ -262,20 +260,18 @@ public class CreateEnigmaActivity extends BaseActivity {
 
     private Boolean checkMandatoryInputsNotNull(){
         mEnigma = etEnigma.getText().toString();
-        Log.d(TAG, "checkMandatoryInputsNotNull: enigma = " + mEnigma);
         mSolution = etSolution.getText().toString();
         mCategory = textViewCategoryChoosed.getText().toString() +
-                ((textViewCategoryChoosed.getText().equals(categoryOtherText) && etOther != null) ?
+                ((textViewCategoryChoosed.getText().equals(Constants.categoryOtherText) && etOther != null) ?
                         " : " + etOther.getText().toString() : "") ;
         mMessage = etMessage.getText().toString();
 
         String categoryHint = getResources().getString(R.string.tv_category_choosed);
-        Log.d(TAG, "checkMandatoryInputsNotNull: enigmaf =" + categoryHint);
         if (mEnigma.equals("") || mSolution.equals("") || mCategory.equals(categoryHint)) {
             ivEnigmaAsterisk.setVisibility(View.VISIBLE);
             ivSolutionAsterisk.setVisibility(View.VISIBLE);
             ivCategoryAsterisk.setVisibility(View.VISIBLE);
-            Toast toast = Toast.makeText(this, "Veuillez remplir tous les champs marqués d'un astérisque !", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(this, getString(R.string.toast_missing_enigma_info), Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
             return false;

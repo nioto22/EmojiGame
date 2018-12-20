@@ -61,12 +61,12 @@ public class MainActivity extends BaseActivity {
 
         if (requestCode == INTENT_CREATE_ACTIVITY_KEY){
             if (resultCode == RESULT_OK){
-                Toast toast = Toast.makeText(this, "Nouvelle énigme enregistrée, bravo, vous gagnez 10 points !", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(this, getString(R.string.toast_new_enigma_creation), Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
                 this.updateUIWhenCreating();
             }else {
-                Toast toast = Toast.makeText(this, "Enigme non sauvegardée !", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(this, getString(R.string.toast_cancel_enigma_creation), Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
                 this.updateUIWhenCreating();
@@ -78,8 +78,6 @@ public class MainActivity extends BaseActivity {
     // --------------------
     // UI
     // --------------------
-
-
     private void updateUIWhenCreating(){
 
         if (isCurrentUserLogged()){
@@ -141,7 +139,7 @@ public class MainActivity extends BaseActivity {
     @OnClick (R.id.main_activity_button_username)
     public void onClickUsernameButton(){
         if (isCurrentUserLogged()) startProfileActivity();
-        else this.showSnackBar(this.mainLinearLayout, "Vous devez vous connecter !");
+        else this.showSnackBar(this.mainLinearLayout, getString(R.string.error_not_connected));
     }
     @OnClick (R.id.main_activity_image_view_profile)
     public void onClickImagePicture(){ onClickUsernameButton();}

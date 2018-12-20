@@ -39,7 +39,7 @@
                 android:inputType="text"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:hint="chercher joueur"
+                android:hint="@string/play_activity_search_player_input_hint"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColorHint="@color/thirdTextColor"
                 android:textColor="@color/primaryTextColor"/>
@@ -47,6 +47,7 @@
                 android:id="@+id/activity_play_filter_player_close_button"
                 android:layout_width="10dp"
                 android:layout_height="10dp"
+                android:contentDescription="@string/close_button_image_content_description"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginStart="@dimen/default_margin"

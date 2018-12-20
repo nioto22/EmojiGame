@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:background="@color/primaryColor"
-            android:text="EXEMPLE"
+            android:text="@string/popup_help_example_title"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/primaryTextColor"
             android:textStyle="bold"
@@ -49,15 +49,16 @@
                 android:layout_height="0dp"
                 android:layout_weight="20"
                 android:gravity="center"
-                android:text="Entrez ici votre énigme sous forme d'émoji !!"
+                android:text="@string/popup_help_enigma_help"
                 android:textColor="@color/colorPrimary"/>
             <ImageView
                 android:id="@+id/help_popup_enigma_image_view"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="80"
+                android:contentDescription="@string/image_example_content_description"
                 android:gravity="center"
-                android:src="@drawable/porte_feuille"
+                android:src="@drawable/enigma_example"
                 android:padding="@dimen/default_extra_large_margin"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
         </LinearLayout>
@@ -81,7 +82,7 @@
                 android:layout_marginEnd="5dp"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:text="Solution : "
+                android:text="@string/popup_help_solution_title"
                 android:textColor="@color/secondaryTextColor"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
             <TextView
@@ -91,7 +92,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@+id/help_popup_tv_title_solution"
-                android:text="Porte-Feuille"
+                android:text="@string/popup_help_solution_text"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColorHint="@color/secondaryTextColor"
                 android:textColor="@color/secondaryTextColor"/>
@@ -102,7 +103,7 @@
                 android:gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_toEndOf="@+id/help_popup_et_solution"
-                android:text="Inscrire ici la réponse."
+                android:text="@string/popup_help_solution_help"
                 android:textColor="@color/colorPrimary"/>
         </RelativeLayout>
         <RelativeLayout
@@ -112,7 +113,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="Attention à votre orthographe  !!!"
+                android:text="@string/popup_help_solution_second_help"
                 android:textColor="@color/colorPrimary"/>
         </RelativeLayout>
         <!-- CATEGORY LAYOUT  -->
@@ -128,7 +129,7 @@
                 android:layout_marginEnd="5dp"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:text="Category : "
+                android:text="@string/popup_help_category_title"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/secondaryTextColor" />
             <TextView
@@ -137,7 +138,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:layout_marginStart="5dp"
-                android:text="Utilisez la liste déroulante ici pour choisir la catégorie de votre énigme."
+                android:text="@string/popup_help_category_help"
                 android:textColor="@color/colorPrimary"
                 android:layout_toEndOf="@+id/help_popup_tv_title_category"/>
         </RelativeLayout>
@@ -156,7 +157,7 @@
                 android:layout_marginEnd="5dp"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:text="Explication : "
+                android:text="@string/popup_help_explanation_title"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/secondaryTextColor"
                 />
@@ -168,7 +169,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
                 android:layout_toEndOf="@+id/help_popup_tv_title_message"
-                android:text ="Porte_Feuille"
+                android:text ="@string/popup_help_explanation_text"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/secondaryTextColor"/>
         </RelativeLayout>
@@ -183,7 +184,7 @@
                 android:paddingStart="@dimen/default_large_margin"
                 android:paddingEnd="@dimen/default_large_margin"
                 android:padding="@dimen/default_margin"
-                android:text="Entrez ici la signification de chaque Emoji séparée par un _ "
+                android:text="@string/popup_help_explanation_help"
                 android:textColor="@color/colorPrimary"/>
         </RelativeLayout>
     </LinearLayout>

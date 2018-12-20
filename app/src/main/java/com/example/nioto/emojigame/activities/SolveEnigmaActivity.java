@@ -9,7 +9,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +28,7 @@ import com.example.nioto.emojigame.base.BaseActivity;
 import com.example.nioto.emojigame.models.Enigma;
 import com.example.nioto.emojigame.models.Message;
 import com.example.nioto.emojigame.models.User;
+import com.example.nioto.emojigame.utils.Constants;
 import com.example.nioto.emojigame.view.ChatAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -43,9 +43,7 @@ import butterknife.OnClick;
 public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Listener{
 
     private static final String TAG = "SolveEnigmaActivity";
-    // EXTRA_BUNDLE
-    public static final String EXTRA_BUNDLE_EDIT_ENIGMA_ACTIVITY = "EXTRA_BUNDLE_EDIT_ENIGMA_ACTIVITY";
-    public static final int INTENT_UPDATE_ACTIVITY_KEY = 14;
+
 
     // FOR DESIGN
     // ENIGMA UI
@@ -95,14 +93,14 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == INTENT_UPDATE_ACTIVITY_KEY){
+        if (requestCode == Constants.INTENT_UPDATE_ACTIVITY_KEY){
             if (resultCode == RESULT_OK){
-                Toast toastOk = Toast.makeText(this, "Nouvelle énigme enregistrée!", Toast.LENGTH_SHORT);
+                Toast toastOk = Toast.makeText(this, getString(R.string.toast_new_enigma_creation_short), Toast.LENGTH_SHORT);
                 toastOk.setGravity(Gravity.CENTER, 0, 0);
                 toastOk.show();
                 getEnigmaUI();
             }else {
-                Toast toastNotOk =  Toast.makeText(this, "Enigme non sauvegardée !", Toast.LENGTH_SHORT);
+                Toast toastNotOk =  Toast.makeText(this, getString(R.string.toast_cancel_enigma_creation), Toast.LENGTH_SHORT);
                 toastNotOk.setGravity(Gravity.CENTER, 0, 0);
                 toastNotOk.show();
                 getEnigmaUI();
@@ -133,7 +131,7 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         User user = documentSnapshot.toObject(User.class);
                         if (user.getUserEnigmaUidList().contains(enigmaUid)){
-                            enigmaResponseTitle.setText("La solution : ");
+                            enigmaResponseTitle.setText(getString(R.string.solve_activity_enigma_response_title));
                             enigmaResponse.setVisibility(View.GONE);
                             enigmaEditResponse.setVisibility(View.VISIBLE);
                             enigmaResolveSendButton.setVisibility(View.GONE);
@@ -214,8 +212,6 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
                                 });
                             }
                         }
-
-
                     }
                 });
             }
@@ -223,7 +219,6 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
     }
 
     private void getChatUI(){
-
         this.configureChatRecyclerView();
     }
 
@@ -278,8 +273,8 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
     @OnClick (R.id.solve_enigma_activity_onglet_resolve_edit_button)
     public void onClickResolvedEditButton(){
         Intent intent = new Intent(SolveEnigmaActivity.this, CreateEnigmaActivity.class);
-        intent.putExtra(EXTRA_BUNDLE_EDIT_ENIGMA_ACTIVITY, enigmaUid);
-        startActivityForResult(intent, INTENT_UPDATE_ACTIVITY_KEY);
+        intent.putExtra(Constants.EXTRA_BUNDLE_EDIT_ENIGMA_ACTIVITY, enigmaUid);
+        startActivityForResult(intent, Constants.INTENT_UPDATE_ACTIVITY_KEY);
     }
 
 
@@ -296,93 +291,90 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
                     toast.show();
                 }else if(!enigmaResponse.getText().toString().equals("")) {
                     final String response = enigmaResponse.getText().toString();
-                EnigmaHelper.getEnigma(enigmaUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        Log.d(TAG, "onSuccess: EnigmaUid" + enigmaUid);
-                        final Enigma enigma = documentSnapshot.toObject(Enigma.class);
-                        if (enigma.getSolution() != null) {
-                            if (enigma.getSolution().equalsIgnoreCase(response)) {
-                                // Add ResolvedUID to enigma
-                                List<String> resolvedUserUidList = enigma.getResolvedUserUid();
-                                resolvedUserUidList.add(currentUserUid);
-                                final int numberOfResolvedTimes = resolvedUserUidList.size();
-                                EnigmaHelper.updateResolvedUserUidList(resolvedUserUidList, enigmaUid);
-                                // Add enigmaUid to userResolvedEnigma
-                                UserHelper.getUser(currentUserUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        User currentUser = documentSnapshot.toObject(User.class);
-                                        List<String> userResolvedEnigmaList = currentUser.getUserResolvedEnigmaUidList();
-                                        userResolvedEnigmaList.add(enigmaUid);
-                                        UserHelper.updateUserResolvedEnigmaUidList(userResolvedEnigmaList, currentUserUid).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                Log.d(TAG, "onSuccess: User resolved enigmas list updated");
-                                            }
-                                        });
-                                        // Update number of points
-                                        int points = (numberOfResolvedTimes == 1) ? 50 : (numberOfResolvedTimes == 2) ? 30 : (numberOfResolvedTimes == 3) ? 20 : 10;
-                                        currentUser.addPoints(points);
-                                        UserHelper.updateUserPoints(currentUser.getPoints(), currentUserUid).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                Log.d(TAG, "onSuccess: User points updated");
-                                            }
-                                        });
-                                        // AlertDialog
-                                        String message;
-                                        switch (numberOfResolvedTimes) {
-                                            case (1):
-                                                message = "Vous êtes le premier à résoudre cette énigme, \n vous remportez 50 points";
-                                                break;
-                                            case (2):
-                                                message = "Vous êtes le second à résoudre cette énigme, \n vous remportez 30 points";
-                                                break;
-                                            case (3):
-                                                message = "Vous êtes le troisième à résoudre cette énigme, \n vous remportez 20 points";
-                                                break;
-                                            default:
-                                                message = "Vous avez résolu l'énigme, \n vous remportez 10 points";
+                    EnigmaHelper.getEnigma(enigmaUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            final Enigma enigma = documentSnapshot.toObject(Enigma.class);
+                            if (enigma.getSolution() != null) {
+                                if (enigma.getSolution().equalsIgnoreCase(response)) {
+                                    // Add ResolvedUID to enigma
+                                    List<String> resolvedUserUidList = enigma.getResolvedUserUid();
+                                    resolvedUserUidList.add(currentUserUid);
+                                    final int numberOfResolvedTimes = resolvedUserUidList.size();
+                                    EnigmaHelper.updateResolvedUserUidList(resolvedUserUidList, enigmaUid);
+                                    // Add enigmaUid to userResolvedEnigma
+                                    UserHelper.getUser(currentUserUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            User currentUser = documentSnapshot.toObject(User.class);
+                                            List<String> userResolvedEnigmaList = currentUser.getUserResolvedEnigmaUidList();
+                                            userResolvedEnigmaList.add(enigmaUid);
+                                            UserHelper.updateUserResolvedEnigmaUidList(userResolvedEnigmaList, currentUserUid).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                }
+                                            });
+                                            // Update number of points
+                                            int points = (numberOfResolvedTimes == 1) ? 50 : (numberOfResolvedTimes == 2) ? 30 : (numberOfResolvedTimes == 3) ? 20 : 10;
+                                            currentUser.addPoints(points);
+                                            UserHelper.updateUserPoints(currentUser.getPoints(), currentUserUid).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                }
+                                            });
+                                            // AlertDialog
+                                            String message;
+                                            switch (numberOfResolvedTimes) {
+                                                case (1):
+                                                    message = getString(R.string.solve_activity_enigma_solved_first_place);
+                                                    break;
+                                                case (2):
+                                                    message = getString(R.string.solve_activity_enigma_solved_second_place);
+                                                    break;
+                                                case (3):
+                                                    message = getString(R.string.solve_activity_enigma_solved_third_place);
+                                                    break;
+                                                default:
+                                                    message = getString(R.string.solve_activity_enigma_solved_fourth_place);
 
+                                            }
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(SolveEnigmaActivity.this);
+                                            TextView alertMessage = new TextView(SolveEnigmaActivity.this);
+                                            alertMessage.setText(message);
+                                            alertMessage.setGravity(Gravity.CENTER);
+                                            builder.setTitle(getString(R.string.solve_activity_alert_dialog_solved_title))
+                                                    .setView(alertMessage)
+                                                    .setPositiveButton(getString(R.string.solve_activity_alert_dialog_ok), new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialogInterface, int which) {
+                                                            //End of activity
+                                                            Intent intent = new Intent();
+                                                            // intent.putExtra(BUNDLE_EXTRA_SCORE, numberOfResolvedTimes);
+                                                            setResult(RESULT_OK, intent);
+                                                            finish();
+                                                        }
+                                                    })
+                                                    .create()
+                                                    .show();
                                         }
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(SolveEnigmaActivity.this);
-                                        TextView alertMessage = new TextView(SolveEnigmaActivity.this);
-                                        alertMessage.setText(message);
-                                        alertMessage.setGravity(Gravity.CENTER);
-                                        builder.setTitle("Félicitations !")
-                                                .setView(alertMessage)
-                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialogInterface, int which) {
-                                                        //End of activity
-                                                        Intent intent = new Intent();
-                                                        // intent.putExtra(BUNDLE_EXTRA_SCORE, numberOfResolvedTimes);
-                                                        setResult(RESULT_OK, intent);
-                                                        finish();
-                                                    }
-                                                })
-                                                .create()
-                                                .show();
-                                    }
-                                });
-                            } else {
-                                Toast toast = Toast.makeText(SolveEnigmaActivity.this, "Désolé mais cette réponse n'est pas exacte !! ", Toast.LENGTH_SHORT);
-                                toast.setGravity(Gravity.CENTER, 0, 0);
-                                toast.show();
+                                    });
+                                } else {
+                                    Toast toast = Toast.makeText(SolveEnigmaActivity.this, getString(R.string.solve_activity_toast_wrong_answer), Toast.LENGTH_SHORT);
+                                    toast.setGravity(Gravity.CENTER, 0, 0);
+                                    toast.show();
+                                }
                             }
-                        }
 
-                    }
-                });
-            } else {
-                Toast toast = Toast.makeText(SolveEnigmaActivity.this, "Merci d'entrer une réponse !!", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
+                        }
+                    });
+                } else {
+                    Toast toast = Toast.makeText(SolveEnigmaActivity.this,getString(R.string.solve_activity_toast_no_answer) , Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
+                }
             }
-        }
-    });
-}
+        });
+    }
 
     // CHAT PART
     @OnClick(R.id.solve_enigma_activity_chat_send_button)

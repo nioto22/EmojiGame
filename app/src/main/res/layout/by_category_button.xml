@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:text="Filtrer par "
+        android:text="@string/by_category_button_filter_by_text"
         android:textColor="@color/thirdTextColor"
         android:textSize="@dimen/default_text_medium"
         android:gravity="center"/>
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/player_button_text_one"
         android:layout_alignParentStart="true"
-        android:text="CATEGORIE"
+        android:text="@string/by_category_button_category_text"
         android:textColor="@color/primaryTextColor"
         android:textSize="@dimen/default_text_medium"
         android:gravity="center"/>
