@@ -112,6 +112,10 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
         buttonByPlayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                enigmaButtonString = Constants.BUTTON_ENIGMA_ALL_TEXT;
+                enigmaItemChecked = Constants.ITEM_ENIGMA_ALL_NAME;
+                updateButtonText(Constants.FILTER_ENIGMA);
+                setUpRecyclerView();
                 relativeLayoutPlayerSearch.setVisibility(View.VISIBLE);
                 closeSearchPlayerButton.requestFocus();
                 closeSearchPlayerButton.setOnClickListener(new View.OnClickListener() {

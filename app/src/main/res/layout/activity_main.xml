@@ -9,76 +9,79 @@
     android:orientation="vertical"
     android:gravity="center_horizontal"
     tools:context=".MainActivity"
-    android:background="@color/primaryLightColor">
-
-
-    <RelativeLayout
-        android:id="@+id/main_activity_rl_top"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="15dp"
-        android:orientation="horizontal"
-        android:gravity="center">
-        <TextView
-            android:id="@+id/main_activity_tv_user_point"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:padding="10dp"
-            android:background="@drawable/text_view_main_blue_color"
-            android:text="@string/main_activity_points_text"
-            android:textColor="@color/primaryTextColor"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-            />
-    </RelativeLayout>
-    <!-- PROFILE IMAGE -->
+    android:background="@drawable/spiral"
+    android:weightSum="100">
     <LinearLayout
-        android:id="@+id/main_activity_rl_user"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:layout_weight="0.7">
-        <FrameLayout
+        android:layout_height="0dp"
+        android:layout_weight="60"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:id="@+id/main_activity_rl_top"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="vertical">
-            <ImageView
-                android:id="@+id/main_activity_image_view_profile"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                android:clickable="true"
-                android:focusable="true"
-                app:srcCompat="@drawable/ic_anon_user_48dp" />
-            <Button
-                android:id="@+id/main_activity_button_username"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/main_activity_tv_user_point"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:padding="10dp"
                 android:background="@drawable/text_view_main_blue_color"
-                android:text="@string/main_activity_username_text"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="@dimen/default_margin"
+                android:text="@string/main_activity_points_text"
                 android:textColor="@color/primaryTextColor"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-                android:textStyle="bold"
-                android:padding="8dp"/>
-            </LinearLayout>
-            <ImageView
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                />
+        </RelativeLayout>
+        <!-- PROFILE IMAGE -->
+        <LinearLayout
+            android:id="@+id/main_activity_rl_user"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/title_text"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp"
-                android:layout_gravity="top"
-                android:foregroundGravity="center_horizontal"/>
-        </FrameLayout>
+                android:layout_height="match_parent">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:id="@+id/main_activity_image_view_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_gravity="center"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:srcCompat="@drawable/ic_anon_user_48dp" />
+                    <Button
+                        android:id="@+id/main_activity_button_username"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/text_view_main_blue_color"
+                        android:text="@string/main_activity_username_text"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="@dimen/default_margin"
+                        android:textColor="@color/primaryTextColor"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                        android:textStyle="bold"
+                        android:padding="8dp"/>
+                </LinearLayout>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/title_text"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp"
+                    android:layout_gravity="top"
+                    android:foregroundGravity="center_horizontal"/>
+            </FrameLayout>
+        </LinearLayout>
     </LinearLayout>
 
 
@@ -86,9 +89,9 @@
     <RelativeLayout
         android:id="@+id/main_activity_rl_buttons"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal">
+        android:layout_height="0dp"
+        android:layout_weight="40"
+        android:gravity="center">
         <Button
             android:id="@+id/main_activity_button_play"
             android:layout_width="wrap_content"
@@ -98,7 +101,7 @@
             android:textColor="@color/primaryTextColor"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="25dp"
             android:padding="@dimen/default_large_margin"/>
 
         <Button
