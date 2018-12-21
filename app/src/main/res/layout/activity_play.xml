@@ -45,15 +45,15 @@
                 android:textColor="@color/primaryTextColor"/>
             <ImageButton
                 android:id="@+id/activity_play_filter_player_close_button"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:contentDescription="@string/close_button_image_content_description"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentTop="true"
+                android:layout_centerVertical="true"
                 android:layout_marginStart="@dimen/default_margin"
                 android:src="@drawable/close"
                 android:background="@color/primaryColor"
-                android:layout_marginEnd="@dimen/default_margin"/>
+                android:layout_marginEnd="@dimen/default_large_margin"/>
         </RelativeLayout>
         <include
             android:id="@+id/activity_play_filter_button_player"

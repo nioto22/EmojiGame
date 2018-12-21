@@ -12,7 +12,7 @@
         />
     <corners android:radius="10dp"/>
     <stroke
-        android:width="2dp"
+        android:width="3dp"
         android:color="@color/buttonGreenLight"
         />
 </shape>

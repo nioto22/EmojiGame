@@ -118,10 +118,12 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                 setUpRecyclerView();
                 relativeLayoutPlayerSearch.setVisibility(View.VISIBLE);
                 closeSearchPlayerButton.requestFocus();
+                closeSearchPlayerButton.bringToFront();
                 closeSearchPlayerButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         relativeLayoutPlayerSearch.setVisibility(View.GONE);
+                        etPlayerSearch.setText(null);
                         etPlayerSearch.setVisibility(View.GONE);
                         etPlayerSearch.clearFocus();
                         etPlayerSearch.setText("");
@@ -212,6 +214,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
             @Override
             public void onClick(View view) {
                 relativeLayoutPlayerSearch.setVisibility(View.GONE);
+                etPlayerSearch.setText(null);
                 etPlayerSearch.setVisibility(View.GONE);
                 buttonByPlayer.setVisibility(View.VISIBLE);
                 PopupMenu popupMenuCategory = new PopupMenu(PlayActivity.this, buttonByCategory);
@@ -226,6 +229,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
             @Override
             public void onClick(View view) {
                 relativeLayoutPlayerSearch.setVisibility(View.GONE);
+                etPlayerSearch.setText(null);
                 etPlayerSearch.setVisibility(View.GONE);
                 buttonByPlayer.setVisibility(View.VISIBLE);
                 final PopupMenu popupMenuEnigma = new PopupMenu(PlayActivity.this, buttonByEnigma);

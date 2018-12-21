@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,7 +60,7 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
     @BindView(R.id.solve_enigma_activity_onglet_resolve_edit_response) TextView enigmaEditResponse;
     @BindView(R.id.solve_enigma_activity_onglet_resolve_send_button) Button enigmaResolveSendButton;
     @BindView(R.id.solve_enigma_activity_onglet_resolve_edit_button) Button enigmaResolveEditButton;
-    @BindView(R.id.solve_enigma_activity_enigma_button) ImageButton enigmaOngletEditButton;
+    @BindView(R.id.solve_enigma_activity_enigma_button) ImageButton enigmaTabEditButton;
     // CHAT UI
     @BindView(R.id.solve_enigma_activity_chat_recycler_view) RecyclerView recyclerView;
     @BindView(R.id.solve_enigma_activity_chat_text_view_recycler_view_empty) TextView textViewRecyclerViewEmpty;
@@ -72,6 +73,10 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
     @BindView(R.id.solve_enigma_activity_onglet_podium_tv_user1) TextView tvPodiumUser1;
     @BindView(R.id.solve_enigma_activity_onglet_podium_tv_user2) TextView tvPodiumUser2;
     @BindView(R.id.solve_enigma_activity_onglet_podium_tv_user3) TextView tvPodiumUser3;
+    // TABS BOTTOM STROKE
+    @BindView(R.id.solve_enigma_activity_bottom_stroke_solve_tab) ImageView solveBottomStroke;
+    @BindView(R.id.solve_enigma_activity_bottom_stroke_chat_tab) ImageView chatBottomStroke;
+    @BindView(R.id.solve_enigma_activity_bottom_stroke_podium_tab) ImageView podiumBottomStroke;
 
 
     // FOR DATA
@@ -136,8 +141,8 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
                             enigmaEditResponse.setVisibility(View.VISIBLE);
                             enigmaResolveSendButton.setVisibility(View.GONE);
                             enigmaResolveEditButton.setVisibility(View.VISIBLE);
-                            enigmaOngletEditButton.setBackgroundColor(getResources().getColor(R.color.primaryLightColor));
-                            enigmaOngletEditButton.setImageResource(R.drawable.ic_edit);
+                            enigmaTabEditButton.setBackgroundColor(getResources().getColor(R.color.primaryDarkColor));
+                            enigmaTabEditButton.setImageResource(R.drawable.ic_edit);
                         }
                         EnigmaHelper.getEnigma(enigmaUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                             @Override
@@ -253,6 +258,25 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
                 .setLifecycleOwner(this)
                 .build();
     }
+
+    public void displayTabsBottomStroke(int tabTag ){
+        solveBottomStroke.setVisibility(View.INVISIBLE);
+        chatBottomStroke.setVisibility(View.INVISIBLE);
+        podiumBottomStroke.setVisibility(View.INVISIBLE);
+
+        switch (tabTag){
+            case 0 :
+                solveBottomStroke.setVisibility(View.VISIBLE);
+                break;
+            case 1 :
+                chatBottomStroke.setVisibility(View.VISIBLE);
+                break;
+            case 2 :
+                podiumBottomStroke.setVisibility(View.VISIBLE);
+                break;
+        }
+    }
+
 
 // --------------------
 // CALLBACK
@@ -386,11 +410,9 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
     }
 
 
-    // ONGLET PART
+    // TABS PART
     @OnClick (R.id.solve_enigma_activity_enigma_button)
-    public void onClickEnigmaButton(View v){
-        animateView(0);
-    }
+    public void onClickEnigmaButton(View v){ animateView(0); }
     @OnClick (R.id.solve_enigma_activity_chat_button)
     public void onClickChatButton(View v){
         animateView(1);
@@ -401,6 +423,7 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
     }
 
     private void animateView (int tag){
+        displayTabsBottomStroke(tag);
         int position = ongletViewTag - tag;
         if (position < 0){
             viewFlipper.setInAnimation(this, R.anim.slide_in_right);
