@@ -4,7 +4,7 @@
 android:shape="rectangle"
     android:padding="10dp">
 <!-- you can use any color you want I used here gray color-->
-<solid android:color="@color/colorSandClearLight"/>
+<solid android:color="@color/colorItemBackground"/>
 <corners android:radius="20dp"/>
     <stroke
         android:width="3dp"

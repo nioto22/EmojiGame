@@ -7,8 +7,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    tools:context=".MainActivity"
-    android:background="@color/primaryLightColor">
+    tools:context="com.example.nioto.emojigame.auth.ProfileActivity"
+    android:background="@color/primaryDarkColor">
 
     <!-- PROFILE IMAGE -->
     <LinearLayout
@@ -53,7 +53,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/text_view_main_profile"
+            android:background="@drawable/text_view_main_blue_color"
             android:layout_marginTop="8dp"
             android:layout_marginStart="35dp"
             android:layout_marginEnd="35dp">

@@ -79,11 +79,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         Boolean result;
         FirebaseUserMetadata metadata = this.getCurrentUser().getMetadata();
         if (metadata != null) {
-            if (metadata.getCreationTimestamp() == metadata.getLastSignInTimestamp()) {
-                result = true; // It's a new user
-            } else {
-                result = false; // It's not
-            }
+            // It's a new user
+// It's not
+            result = metadata.getCreationTimestamp() == metadata.getLastSignInTimestamp();
         } else {
             result = false;
         }
@@ -122,14 +120,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected String generateUniqueUid(){
-        String uuid = UUID.randomUUID().toString(); // GENERATE UNIQUE STRING
-        return uuid;
+        return UUID.randomUUID().toString(); // GENERATE UNIQUE STRING
     }
 
     protected boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        return cm.getActiveNetworkInfo() != null;
+        return cm.getActiveNetworkInfo()!= null;
     }
 
     // --------------------

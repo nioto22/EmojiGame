@@ -14,5 +14,8 @@
     <item android:id="@+id/menu_enigma_own"
         android:title="Créée par vous"
         android:checkable="true"/>
+    <item android:id="@+id/menu_enigma_with_message"
+        android:title="Message reçu"
+        android:checkable="true"/>
 
 </menu>

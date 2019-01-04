@@ -52,8 +52,7 @@ public class Enigma {
     public List<String> getResolvedUserUid() { return resolvedUserUid; }
     public int getNumbersOfResolvedUserUid() { return this.resolvedUserUid.size(); }
     public String getDifficultyFormarted() {
-        String result = "" + getNumbersOfResolvedUserUid() + " fois";
-        return result;
+        return ( "" + getNumbersOfResolvedUserUid() + " fois");
     }
 
 

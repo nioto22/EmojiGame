@@ -34,8 +34,9 @@ public class ChatAdapter extends FirestoreRecyclerAdapter<Message, MessageViewHo
         holder.updateWithMessage(model, this.idCurrentUser, this.glide);
     }
 
+    @NonNull
     @Override
-    public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new MessageViewHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.chat_item, parent, false));
     }

@@ -53,9 +53,6 @@ public class CreateEnigmaActivity extends BaseActivity {
     @BindView(R.id.create_activity_et_enigma) TextInputEditText etEnigma;
     @BindView(R.id.create_activity_et_solution) TextInputEditText etSolution;
     @BindView(R.id.create_activity_et_message) TextInputEditText etMessage;
-    @BindView(R.id.create_activity_enigma_asterisk) ImageView ivEnigmaAsterisk;
-    @BindView(R.id.create_activity_solution_asterisk) ImageView ivSolutionAsterisk;
-    @BindView(R.id.create_activity_category_asterisk) ImageView ivCategoryAsterisk;
     @BindView(R.id.create_activity_enigma_frame_layout) FrameLayout flEnigmaLayout;
     @BindView(R.id.create_activity_rl_other) RelativeLayout rlOtherLayout;
     @BindView(R.id.create_activity_et_other) TextInputEditText etOther;
@@ -268,9 +265,6 @@ public class CreateEnigmaActivity extends BaseActivity {
 
         String categoryHint = getResources().getString(R.string.tv_category_choosed);
         if (mEnigma.equals("") || mSolution.equals("") || mCategory.equals(categoryHint)) {
-            ivEnigmaAsterisk.setVisibility(View.VISIBLE);
-            ivSolutionAsterisk.setVisibility(View.VISIBLE);
-            ivCategoryAsterisk.setVisibility(View.VISIBLE);
             Toast toast = Toast.makeText(this, getString(R.string.toast_missing_enigma_info), Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();

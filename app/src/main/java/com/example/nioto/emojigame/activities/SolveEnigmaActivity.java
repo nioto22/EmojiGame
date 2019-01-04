@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -32,11 +33,15 @@ import com.example.nioto.emojigame.models.User;
 import com.example.nioto.emojigame.utils.Constants;
 import com.example.nioto.emojigame.view.ChatAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -75,14 +80,14 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
     @BindView(R.id.solve_enigma_activity_onglet_podium_tv_user3) TextView tvPodiumUser3;
     // TABS BOTTOM STROKE
     @BindView(R.id.solve_enigma_activity_bottom_stroke_solve_tab) ImageView solveBottomStroke;
-    @BindView(R.id.solve_enigma_activity_bottom_stroke_chat_tab) ImageView chatBottomStroke;
+    @BindView(R.id.solve_enigma_activity_bottom_stroke_hint_tab) ImageView hintBottomStroke;
     @BindView(R.id.solve_enigma_activity_bottom_stroke_podium_tab) ImageView podiumBottomStroke;
 
 
     // FOR DATA
     private String enigmaUid;
     private User currentUser;
-    private String currentUserUid = this.getCurrentUser().getUid();
+    private String currentUserUid = Objects.requireNonNull(this.getCurrentUser()).getUid();
     private int ongletViewTag = 0;
     private ChatAdapter chatAdapter;
 
@@ -91,7 +96,7 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
         super.onCreate(savedInstanceState);
         this.getFirestoreUser();
         getEnigmaUI();
-        getChatUI();
+        getHintUI();
         getPodiumUI();
     }
 
@@ -141,7 +146,6 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
                             enigmaEditResponse.setVisibility(View.VISIBLE);
                             enigmaResolveSendButton.setVisibility(View.GONE);
                             enigmaResolveEditButton.setVisibility(View.VISIBLE);
-                            enigmaTabEditButton.setBackgroundColor(getResources().getColor(R.color.primaryDarkColor));
                             enigmaTabEditButton.setImageResource(R.drawable.ic_edit);
                         }
                         EnigmaHelper.getEnigma(enigmaUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -223,7 +227,7 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
         }
     }
 
-    private void getChatUI(){
+    private void getHintUI(){
         this.configureChatRecyclerView();
     }
 
@@ -261,7 +265,7 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
 
     public void displayTabsBottomStroke(int tabTag ){
         solveBottomStroke.setVisibility(View.INVISIBLE);
-        chatBottomStroke.setVisibility(View.INVISIBLE);
+        hintBottomStroke.setVisibility(View.INVISIBLE);
         podiumBottomStroke.setVisibility(View.INVISIBLE);
 
         switch (tabTag){
@@ -269,7 +273,7 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
                 solveBottomStroke.setVisibility(View.VISIBLE);
                 break;
             case 1 :
-                chatBottomStroke.setVisibility(View.VISIBLE);
+                hintBottomStroke.setVisibility(View.VISIBLE);
                 break;
             case 2 :
                 podiumBottomStroke.setVisibility(View.VISIBLE);
@@ -403,9 +407,32 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
     // CHAT PART
     @OnClick(R.id.solve_enigma_activity_chat_send_button)
     public void onClickSendMessage() {
+        Log.d(TAG, "onClickSendMessage: ");
         if (!TextUtils.isEmpty(editTextMessage.getText()) && currentUser != null) {
+            //Update userMessageList
+            Log.d(TAG, "onClickSendMessage: enigmaUid = " + enigmaUid);
+            EnigmaHelper.getEnigma(enigmaUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    final Enigma enigma = documentSnapshot.toObject(Enigma.class);
+                    UserHelper.getUser(enigma.getUserUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            User enigmaUser = documentSnapshot.toObject(User.class);
+                            ArrayList<String> userMessageList = new ArrayList<>();
+                            if (enigmaUser != null && enigmaUser.getUserMessageList() != null) {
+                                userMessageList = enigmaUser.getUserMessageList();
+                            }
+                            userMessageList.add(enigmaUid);
+                            UserHelper.updateUserMessageList(userMessageList, enigmaUser.getUid());
+                        }
+                    });
+                }
+            });
+            // Send Message
             MessageHelper.createMessageForChat(editTextMessage.getText().toString(), enigmaUid, currentUser).addOnFailureListener(this.onFailureListener());
             this.editTextMessage.setText("");
+
         }
     }
 
@@ -413,7 +440,7 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
     // TABS PART
     @OnClick (R.id.solve_enigma_activity_enigma_button)
     public void onClickEnigmaButton(View v){ animateView(0); }
-    @OnClick (R.id.solve_enigma_activity_chat_button)
+    @OnClick (R.id.solve_enigma_activity_hint_button)
     public void onClickChatButton(View v){
         animateView(1);
     }

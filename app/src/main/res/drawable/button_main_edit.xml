@@ -4,8 +4,13 @@
     android:shape="rectangle"
     android:padding="10dp">
 
-    <solid
-        android:color="@color/buttonOrangeDark"
+    <gradient
+        android:angle="90"
+        android:centerX="45%"
+        android:centerColor="#892507"
+        android:startColor="#C6665F"
+        android:endColor="#C6665F"
+        android:type="linear"
         />
     <padding
         android:left="0dp"
@@ -13,9 +18,9 @@
         android:right="0dp"
         android:bottom="0dp"
         />
-    <corners android:radius="10dp"/>
+    <corners android:radius="50dp"/>
     <stroke
         android:width="2dp"
-        android:color="@color/primaryLightColor"
+        android:color="#C63F17"
         />
 </shape>

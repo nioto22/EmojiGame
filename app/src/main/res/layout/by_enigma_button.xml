@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:text="@string/by_enigma_button_filter_title_text"
-        android:textColor="@color/thirdTextColor"
+        android:textColor="@color/secondaryTextColor"
         android:textSize="@dimen/default_text_medium"
         android:gravity="center"/>
     <TextView

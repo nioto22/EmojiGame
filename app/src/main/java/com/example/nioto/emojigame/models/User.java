@@ -3,6 +3,7 @@ package com.example.nioto.emojigame.models;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class User {
@@ -10,9 +11,11 @@ public class User {
     private String uid;
     private String username;
     private int points;
+    private int smileys;
     @Nullable private String urlPicture;
     private List<String> userEnigmaUidList;
     private List<String> userResolvedEnigmaUidList;
+    private ArrayList<String> userMessageList;
     private Boolean hasChangedPicture;
 
     public User(){}
@@ -22,20 +25,24 @@ public class User {
         this.username = username;
         this.urlPicture = urlPicture;
         this.points = 0;
-        userEnigmaUidList = new ArrayList<>();
-        userResolvedEnigmaUidList = new ArrayList<>();
-        hasChangedPicture = false;
+        this.smileys = 5;
+        this.userEnigmaUidList = new ArrayList<>();
+        this.userResolvedEnigmaUidList = new ArrayList<>();
+        this.userMessageList = new ArrayList<>();
+        this.hasChangedPicture = false;
     }
 
     // ----- GETTERS -----
 
-    public String getUid() { return uid;}
-    public String getUsername() { return username;}
-    public int getPoints() { return points;}
-    @Nullable public String getUrlPicture() { return urlPicture;}
-    public List<String> getUserEnigmaUidList() { return userEnigmaUidList;}
-    public List<String> getUserResolvedEnigmaUidList() { return userResolvedEnigmaUidList;}
-    public Boolean getHasChangedPicture() { return hasChangedPicture; }
+    public String getUid() { return this.uid;}
+    public String getUsername() { return this.username;}
+    public int getPoints() { return this.points;}
+    public int getSmileys() { return this.smileys;}
+    @Nullable public String getUrlPicture() { return this.urlPicture;}
+    public List<String> getUserEnigmaUidList() { return this.userEnigmaUidList;}
+    public List<String> getUserResolvedEnigmaUidList() { return this.userResolvedEnigmaUidList;}
+    public ArrayList<String> getUserMessageList() { return this.userMessageList;}
+    public Boolean getHasChangedPicture() { return this.hasChangedPicture; }
 
 
 // ---- SETTERS ----
@@ -43,7 +50,12 @@ public class User {
     public void setUid(String uid) { this.uid = uid;}
     public void setUsername(String username) { this.username = username;}
 
-    public void setPoints(int points) { this.points = points;}
+    private void setSmileys(int smileys) { this.smileys = smileys;}
+    public void addSmileys (int addingSmileys) { this.setSmileys(this.getSmileys() + addingSmileys);}
+    public void decreaseSmileys (int decreaseSmileys) { this.setSmileys((this.getSmileys() - decreaseSmileys <= 0)? 0 : this.getSmileys() - decreaseSmileys) ;}
+
+
+    private void setPoints(int points) { this.points = points;}
     public void addPoints (int addingPoints) {
         this.setPoints(this.getPoints() + addingPoints);
     }

@@ -30,10 +30,12 @@ public class Constants {
     public static final String ITEM_ENIGMA_OWN_NAME = "itemEnigmaOwn";
     public static final String ITEM_ENIGMA_RESOLVED_NAME = "itemEnigmaResolved";
     public static final String ITEM_ENIGMA_UNRESOLVED_NAME = "itemEnigmaUnresolved";
+    public static final String ITEM_ENIGMA_WITH_MESSAGE_NAME = "itemEnigmaWithMessage";
     public static final String BUTTON_ENIGMA_ALL_TEXT = "TOUTES";
     public static final String BUTTON_ENIGMA_OWN_TEXT = "PAR VOUS";
     public static final String BUTTON_ENIGMA_RESOLVED_TEXT = "RESOLUE";
     public static final String BUTTON_ENIGMA_UNRESOLVED_TEXT = "NON RESOLUE";
+    public static final String BUTTON_ENIGMA_WITH_MESSAGE_TEXT = "MESSAGE RECU";
     public static final String BUTTON_CATEGORY_ALL_TEXT = "CATEGORIE";
     public static final String BUTTON_CATEGORY_PERSONAGE_TEXT = "PERSONNAGE";
     public static final String BUTTON_CATEGORY_CINEMA_TEXT = "CINEMA";
@@ -42,6 +44,13 @@ public class Constants {
     public static final String BUTTON_CATEGORY_OBJECT_TEXT = "OBJET";
     public static final String BUTTON_CATEGORY_WORD_TEXT = "NOM COMMUN";
     public static final String BUTTON_CATEGORY_OTHER_TEXT = "AUTRE";
+    public static final String FIREBASE_CATEGORY_PERSONAGE_TEXT = "Personnage";
+    public static final String FIREBASE_CATEGORY_CINEMA_TEXT = "Cinéma";
+    public static final String FIREBASE_CATEGORY_MUSIC_TEXT = "Musique";
+    public static final String FIREBASE_CATEGORY_EXPRESSION_TEXT = "Expressions";
+    public static final String FIREBASE_CATEGORY_OBJECT_TEXT = "Objet";
+    public static final String FIREBASE_CATEGORY_WORD_TEXT = "Nom Commun";
+    public static final String FIREBASE_CATEGORY_OTHER_TEXT = "Autres";
     public static final String ALL_TEXT = "Tous";
     public static final String USER_COLLECTION = "users";
 

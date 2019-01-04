@@ -11,10 +11,10 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/icone_emoji"
+        android:roundIcon="@drawable/emojigame_icone"
         android:supportsRtl="true">
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.nioto.emojigame.MainActivity"
             android:theme="@style/AppTheme.NoTitle"
             android:screenOrientation="portrait"> <!-- DISABLE TOOLBAR IN MAIN ACTIVITY -->
             <intent-filter>
@@ -24,29 +24,29 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name="com.example.nioto.emojigame.LoginActivity"
             android:theme="@style/AppTheme.NoTitle"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".auth.ProfileActivity"
+            android:name="com.example.nioto.emojigame.auth.ProfileActivity"
             android:label="@string/toolbar_title_profile_activity"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.example.nioto.emojigame.MainActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.CreateEnigmaActivity"
+            android:name="com.example.nioto.emojigame.activities.CreateEnigmaActivity"
             android:label="@string/toolbar_title_create_enigma_activity"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.example.nioto.emojigame.MainActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.PlayActivity"
-            android:parentActivityName=".MainActivity"
+            android:name="com.example.nioto.emojigame.activities.PlayActivity"
+            android:parentActivityName="com.example.nioto.emojigame.MainActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait" />
-        <activity android:name=".activities.SolveEnigmaActivity"
+        <activity android:name="com.example.nioto.emojigame.activities.SolveEnigmaActivity"
             android:label="Résoudre une Enigme"
-            android:parentActivityName=".activities.PlayActivity"
+            android:parentActivityName="com.example.nioto.emojigame.activities.PlayActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
     </application>

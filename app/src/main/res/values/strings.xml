@@ -40,7 +40,7 @@
     <string name="toast_new_enigma_creation">Nouvelle énigme enregistrée, bravo, vous gagnez 10 points !</string>
     <string name="toast_new_enigma_creation_short">Nouvelle énigme enregistrée!</string>
     <string name="toast_cancel_enigma_creation">Enigme non sauvegardée !</string>
-    <string name="toast_missing_enigma_info">"Veuillez remplir tous les champs marqués d'un astérisque !"</string>
+    <string name="toast_missing_enigma_info">"Veuillez remplir tous les champs !!"</string>
 
 
     <!-- MENTOR_CHAT ACTIVITY -->
@@ -56,8 +56,8 @@
     <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb205811963639659</string>
     <string name="button_update_photo">Mettre à jour la photo</string>
     <string name="toolbar_title_create_enigma_activity">Créer une Enigme</string>
-    <string name="create_button">CREATE</string>
-    <string name="tv_category_choosed">Category …</string>
+    <string name="create_button">CREER</string>
+    <string name="tv_category_choosed">Choisissez une catégorie</string>
     <string name="login_welcome">Bienvenue</string>
     <string name="login_text_game">Venez défier vos amis dans ce jeu de rébus d\'un nouveau genre</string>
     <string name="login_text_connexion">Pour commencer à vous amuser, connectez vous : </string>
@@ -66,16 +66,16 @@
     <!-- OTHER STRING RESOURCES -->
     <string name="enigma_already_solved">Vous avez déjà répondu à cette énigme</string>
     <string name="no_enigma_filter">Il n\'y a pour le moment aucune énigme correspondante</string>
-    <string name="create_activity_update_button">UPDATE</string>
-    <string name="enigma_hint">ENIGMA</string>
+    <string name="create_activity_update_button">MODIFIER</string>
+    <string name="enigma_hint">CREER VOTRE ENIGME ICI \n sous forme d\'EMOJIS</string>
     <string name="create_activity_solution_title_text">Solution :</string>
-    <string name="create_activity_solution_hint">Solution</string>
+    <string name="create_activity_solution_hint">Entrez ici la solution</string>
     <string name="create_activity_category_title_text">Category :</string>
     <string name="create_activity_other_title_text">Autre :</string>
     <string name="create_activity_other_detail_hint">Précisez votre catégorie</string>
     <string name="create_activity_explanation_title_text">Explication :</string>
-    <string name="create_activity_explanation_hint">Explication</string>
-    <string name="main_activity_points_text">… points</string>
+    <string name="create_activity_explanation_hint">Expliquez chaque partie et séparez les avec un \"\_\".</string>
+    <string name="main_activity_points_text">0</string>
     <string name="main_activity_username_text">Username</string>
     <string name="main_activity_play_button_text">JOUER</string>
     <string name="main_activity_create_button_text">CREER</string>
@@ -90,7 +90,7 @@
     <string name="solve_activity_create_by_title">Créé par :</string>
     <string name="solve_activity_number_enigma_solved_title">Enigme résolue :</string>
     <string name="resolve_button_image_content_description">resolve button</string>
-    <string name="chat_button_image_content_description">chat button</string>
+    <string name="hint_button_image_content_description">hint button</string>
     <string name="podium_button_image_content_description">podium button</string>
     <string name="solve_activity_your_answer_title_text">Votre réponse :</string>
     <string name="solve_activity_answer_hint">Entrer votre réponse ici</string>

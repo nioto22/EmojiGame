@@ -1,11 +1,9 @@
 package com.example.nioto.emojigame.api;
 
-import android.util.Log;
-
 import com.example.nioto.emojigame.models.Enigma;
+import com.example.nioto.emojigame.utils.Constants;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -42,37 +40,37 @@ public class EnigmaHelper {
     public static Query getAllEnigma(String filterWay){
         Query query;
         switch (filterWay){
-            case "byDateDesc" :
+            case Constants.SORT_CATEGORY_ALL_NAME :
                 query =  EnigmaHelper.getEnigmaCollection()
                         .orderBy("dateCreated", Query.Direction.DESCENDING)
                         .limit(50);
                 return query;
-            case "byCategoryPersonage" :
+            case Constants.SORT_CATEGORY_PERSONAGE_NAME :
                 query =  EnigmaHelper.getEnigmaCollection()
-                        .whereEqualTo("category", "Personnage" )
+                        .whereEqualTo("category", Constants.FIREBASE_CATEGORY_PERSONAGE_TEXT )
                         .limit(50);
                 return query;
-            case "byCategoryCinema" :
+            case Constants.SORT_CATEGORY_CINEMA_NAME :
                 query =  EnigmaHelper.getEnigmaCollection()
-                        .whereEqualTo("category", "Cinéma");
+                        .whereEqualTo("category",  Constants.FIREBASE_CATEGORY_CINEMA_TEXT);
                 return query;
-            case "byCategoryMusic" :
+            case Constants.SORT_CATEGORY_MUSIC_NAME :
                 query =  EnigmaHelper.getEnigmaCollection()
-                        .whereEqualTo("category", "Musique");
+                        .whereEqualTo("category",  Constants.FIREBASE_CATEGORY_MUSIC_TEXT);
                 return query;
-            case "byCategoryExpressions" :
+            case Constants.SORT_CATEGORY_EXPRESSION_NAME :
                 query =  EnigmaHelper.getEnigmaCollection()
-                        .whereEqualTo("category", "Expressions");
+                        .whereEqualTo("category",  Constants.FIREBASE_CATEGORY_EXPRESSION_TEXT);
                 return query;
-            case "byCategoryObject" :
+            case Constants.SORT_CATEGORY_OBJECT_NAME :
                 query =  EnigmaHelper.getEnigmaCollection()
-                        .whereEqualTo("category", "Objet");
+                        .whereEqualTo("category",  Constants.FIREBASE_CATEGORY_OBJECT_TEXT);
                 return query;
-            case "byCategoryWord" :
+            case Constants.SORT_CATEGORY_WORD_NAME :
                 query =  EnigmaHelper.getEnigmaCollection()
-                        .whereEqualTo("category", "Nom Commun");
+                        .whereEqualTo("category",  Constants.FIREBASE_CATEGORY_WORD_TEXT);
                 return query;
-            case "byCategoryOther" :
+            case Constants.SORT_CATEGORY_OTHER_NAME :
                 query =  EnigmaHelper.getEnigmaCollection()
                         .orderBy("category")
                         .endBefore("Cinéma")

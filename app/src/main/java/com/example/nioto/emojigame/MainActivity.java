@@ -33,6 +33,7 @@ public class MainActivity extends BaseActivity {
     // FOR DESIGN
     @BindView(R.id.main_activity_main_linear_layout) LinearLayout mainLinearLayout;
     @BindView(R.id.main_activity_tv_user_point) TextView mainTextViewUserPoints;
+    @BindView(R.id.main_activity_tv_user_smiley) TextView mainTextViewUserSmileys;
     @BindView(R.id.main_activity_image_view_profile) ImageView mainImageViewProfile;
     @BindView(R.id.main_activity_button_username) Button mainButtonUsername;
     @BindView(R.id.main_activity_button_play) Button mainButtonPlay;
@@ -114,23 +115,19 @@ public class MainActivity extends BaseActivity {
                     }
 
                     // Set points
-                    int userPoints = currentUser.getPoints();
-                    String stringUserPoints = "" + userPoints + ((userPoints>0)? " points" : " point");
-                    mainTextViewUserPoints.setText(stringUserPoints);
+                    String userPoints = String.valueOf(currentUser.getPoints());
+                    mainTextViewUserPoints.setText(userPoints);
+
+                    // Set smileys
+                    String userSmileys = String.valueOf(currentUser.getSmileys());
+                    mainTextViewUserSmileys.setText(userSmileys);
+
 
                 }
             });
 
         }
     }
-
-    // --------------------
-    // REST REQUESTS
-    // --------------------
-
-
-
-
 
     // --------------------
     //      ACTIONS

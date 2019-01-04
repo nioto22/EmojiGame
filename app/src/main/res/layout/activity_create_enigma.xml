@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activities.CreateEnigmaActivity"
-    android:background="@color/primaryLightColor">
+    tools:context="com.example.nioto.emojigame.activities.CreateEnigmaActivity"
+    android:background="@color/primaryDarkColor">
     <!-- ENIGMA LAYOUT  -->
     <FrameLayout
         android:id="@+id/create_activity_enigma_frame_layout"
@@ -20,6 +20,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:hint="@string/enigma_hint"
+            android:textColorHint="@color/primaryTextColor"
             android:inputType="textShortMessage|textCapSentences|textMultiLine"
             android:imeOptions="actionSend|flagNoEnterAction"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
@@ -28,18 +29,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_help_24dp"
-            android:background="@color/primaryLightColor"
+            android:background="@color/primaryDarkColor"
             android:layout_gravity="end"
             android:layout_margin="20dp" />
-        <ImageView
-            android:id="@+id/create_activity_enigma_asterisk"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/asterisk"
-            android:layout_gravity="center"
-            android:layout_marginStart="75dp"
-            android:layout_marginBottom="25dp"
-            android:visibility="gone"/>
 
     </FrameLayout>
     <!-- Text Inputs Layout  -->
@@ -62,35 +54,28 @@
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:text="@string/create_activity_solution_title_text"
-                android:textColor="@color/secondaryTextColor"
+                android:textColor="@color/primaryTextColor"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/create_activity_et_solution"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:layout_toEndOf="@+id/create_activity_solution_asterisk"
+                android:layout_toEndOf="@+id/create_activity_tv_title_solution"
                 android:layout_toStartOf="@+id/create_activity_solution_help"
                 android:hint="@string/create_activity_solution_hint"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColorHint="@color/secondaryTextColor"
-                android:textColor="@color/secondaryTextColor"/>
+                android:textColorHint="@color/primaryTextColor"
+                android:textColor="@color/primaryTextColor"/>
             <ImageButton
                 android:id="@+id/create_activity_solution_help"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_help_24dp"
-                android:background="@color/primaryLightColor"
+                android:background="@color/primaryDarkColor"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="5dp"/>
-            <ImageView
-                android:id="@+id/create_activity_solution_asterisk"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/asterisk"
-                android:layout_toEndOf="@+id/create_activity_tv_title_solution"
-                android:visibility="gone"/>
         </RelativeLayout>
         <!-- CATEGORY LAYOUT  -->
         <RelativeLayout
@@ -106,13 +91,13 @@
                 android:layout_alignParentStart="true"
                 android:text="@string/create_activity_category_title_text"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/secondaryTextColor"
+                android:textColor="@color/primaryTextColor"
                 />
             <FrameLayout
                 android:id="@+id/create_activity_frame_category_list"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@+id/create_activity_category_asterisk"
+                android:layout_toEndOf="@+id/create_activity_tv_title_category"
                 android:layout_toStartOf="@+id/create_activity_category_help">
                 <TextView
                     android:id="@+id/create_activity_tv_category_choosed"
@@ -121,7 +106,7 @@
                     android:layout_marginStart="45dp"
                     android:text="@string/tv_category_choosed"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/secondaryTextColor"
+                    android:textColor="@color/primaryTextColor"
                     />
                 <ExpandableListView
                     android:id="@+id/create_activity_list_category"
@@ -130,7 +115,7 @@
                     android:layout_marginStart="5dp"
                     android:divider="@color/browser_actions_bg_grey"
                     android:dividerHeight="0.5dp"
-                    android:childDivider="@color/secondaryTextColor" />
+                    android:childDivider="@color/primaryTextColor" />
 
             </FrameLayout>
             <ImageButton
@@ -138,16 +123,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_help_24dp"
-                android:background="@color/primaryLightColor"
+                android:background="@color/primaryDarkColor"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="5dp"/>
-            <ImageView
-                android:id="@+id/create_activity_category_asterisk"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/asterisk"
-                android:layout_toEndOf="@+id/create_activity_tv_title_category"
-                android:visibility="gone"/>
         </RelativeLayout>
         <!-- OTHER LAYOUT  -->
         <RelativeLayout
@@ -166,7 +144,7 @@
                 android:layout_centerVertical="true"
                 android:text="@string/create_activity_other_title_text"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/secondaryTextColor"
+                android:textColor="@color/primaryTextColor"
                 />
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/create_activity_et_other"
@@ -177,8 +155,8 @@
                 android:hint ="@string/create_activity_other_detail_hint"
                 android:inputType="textMultiLine"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColorHint="@color/secondaryTextColor"
-                android:textColor="@color/secondaryTextColor"/>
+                android:textColorHint="@color/primaryTextColor"
+                android:textColor="@color/primaryTextColor"/>
         </RelativeLayout>
         <!-- MESSAGE LAYOUT  -->
         <RelativeLayout
@@ -196,7 +174,7 @@
                 android:layout_centerVertical="true"
                 android:text="@string/create_activity_explanation_title_text"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/secondaryTextColor"
+                android:textColor="@color/primaryTextColor"
                 />
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/create_activity_et_message"
@@ -208,14 +186,14 @@
                 android:hint ="@string/create_activity_explanation_hint"
                 android:inputType="textMultiLine"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColorHint="@color/secondaryTextColor"
-                android:textColor="@color/secondaryTextColor"/>
+                android:textColorHint="@color/primaryTextColor"
+                android:textColor="@color/primaryTextColor"/>
             <ImageButton
                 android:id="@+id/create_activity_message_help"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_help_24dp"
-                android:background="@color/primaryLightColor"
+                android:background="@color/primaryDarkColor"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="5dp"/>
@@ -232,18 +210,18 @@
                 android:layout_margin="10dp"
                 android:layout_centerInParent="true"
                 android:text="@string/create_button"
-                android:textColor="@color/secondaryTextColor"
+                android:textColor="@color/primaryTextColor"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
             <Button
                 android:id="@+id/create_activity_update_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                android:background="@drawable/button_create_update"
-                android:layout_margin="10dp"
+                android:background="@drawable/button_main_edit"
+                android:layout_margin="@dimen/default_margin"
                 android:layout_centerInParent="true"
                 android:text="@string/create_activity_update_button"
-                android:textColor="@color/secondaryTextColor"
+                android:textColor="@color/primaryTextColor"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
             <ProgressBar
                 android:id="@+id/create_activity_progressbar"

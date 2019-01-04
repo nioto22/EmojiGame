@@ -1,29 +1,17 @@
 package com.example.nioto.emojigame.api;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
-import android.util.ArrayMap;
-import android.util.Log;
-import android.widget.Toast;
 
-import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.models.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class UserHelper {
     private static final String TAG = "UserHelper";
@@ -50,9 +38,8 @@ public class UserHelper {
     }
 
     public static Query getAllUser(){
-       Query query =  EnigmaHelper.getEnigmaCollection()
+        return EnigmaHelper.getEnigmaCollection()
                 .limit(50);
-        return query;
     }
 
 
@@ -77,6 +64,10 @@ public class UserHelper {
 
     public static Task<Void> updateUserResolvedEnigmaUidList(List<String>  userResolvedEnigmaUidList, String uid) {
         return UserHelper.getUsersCollection().document(uid).update("userResolvedEnigmaUidList", userResolvedEnigmaUidList);
+    }
+
+    public static Task<Void> updateUserMessageList(ArrayList<String> userMessageList, String uid){
+        return UserHelper.getUsersCollection().document(uid).update("userMessageList", userMessageList);
     }
 
     public static Task<Void> updateUserPoints(int points, String uid) {
