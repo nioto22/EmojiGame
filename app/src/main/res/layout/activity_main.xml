@@ -34,6 +34,7 @@
                     android:id="@+id/main_activity_tv_user_smiley"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:padding="@dimen/default_margin"
                     android:text="@string/main_activity_points_text"
                     android:textColor="@color/primaryTextColor"
@@ -45,6 +46,14 @@
                     android:src="@drawable/ic_smiley"
                     android:layout_gravity="center_vertical"
                     android:paddingEnd="@dimen/default_margin"/>
+                <ImageButton
+                    android:id="@+id/main_activity_button_add_smileys"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/text_view_main_blue_light_color"
+                    android:src="@drawable/ic_add"
+                    android:layout_gravity="center"
+                    android:padding="5dp"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -52,11 +61,13 @@
                 android:orientation="horizontal"
                 android:background="@drawable/text_view_main_blue_color"
                 android:layout_gravity="center"
+                android:gravity="center"
                 android:layout_margin="@dimen/default_margin">
                 <TextView
                     android:id="@+id/main_activity_tv_user_point"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:padding="@dimen/default_margin"
                     android:text="@string/main_activity_points_text"
                     android:textColor="@color/primaryTextColor"
@@ -75,7 +86,7 @@
                     android:background="@drawable/text_view_main_blue_light_color"
                     android:src="@drawable/ic_add"
                     android:layout_gravity="center"
-                    android:padding="@dimen/default_margin"/>
+                    android:padding="5dp"/>
             </LinearLayout>
         </LinearLayout>
         <!-- PROFILE IMAGE -->

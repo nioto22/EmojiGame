@@ -23,7 +23,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 
-public class EnigmaAdapter extends RecyclerView.Adapter<EnigmaAdapter.UnsolvedEnigmaViewHolder> {
+public class EnigmaGridAdapter extends RecyclerView.Adapter<EnigmaGridAdapter.UnsolvedEnigmaViewHolder> {
 
 
     private static final int STATE_ENIGMA_OWN = 0 ;
@@ -35,14 +35,9 @@ public class EnigmaAdapter extends RecyclerView.Adapter<EnigmaAdapter.UnsolvedEn
 
 
     public static class UnsolvedEnigmaViewHolder extends RecyclerView.ViewHolder{
-        /*   public TextView tvEnigma;
-           public TextView tvCategory;
-           public TextView tvDifficulty;
-           public TextView tvUser;
-           public TextView tvState;
-           */
         public TextView tvEnigmaPoints;
         public TextView tvEnigmaUser;
+        public TextView tvEnigmaCategory;
         public ImageView ivCategoryImage;
         public ImageView ivEnigmaStateImage;
 
@@ -53,12 +48,17 @@ public class EnigmaAdapter extends RecyclerView.Adapter<EnigmaAdapter.UnsolvedEn
             tvDifficulty = itemView.findViewById(R.id.enigma_item_tv_difficulty);
             tvUser = itemView.findViewById(R.id.enigma_item_tv_user);
             tvState = itemView.findViewById(R.id.enigma_item_tv_resolve_state);
-         */
+        */
 
             tvEnigmaPoints = itemView.findViewById(R.id.enigma_grid_item_points_tv);
             tvEnigmaUser = itemView.findViewById(R.id.enigma_grid_item_user_text);
+            tvEnigmaCategory = itemView.findViewById(R.id.enigma_grid_item_category_tv);
             ivCategoryImage = itemView.findViewById(R.id.enigma_grid_item_category_image);
             ivEnigmaStateImage = itemView.findViewById(R.id.enigma_grid_item_state_image);
+
+
+
+
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -74,7 +74,7 @@ public class EnigmaAdapter extends RecyclerView.Adapter<EnigmaAdapter.UnsolvedEn
         }
     }
 
-    public EnigmaAdapter(ArrayList<Enigma> enigmaArrayList, Context context){
+    public EnigmaGridAdapter(ArrayList<Enigma> enigmaArrayList, Context context){
         this.mEnigmaArrayList = enigmaArrayList;
         this.context = context;
     }
@@ -82,7 +82,7 @@ public class EnigmaAdapter extends RecyclerView.Adapter<EnigmaAdapter.UnsolvedEn
     @NonNull
     @Override
     public UnsolvedEnigmaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.enigma_grid_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.enigma_grid_item_2, parent, false);
         return new UnsolvedEnigmaViewHolder(v, mListener);
     }
 
@@ -112,10 +112,11 @@ public class EnigmaAdapter extends RecyclerView.Adapter<EnigmaAdapter.UnsolvedEn
                 }
             }
         });
-        */
+    */
 
         holder.ivCategoryImage.setBackground(categoryBackground(enigma.getCategory()));
-        holder.tvEnigmaPoints.setText(numberOfPoints(enigma.getMessage()));
+        holder.tvEnigmaCategory.setText(enigma.getCategory());
+        holder.tvEnigmaPoints.setText(String.valueOf(enigma.getDificulty()));
         UserHelper.getUser(enigma.getUserUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -133,7 +134,6 @@ public class EnigmaAdapter extends RecyclerView.Adapter<EnigmaAdapter.UnsolvedEn
                 }
             }
         });
-
     }
 
     private String numberOfPoints(String message) {

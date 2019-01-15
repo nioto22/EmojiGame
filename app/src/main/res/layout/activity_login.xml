@@ -25,42 +25,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/login_activity_app_title"
-            android:layout_above="@+id/main_activity_button_login"
-            android:layout_margin="@dimen/default_large_margin"
-            android:padding="@dimen/default_large_margin">
-            <TextView
-                android:id="@+id/text_view_welcome"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:gravity="center"
-                android:layout_margin="@dimen/default_large_margin"
-                android:text="@string/login_welcome"
-                android:textColor="@color/primaryTextColor"
-                android:textSize="25sp"
-                android:textStyle="bold"/>
+            android:layout_above="@+id/login_activity_login_text_connexion"
+            android:layout_margin="@dimen/default_large_margin">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:gravity="center"
-                android:layout_margin="@dimen/default_large_margin"
+                android:layout_margin="@dimen/default_margin"
                 android:text="@string/login_text_game"
                 android:textColor="@color/primaryTextColor"
-                android:textSize="25sp"
-                android:textStyle="bold"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:gravity="center"
-                android:layout_margin="@dimen/default_large_margin"
-                android:text="@string/login_text_connexion"
-                android:textColor="@color/primaryTextColor"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:textStyle="bold"/>
         </RelativeLayout>
         <!-- BUTTON LOGIN -->
+        <TextView
+            android:id="@+id/login_activity_login_text_connexion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/main_activity_button_login"
+            android:gravity="center"
+            android:layout_margin="@dimen/default_margin"
+            android:text="@string/login_text_connexion"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
         <Button
             android:id="@+id/main_activity_button_login"
             android:layout_width="match_parent"
@@ -68,7 +57,7 @@
             android:text="@string/login"
             android:textColor="#fff"
             android:layout_alignParentBottom="true"
-            android:background="@drawable/button_radius_primary_light_color"
+            android:background="@drawable/button_radius_primary_dark_color"
             style="?android:attr/borderlessButtonStyle"
             android:layout_margin="@dimen/default_large_margin"
             android:padding="@dimen/default_large_margin"

@@ -128,7 +128,7 @@ public class CreateEnigmaActivity extends BaseActivity {
                 textViewCategoryChoosed.setText(expandableListDetail.get(
                         expandableListTitle.get(groupPosition)).get(
                         childPosition));
-                if (textViewCategoryChoosed.getText().toString().equals(Constants.categoryOtherText)){
+                if (textViewCategoryChoosed.getText().toString().equals(Constants.FIREBASE_CATEGORY_OTHER_TEXT)){
                     rlOtherLayout.setVisibility(View.VISIBLE);
                 }
                 return false;
@@ -259,7 +259,7 @@ public class CreateEnigmaActivity extends BaseActivity {
         mEnigma = etEnigma.getText().toString();
         mSolution = etSolution.getText().toString();
         mCategory = textViewCategoryChoosed.getText().toString() +
-                ((textViewCategoryChoosed.getText().equals(Constants.categoryOtherText) && etOther != null) ?
+                ((textViewCategoryChoosed.getText().equals(Constants.FIREBASE_CATEGORY_OTHER_TEXT) && etOther != null) ?
                         " : " + etOther.getText().toString() : "") ;
         mMessage = etMessage.getText().toString();
 

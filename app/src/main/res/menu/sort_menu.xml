@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/menu_filter_dificulty_asc"
+        android:title="Dificulty Asc."
+        android:checkable="true"
+        />
+    <item android:id="@+id/menu_filter_dificulty_desc"
+        android:title="Difficulté Desc."
+        android:checkable="true"
+        />
+    <item android:id="@+id/menu_filter_date_asc"
+        android:title="Date Asc."
+        android:checkable="true"/>
+    <item android:id="@+id/menu_filter_date_desc"
+        android:title="Date Desc."
+        android:checkable="true"/>
+    <item android:id="@+id/menu_filter_player_asc"
+        android:title="Joueur Asc."
+        android:checkable="true"/>
+    <item android:id="@+id/menu_filter_player_desc"
+        android:title="Joueur Desc."
+        android:checkable="true"/>
+
+</menu>

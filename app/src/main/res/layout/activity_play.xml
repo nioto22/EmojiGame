@@ -9,7 +9,7 @@
 
     <!-- TAGS CONTAINER -->
     <LinearLayout
-        android:id="@+id/solve_enigma_activity_buttons_container"
+        android:id="@+id/play_enigma_activity_buttons_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:baselineAligned="false"
@@ -23,60 +23,60 @@
             android:layout_weight="1"
             android:orientation="vertical">
             <ImageButton
-                android:id="@+id/solve_enigma_activity_enigma_button"
+                android:id="@+id/play_enigma_activity_enigma_button"
                 android:layout_width="match_parent"
                 android:layout_height="35dip"
                 android:contentDescription="@string/resolve_button_image_content_description"
                 android:background="@color/colorGreen"
-                android:src="@drawable/ic_question"
+                android:src="@drawable/ic_state_new"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:tag="10"/>
             <ImageView
-                android:id="@+id/solve_enigma_activity_bottom_stroke_solve_tab"
+                android:id="@+id/play_enigma_activity_bottom_stroke_solve_tab"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@color/colorError"
                 android:visibility="visible"/>
         </LinearLayout>
-        <!-- BUTTON CHAT FIREBASE -->
+        <!-- BUTTON HISTORY ENIGMA -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
             <ImageButton
-                android:id="@+id/solve_enigma_activity_hint_button"
+                android:id="@+id/play_enigma_activity_history_button"
                 android:layout_width="match_parent"
                 android:layout_height="35dip"
-                android:contentDescription="@string/hint_button_image_content_description"
+                android:contentDescription="@string/history_enigma_image_content_description"
                 android:background="@color/colorAccent"
                 android:src="@drawable/ic_history"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:tag="20"/>
             <ImageView
-                android:id="@+id/solve_enigma_activity_bottom_stroke_hint_tab"
+                android:id="@+id/play_enigma_activity_bottom_stroke_history_tab"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@color/colorError"
                 android:visibility="invisible"/>
         </LinearLayout>
-        <!-- BUTTON PODIUM -->
+        <!-- BUTTON USER ENIGMA -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
             <ImageButton
-                android:id="@+id/solve_enigma_activity_podium_button"
+                android:id="@+id/play_enigma_activity_user_enigma_button"
                 android:layout_width="match_parent"
                 android:layout_height="35dip"
-                android:contentDescription="@string/podium_button_image_content_description"
+                android:contentDescription="@string/user_enigma_image_content_description"
                 android:background="@color/colorSand"
-                android:src="@drawable/ic_perso"
+                android:src="@drawable/ic_state_own"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:tag="30"/>
             <ImageView
-                android:id="@+id/solve_enigma_activity_bottom_stroke_podium_tab"
+                android:id="@+id/play_enigma_activity_bottom_stroke_player_tab"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@color/colorError"
@@ -84,13 +84,14 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- FILTER CONTAINER -->
+
+    <!-- FILTER BUTTONS CONTAINER -->
     <RelativeLayout
         android:id="@+id/activity_play_filter_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_below="@+id/solve_enigma_activity_buttons_container"
+        android:layout_below="@+id/play_enigma_activity_buttons_container"
         android:background="@color/primaryDarkColor"
         android:padding="8dp">
         <LinearLayout
@@ -98,94 +99,48 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_horizontal">
-        <RelativeLayout
-            android:id="@+id/activity_play_filter_player_linear_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/default_extra_large_margin"
-            android:visibility="gone">
+            <include
+                android:id="@+id/activity_play_filter_button_sort"
+                layout="@layout/sort_filter_button"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/default_extra_large_margin"
+                android:visibility="visible"/>
+            <include
+                android:id="@+id/activity_play_filter_button_category"
+                layout="@layout/by_category_button"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_extra_large_margin"/>
+        </LinearLayout>
+    </RelativeLayout>
 
-            <EditText
-                android:id="@+id/activity_play_filter_player_edit_text"
+        <!-- RecyclerView -->
+        <LinearLayout
+            android:id="@+id/activity_play_enigma_solve_tab_rv_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/activity_play_filter_layout"
+            android:orientation="vertical">
+
+            <!-- MESSAGE RECYCLER VIEW EMPTY -->
+            <TextView
+                android:id="@+id/activity_play_enigma_tv_rv_empty"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button_radius_primary_color"
-                android:layout_alignParentStart="true"
-                android:layout_toStartOf="@+id/activity_play_filter_player_close_button"
-                android:visibility="gone"
-                android:layout_gravity="start"
-                android:gravity="center"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
-                android:inputType="text"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:hint="@string/play_activity_search_player_input_hint"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColorHint="@color/thirdTextColor"
-                android:textColor="@color/primaryTextColor"/>
-            <ImageButton
-                android:id="@+id/activity_play_filter_player_close_button"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:contentDescription="@string/close_button_image_content_description"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/default_margin"
-                android:src="@drawable/close"
-                android:background="@color/primaryColor"
-                android:layout_marginEnd="@dimen/default_large_margin"/>
-        </RelativeLayout>
+                android:text="@string/no_enigma_filter"
+                android:textColor="@color/primaryTextColor"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textAlignment="center"
+                android:layout_margin="@dimen/default_large_margin"
+                android:visibility="gone"/>
 
-        <include
-            android:id="@+id/activity_play_filter_button_player"
-            layout="@layout/by_player_button"
-            android:layout_width="90dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/default_extra_large_margin"
-            android:visibility="visible"/>
-        <include
-            android:id="@+id/activity_play_filter_button_category"
-            layout="@layout/by_category_button"
-            android:layout_width="90dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_extra_large_margin"/>
-<!--
-        <include
-            android:id="@+id/activity_play_filter_button_enigma"
-            layout="@layout/by_enigma_button"
-            android:layout_width="90dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="25dp"
-            android:layout_alignParentEnd="true"/>
--->
-     </LinearLayout>
-    </RelativeLayout>
-    <!-- RECYCLER VIEW CONTAINER -->
-    <LinearLayout
-        android:id="@+id/activity_play_enigma_recycler_view_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_below="@+id/activity_play_filter_layout">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/activity_play_enigma_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
 
-        <!-- MESSAGE RECYCLER VIEW EMPTY -->
-        <TextView
-            android:id="@+id/activity_play_enigma_text_view_recycler_view_empty"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/no_enigma_filter"
-            android:textColor="@color/primaryTextColor"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textAlignment="center"
-            android:layout_margin="@dimen/default_large_margin"
-            android:visibility="gone"/>
 
-        <!-- RECYCLER VIEW -->
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/activity_play_enigma_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
 
-    </LinearLayout>
 </RelativeLayout>

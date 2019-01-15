@@ -1,5 +1,6 @@
 package com.example.nioto.emojigame.models;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.example.nioto.emojigame.api.UserHelper;
@@ -7,7 +8,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.ServerTimestamp;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -22,7 +25,7 @@ public class Enigma {
     @Nullable private String message;
     private List<String> resolvedUserUid;
     private int numbersOfResolvedUserUid;
-    private String difficultyFormarted;
+    private int dificulty;
 
     public Enigma() {}
 
@@ -38,6 +41,7 @@ public class Enigma {
         this.category = category;
         this.resolvedUserUid = new ArrayList<>();
         this.message = message;
+        setDificulty();
     }
 
     //  ----  GETTERS   ----
@@ -51,9 +55,7 @@ public class Enigma {
     @Nullable public String getMessage() { return message;}
     public List<String> getResolvedUserUid() { return resolvedUserUid; }
     public int getNumbersOfResolvedUserUid() { return this.resolvedUserUid.size(); }
-    public String getDifficultyFormarted() {
-        return ( "" + getNumbersOfResolvedUserUid() + " fois");
-    }
+    public int getDificulty() { return (this.dificulty);}
 
 
     //   ---- SETTERS   ----
@@ -70,7 +72,58 @@ public class Enigma {
     public void setNumbersOfResolvedUserUid(int numbersOfResolvedUserUid) {
         this.numbersOfResolvedUserUid = numbersOfResolvedUserUid;
     }
-    public void setDifficultyFormarted(String difficultyFormarted) {
-        this.difficultyFormarted = difficultyFormarted;
+    public void setDificulty() {
+        if (this.message != null) {
+        String[] messageSplit = this.message.split("_");
+            int numberOfSplit = messageSplit.length;
+            int enigmaLenght = this.enigma.length();
+            int additionalPoints = (enigmaLenght / numberOfSplit < 2) ? 0 : (enigmaLenght / numberOfSplit < 4) ? enigmaLenght/numberOfSplit*25 : 75;
+            this.dificulty = (numberOfSplit * 25) + additionalPoints ;
+        } else {
+            this.dificulty = 25;
+        }
     }
+
+    public static class DifficultyComparatorAsc implements Comparator<Enigma> {
+        @Override
+        public int compare(Enigma e1, Enigma e2) {
+            return Integer.compare(e1.dificulty, e2.dificulty);
+        }
+    }
+
+    public static class DifficultyComparatorDesc implements Comparator<Enigma> {
+        @Override
+        public int compare(Enigma e1, Enigma e2) {
+            return Integer.compare(e2.dificulty, e1.dificulty);
+        }
+    }
+
+    public static class DateComparatorAsc implements Comparator<Enigma> {
+        @Override
+        public int compare(Enigma e1, Enigma e2) {
+            return e1.dateCreated.compareTo(e2.dateCreated);
+        }
+    }
+
+    public static class DateComparatorDesc implements Comparator<Enigma> {
+        @Override
+        public int compare(Enigma e1, Enigma e2) {
+            return e2.dateCreated.compareTo(e1.dateCreated);
+        }
+    }
+
+    public static class PlayerComparatorAsc implements Comparator<Enigma> {
+        @Override
+        public int compare(Enigma e1, Enigma e2) {
+            return e1.userUid.compareTo(e2.userUid);
+        }
+    }
+
+    public static class PlayerComparatorDesc implements Comparator<Enigma> {
+        @Override
+        public int compare(Enigma e1, Enigma e2) {
+            return e2.userUid.compareTo(e1.userUid);
+        }
+    }
+
 }

@@ -1,64 +1,63 @@
 package com.example.nioto.emojigame.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.api.EnigmaHelper;
-import com.example.nioto.emojigame.api.UserHelper;
 import com.example.nioto.emojigame.base.BaseActivity;
 import com.example.nioto.emojigame.models.Enigma;
-import com.example.nioto.emojigame.models.User;
 import com.example.nioto.emojigame.utils.Constants;
-import com.example.nioto.emojigame.view.EnigmaAdapter;
+import com.example.nioto.emojigame.view.EnigmaGridAdapter;
+import com.example.nioto.emojigame.view.EnigmaLinearAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Collections;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemClickListener  {
-    // EnigmaAdapter.Listener,
+
     private static final String TAG = "PlayActivity";
 
     public static final String EXTRA_ENIGMA_PATH = "EXTRA_ENIGMA_PATH";
     public static final int INTENT_SOLVE_ACTIVITY_KEY = 12;
     public static final int GRID_LAYOUT_NUMBER_OF_ROWS = 3;
+    public static final int TAB_UNSOLVED_ENIGMA_TAG = 0;
+    public static final int TAB_HISTORY_ENIGMA_TAG = 1;
+    public static final int TAB_USER_ENIGMA_TAG = 2;
 
     // FOR RECYCLER VIEW
-    private RecyclerView unsolvedRecyclerView;
-    private EnigmaAdapter enigmaAdapter;
-    private RecyclerView.LayoutManager unsolvedLayoutManager;
+    private RecyclerView enigmaRecyclerView;
+    private EnigmaGridAdapter mEnigmaGridAdapter;
+    private EnigmaLinearAdapter mEnigmaLinearAdapter;
+    private RecyclerView.LayoutManager enigmaLayoutManager;
 
     // FOR DESIGN
-    @BindView(R.id.activity_play_enigma_text_view_recycler_view_empty) TextView tvNoEnigma;
-    @BindView(R.id.activity_play_filter_player_linear_layout) RelativeLayout relativeLayoutPlayerSearch;
-    @BindView(R.id.activity_play_filter_player_edit_text) EditText etPlayerSearch;
-    @BindView(R.id.activity_play_filter_player_close_button) ImageButton closeSearchPlayerButton;
+    @BindView(R.id.activity_play_enigma_recycler_view) RecyclerView layoutEnigmaRecyclerView;
+    @BindView(R.id.activity_play_enigma_tv_rv_empty) TextView tvEmptyRecyclerView;
+    @BindView(R.id.play_enigma_activity_bottom_stroke_solve_tab) ImageView solveBottomStroke;
+    @BindView(R.id.play_enigma_activity_bottom_stroke_history_tab) ImageView historyBottomStroke;
+    @BindView(R.id.play_enigma_activity_bottom_stroke_player_tab) ImageView playerBottomStroke;
+    // PopupMenus
+    public static final int SORT_POPUP_MENU_SELECTED = 0;
+    public static final int FILTER_POPUP_MENU_SELECTED = 1;
     // Menus Items
     MenuItem itemAll ;
     MenuItem itemPersonage;
@@ -68,22 +67,25 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     MenuItem itemObject ;
     MenuItem itemWord ;
     MenuItem itemOther;
-    MenuItem itemEnigmaAll;
-    MenuItem itemEnigmaOwn;
-    MenuItem itemEnigmaResolved;
-    MenuItem itemEnigmaUnresolved;
-    MenuItem itemEnigmaWithMessage;
-    TextView tvEnigmaButton;
-    TextView tvCategoryButton;
-    private String filterCategory = Constants.SORT_CATEGORY_ALL_NAME;
-    private String categoryChecked = Constants.ITEM_ALL_NAME;
-    private String enigmaItemChecked = Constants.ITEM_ENIGMA_UNRESOLVED_NAME;
-    private String enigmaButtonString = Constants.BUTTON_ENIGMA_UNRESOLVED_TEXT;
-    private String categoryButtonString = Constants.BUTTON_CATEGORY_ALL_TEXT;
-    private final ArrayList<User> userList = new ArrayList<>();
-    private final HashMap<String, String> userHashMapList = new HashMap<>();
-    private InputMethodManager imm;
+    MenuItem itemEnigmaDificultyAsc;
+    MenuItem itemEnigmaDificultyDesc;
+    MenuItem itemEnigmaDateAsc;
+    MenuItem itemEnigmaDateDesc;
+    MenuItem itemEnigmaPlayerAsc;
+    MenuItem itemEnigmaPlayerDesc;
 
+    // FOR FILTER UI
+    private String filterCategory = Constants.FILTER_CATEGORY_ALL;
+    private String sortType = Constants.SORT_DIFICULTY_ASC;
+    private PopupMenu popupMenuCategory;
+    private PopupMenu popupMenuSort;
+    private TextView tvCategoryButton;
+    private TextView tvSortButton;
+
+    // FOR ENIGMA TAB
+    private int tabTag = TAB_UNSOLVED_ENIGMA_TAG;
+    // For User History
+    private ArrayList<String> userEnigmaHistoryList = new ArrayList<>();
 
 
 
@@ -91,12 +93,12 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setUpRecyclerView();
-        updateButtonText(Constants.FILTER_ENIGMA);
-        updateButtonText(Constants.FILTER_CATEGORY);
+        getUserHistoryEnigmaArray();
         setUpFilterButtonsViews();
+        setUpRecyclerView();
 
-
+        /**/
+        /* setUpButtonsTitle();*/
     }
 
     @Override
@@ -104,147 +106,90 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
         return R.layout.activity_play;
     }
 
-
+    public void getUserHistoryEnigmaArray(){
+        userEnigmaHistoryList.add("01d57082-e8de-4128-b63d-8c4b0f40296d");
+        userEnigmaHistoryList.add("5684256d-c361-4156-82f9-e209fd37ffc8");
+    }
 
     // ------------------
     //      UI
     // ------------------
 
+    // TABS PART
+    @OnClick(R.id.play_enigma_activity_enigma_button)
+    public void onClickUnsolvedEnigmaButton(View v){
+        tabTag = TAB_UNSOLVED_ENIGMA_TAG;
+        displayTabsBottomStroke();
+        animateView();
+        setUpRecyclerView();
+    }
+    @OnClick (R.id.play_enigma_activity_history_button)
+    public void onClickButton(View v){
+        tabTag = TAB_HISTORY_ENIGMA_TAG;
+        displayTabsBottomStroke();
+        animateView();
+        setUpRecyclerView();
+    }
+    @OnClick (R.id.play_enigma_activity_user_enigma_button)
+    public void onClickUserEnigmaButton(View v){
+        tabTag = TAB_USER_ENIGMA_TAG;
+        displayTabsBottomStroke();
+        animateView();
+        setUpRecyclerView();
+    }
+
+    private void animateView (){
+        // TO DO TITLE ANIMATION
+    }
+
+    public void displayTabsBottomStroke(){
+        solveBottomStroke.setVisibility(View.INVISIBLE);
+        historyBottomStroke.setVisibility(View.INVISIBLE);
+        playerBottomStroke.setVisibility(View.INVISIBLE);
+
+        switch (tabTag){
+            case 0 :
+                solveBottomStroke.setVisibility(View.VISIBLE);
+                break;
+            case 1 :
+                historyBottomStroke.setVisibility(View.VISIBLE);
+                break;
+            case 2 :
+                playerBottomStroke.setVisibility(View.VISIBLE);
+                break;
+        }
+    }
+
     public void setUpFilterButtonsViews(){
-        final View buttonByPlayer = findViewById(R.id.activity_play_filter_button_player);
-        final View buttonByCategory = findViewById(R.id.activity_play_filter_button_category);
-       // final View buttonByEnigma = findViewById(R.id.activity_play_filter_button_enigma);
+        final View buttonSort = findViewById(R.id.activity_play_filter_button_sort);
+       tvSortButton = buttonSort.findViewById(R.id.sort_filter_button_text_view);
+        tvSortButton.setText(sortType);
+        final View buttonCategory = findViewById(R.id.activity_play_filter_button_category);
+        tvCategoryButton = buttonCategory.findViewById(R.id.category_button_text_view);
+        tvCategoryButton.setText(filterCategory);
 
-        buttonByPlayer.setOnClickListener(new View.OnClickListener() {
+        buttonSort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                enigmaButtonString = Constants.BUTTON_ENIGMA_ALL_TEXT;
-                enigmaItemChecked = Constants.ITEM_ENIGMA_ALL_NAME;
-                updateButtonText(Constants.FILTER_ENIGMA);
-                setUpRecyclerView();
-                relativeLayoutPlayerSearch.setVisibility(View.VISIBLE);
-                closeSearchPlayerButton.requestFocus();
-                closeSearchPlayerButton.bringToFront();
-                closeSearchPlayerButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        relativeLayoutPlayerSearch.setVisibility(View.GONE);
-                        etPlayerSearch.setText(null);
-                        etPlayerSearch.setVisibility(View.GONE);
-                        etPlayerSearch.clearFocus();
-                        etPlayerSearch.setText("");
-                        if (imm != null) imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                        buttonByPlayer.setVisibility(View.VISIBLE);
-                    }
-                });
-                etPlayerSearch.setVisibility(View.VISIBLE);
-                imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (imm != null) imm.showSoftInput(etPlayerSearch, InputMethodManager.SHOW_IMPLICIT);
-                buttonByPlayer.setVisibility(View.GONE);
-                etPlayerSearch.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-                        final String stSearch = editable.toString().toLowerCase();
-                        final ArrayList<Enigma> enigmaFilteredList = new ArrayList<>();
-                        final ArrayList<String> enigmaUidFilteredList = new ArrayList<>();
-                        FirebaseFirestore.getInstance().collection(Constants.USER_COLLECTION).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        User user = document.toObject(User.class);
-                                        userList.add(user);
-                                        userHashMapList.put(user.getUsername(), user.getUid());
-                                    }
-                                    for (User user : userList) {
-                                        if (user.getUsername().toLowerCase().contains(stSearch)) {
-                                            List<String> enigmaList = user.getUserEnigmaUidList();
-                                            for (String enigmaUid : enigmaList
-                                                    ) {
-                                                enigmaUidFilteredList.add(enigmaUid);
-                                            }
-                                        }
-                                    }
-                                    Query query = EnigmaHelper.getAllEnigma(filterCategory);
-                                    query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                            if (task.isSuccessful()) {
-                                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                                    Enigma enigma = document.toObject(Enigma.class);
-                                                    if (enigmaUidFilteredList.contains(enigma.getUid())) {
-                                                        enigmaFilteredList.add(enigma);
-                                                    }
-                                                }
-                                                unsolvedRecyclerView = findViewById(R.id.activity_play_enigma_recycler_view);
-                                                unsolvedRecyclerView.setHasFixedSize(true);
-                                                unsolvedLayoutManager = new GridLayoutManager(PlayActivity.this, GRID_LAYOUT_NUMBER_OF_ROWS);
-                                                enigmaAdapter = new EnigmaAdapter(enigmaFilteredList, PlayActivity.this);
-
-                                                unsolvedRecyclerView.setLayoutManager(unsolvedLayoutManager);
-                                                enigmaAdapter.notifyDataSetChanged();
-                                                unsolvedRecyclerView.setAdapter(enigmaAdapter);
-
-                                                tvNoEnigma.setVisibility(enigmaAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
-
-                                                enigmaAdapter.setOnItemClickListener(new EnigmaAdapter.OnItemClickListener() {
-                                                    @Override
-                                                    public void onItemClick(int position) {
-                                                        Enigma enigma = enigmaFilteredList.get(position);
-                                                        Intent solveEnigmaIntent = new Intent(PlayActivity.this, SolveEnigmaActivity.class);
-                                                        solveEnigmaIntent.putExtra(EXTRA_ENIGMA_PATH, enigma.getUid());
-                                                        startActivityForResult(solveEnigmaIntent, INTENT_SOLVE_ACTIVITY_KEY);
-                                                    }
-                                                });
-                                            }
-                                        }
-                                    });
-                                }
-                            }
-                        });
-                    }
-                });
+                popupMenuSort = new PopupMenu(PlayActivity.this, buttonSort);
+                popupMenuSort.setOnMenuItemClickListener(PlayActivity.this);
+                popupMenuSort.inflate(R.menu.sort_menu);
+                setUpCategoryMenus(popupMenuSort, SORT_POPUP_MENU_SELECTED );
+                popupMenuSort.show();
             }
         });
 
 
-        buttonByCategory.setOnClickListener(new View.OnClickListener() {
+        buttonCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                relativeLayoutPlayerSearch.setVisibility(View.GONE);
-                etPlayerSearch.setText(null);
-                etPlayerSearch.setVisibility(View.GONE);
-                buttonByPlayer.setVisibility(View.VISIBLE);
-                PopupMenu popupMenuCategory = new PopupMenu(PlayActivity.this, buttonByCategory);
+                popupMenuCategory = new PopupMenu(PlayActivity.this, buttonCategory);
                 popupMenuCategory.setOnMenuItemClickListener(PlayActivity.this);
-                popupMenuCategory.inflate(R.menu.by_category_menu);
-                setUpCategoryMenus(popupMenuCategory, Constants.POPUP_CATEGORY_MENU_NAME);
+                popupMenuCategory.inflate(R.menu.filter_category_menu);
+                setUpCategoryMenus(popupMenuCategory, FILTER_POPUP_MENU_SELECTED);
                 popupMenuCategory.show();
-
             }
         });
-      /*  buttonByEnigma.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                relativeLayoutPlayerSearch.setVisibility(View.GONE);
-                etPlayerSearch.setText(null);
-                etPlayerSearch.setVisibility(View.GONE);
-                buttonByPlayer.setVisibility(View.VISIBLE);
-                final PopupMenu popupMenuEnigma = new PopupMenu(PlayActivity.this, buttonByEnigma);
-                popupMenuEnigma.setOnMenuItemClickListener(PlayActivity.this);
-                popupMenuEnigma.inflate(R.menu.by_enigma_menu);
-                setUpCategoryMenus(popupMenuEnigma, Constants.POPUP_ENIGMA_MENU_NAME);
-                popupMenuEnigma.show();
-            }
-        });*/
     }
 
 
@@ -254,205 +199,205 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
         switch  (item.getItemId()){
             // Category item
             case  R.id.category_all:
-                getAllItemUnchecked(Constants.FILTER_CATEGORY);
-                categoryChecked = Constants.ITEM_ALL_NAME;
-                filterCategory = Constants.SORT_CATEGORY_ALL_NAME;
-                categoryButtonString = Constants.BUTTON_CATEGORY_ALL_TEXT;
-                updateButtonText(Constants.FILTER_CATEGORY);
-                setUpFilterChecked(categoryChecked);
+                filterCategory = Constants.FILTER_CATEGORY_ALL;
+                getAllItemUnchecked(FILTER_POPUP_MENU_SELECTED);
+                setUpButtonsTitle(FILTER_POPUP_MENU_SELECTED);
+                setUpFilterChecked(FILTER_POPUP_MENU_SELECTED);
                 setUpRecyclerView();
-                return false;
-            case R.id.category_personnage :
-                getAllItemUnchecked(Constants.FILTER_CATEGORY);
-                categoryChecked = Constants.ITEM_PERSONAGE_NAME;
-                filterCategory = Constants.SORT_CATEGORY_PERSONAGE_NAME;
-                categoryButtonString = Constants.BUTTON_CATEGORY_PERSONAGE_TEXT;
-                updateButtonText(Constants.FILTER_CATEGORY);
-                setUpFilterChecked(categoryChecked);
-                setUpRecyclerView();
-                return false;
-            case R.id.category_cinéma :
-                getAllItemUnchecked(Constants.FILTER_CATEGORY);
-                categoryChecked = Constants.ITEM_CINEMA_NAME;
-                filterCategory = Constants.SORT_CATEGORY_CINEMA_NAME;
-                categoryButtonString = Constants.BUTTON_CATEGORY_CINEMA_TEXT;
-                updateButtonText(Constants.FILTER_CATEGORY);
-                setUpFilterChecked(categoryChecked);
-                setUpRecyclerView();
-                return false;
-            case R.id.category_musique :
-                getAllItemUnchecked(Constants.FILTER_CATEGORY);
-                categoryChecked = Constants.ITEM_MUSIC_NAME;
-                filterCategory = Constants.SORT_CATEGORY_MUSIC_NAME;
-                categoryButtonString = Constants.BUTTON_CATEGORY_MUSIC_TEXT;
-                updateButtonText(Constants.FILTER_CATEGORY);
-                setUpFilterChecked(categoryChecked);
-                setUpRecyclerView();
-                return false;
-            case R.id.category_expressions :
-                getAllItemUnchecked(Constants.FILTER_CATEGORY);
-                categoryChecked = Constants.ITEM_EXPRESSION_NAME;
-                filterCategory = Constants.SORT_CATEGORY_EXPRESSION_NAME;
-                categoryButtonString = Constants.BUTTON_CATEGORY_EXPRESSION_TEXT;
-                updateButtonText(Constants.FILTER_CATEGORY);
-                setUpFilterChecked(categoryChecked);
-                setUpRecyclerView();
-                return false;
-            case R.id.category_objet :
-                getAllItemUnchecked(Constants.FILTER_CATEGORY);
-                categoryChecked = Constants.ITEM_OBJECT_NAME;
-                filterCategory = Constants.SORT_CATEGORY_OBJECT_NAME;
-                categoryButtonString = Constants.BUTTON_CATEGORY_OBJECT_TEXT;
-                updateButtonText(Constants.FILTER_CATEGORY);
-                setUpFilterChecked(categoryChecked);
-                setUpRecyclerView();
-                return false;
-            case R.id.category_mot :
-                getAllItemUnchecked(Constants.FILTER_CATEGORY);
-                categoryChecked = Constants.ITEM_WORD_NAME;
-                filterCategory = Constants.SORT_CATEGORY_WORD_NAME;
-                categoryButtonString = Constants.BUTTON_CATEGORY_WORD_TEXT;
-                updateButtonText(Constants.FILTER_CATEGORY);
-                setUpFilterChecked(categoryChecked);
-                setUpRecyclerView();
-                return false;
-            case R.id.category_autres :
-                getAllItemUnchecked(Constants.FILTER_CATEGORY);
-                categoryChecked = Constants.ITEM_OTHER_NAME;
-                filterCategory = Constants.SORT_CATEGORY_OTHER_NAME;
-                categoryButtonString = Constants.BUTTON_CATEGORY_OTHER_TEXT;
-                updateButtonText(Constants.FILTER_CATEGORY);
-                setUpFilterChecked(categoryChecked);
-                setUpRecyclerView();
-                return false;
-            // ENIGMA ITEM
-            case R.id.menu_enigma_all :
-                getAllItemUnchecked(Constants.FILTER_ENIGMA);
-                enigmaItemChecked = Constants.ITEM_ENIGMA_ALL_NAME;
-                enigmaButtonString = Constants.BUTTON_ENIGMA_ALL_TEXT;
-                updateButtonText(Constants.FILTER_ENIGMA);
-                setUpFilterChecked(enigmaItemChecked);
-                setUpRecyclerView();
-                return false;
-            case R.id.menu_enigma_own :
-                getAllItemUnchecked(Constants.FILTER_ENIGMA);
-                enigmaItemChecked = Constants.ITEM_ENIGMA_OWN_NAME;
-                enigmaButtonString = Constants.BUTTON_ENIGMA_OWN_TEXT;
-                updateButtonText(Constants.FILTER_ENIGMA);
-                setUpFilterChecked(enigmaItemChecked);
-                setUpRecyclerView();
-                return false;
-            case R.id.menu_enigma_resolved :
-                getAllItemUnchecked(Constants.FILTER_ENIGMA);
-                enigmaItemChecked = Constants.ITEM_ENIGMA_RESOLVED_NAME;
-                enigmaButtonString = Constants.BUTTON_ENIGMA_RESOLVED_TEXT;
-                updateButtonText(Constants.FILTER_ENIGMA);
-                setUpFilterChecked(enigmaItemChecked);
-                setUpRecyclerView();
-                return false;
-            case R.id.menu_enigma_unresolved :
-                getAllItemUnchecked(Constants.FILTER_ENIGMA);
-                enigmaItemChecked = Constants.ITEM_ENIGMA_UNRESOLVED_NAME;
-                enigmaButtonString = Constants.BUTTON_ENIGMA_UNRESOLVED_TEXT;
-                updateButtonText(Constants.FILTER_ENIGMA);
-                setUpFilterChecked(enigmaItemChecked);
-                setUpRecyclerView();
-                return false;
-            case R.id.menu_enigma_with_message :
-                getAllItemUnchecked(Constants.FILTER_ENIGMA);
-                enigmaItemChecked = Constants.ITEM_ENIGMA_WITH_MESSAGE_NAME;
-                enigmaButtonString = Constants.BUTTON_ENIGMA_WITH_MESSAGE_TEXT;
-                updateButtonText(Constants.FILTER_ENIGMA);
-                setUpFilterChecked(enigmaItemChecked);
-                setUpRecyclerView();
-                return false;
-            default:
-                return false;
-        }
-    }
-
-
-
-    private void setUpCategoryMenus(PopupMenu popupMenuCategory2, String menuName){
-        switch (menuName) {
-            case Constants.POPUP_CATEGORY_MENU_NAME :
-                itemAll = popupMenuCategory2.getMenu().findItem(R.id.category_all);
-                itemPersonage = popupMenuCategory2.getMenu().findItem(R.id.category_personnage);
-                itemCinema = popupMenuCategory2.getMenu().findItem(R.id.category_cinéma);
-                itemMusic = popupMenuCategory2.getMenu().findItem(R.id.category_musique);
-                itemExpressions = popupMenuCategory2.getMenu().findItem(R.id.category_expressions);
-                itemObject = popupMenuCategory2.getMenu().findItem(R.id.category_objet);
-                itemWord = popupMenuCategory2.getMenu().findItem(R.id.category_mot);
-                itemOther = popupMenuCategory2.getMenu().findItem(R.id.category_autres);
-                setUpFilterChecked(Constants.FILTER_CATEGORY);
                 break;
-            case Constants.POPUP_ENIGMA_MENU_NAME :
-                itemEnigmaAll = popupMenuCategory2.getMenu().findItem(R.id.menu_enigma_all);
-                itemEnigmaOwn = popupMenuCategory2.getMenu().findItem(R.id.menu_enigma_own);
-                itemEnigmaResolved = popupMenuCategory2.getMenu().findItem(R.id.menu_enigma_resolved);
-                itemEnigmaUnresolved = popupMenuCategory2.getMenu().findItem(R.id.menu_enigma_unresolved);
-                itemEnigmaWithMessage = popupMenuCategory2.getMenu().findItem(R.id.menu_enigma_with_message);
-                setUpFilterChecked(Constants.FILTER_ENIGMA);
+            case R.id.category_personnage :
+                filterCategory = Constants.FILTER_CATEGORY_PERSONAGE;
+                getAllItemUnchecked(FILTER_POPUP_MENU_SELECTED);
+                setUpButtonsTitle(FILTER_POPUP_MENU_SELECTED);
+                setUpFilterChecked(FILTER_POPUP_MENU_SELECTED);
+                setUpRecyclerView();
+                break;
+            case R.id.category_cinéma :
+                filterCategory = Constants.FILTER_CATEGORY_CINEMA;
+                getAllItemUnchecked(FILTER_POPUP_MENU_SELECTED);
+                setUpButtonsTitle(FILTER_POPUP_MENU_SELECTED);
+                setUpFilterChecked(FILTER_POPUP_MENU_SELECTED);
+                setUpRecyclerView();
+                break;
+            case R.id.category_musique :
+                filterCategory = Constants.FILTER_CATEGORY_MUSIC;
+                getAllItemUnchecked(FILTER_POPUP_MENU_SELECTED);
+                setUpButtonsTitle(FILTER_POPUP_MENU_SELECTED);
+                setUpFilterChecked(FILTER_POPUP_MENU_SELECTED);
+                setUpRecyclerView();
+                break;
+            case R.id.category_expressions :
+                filterCategory = Constants.FILTER_CATEGORY_EXPRESSION;
+                getAllItemUnchecked(FILTER_POPUP_MENU_SELECTED);
+                setUpButtonsTitle(FILTER_POPUP_MENU_SELECTED);
+                setUpFilterChecked(FILTER_POPUP_MENU_SELECTED);
+                setUpRecyclerView();
+                break;
+            case R.id.category_objet :
+                filterCategory = Constants.FILTER_CATEGORY_OBJECT;
+                getAllItemUnchecked(FILTER_POPUP_MENU_SELECTED);
+                setUpButtonsTitle(FILTER_POPUP_MENU_SELECTED);
+                setUpFilterChecked(FILTER_POPUP_MENU_SELECTED);
+                setUpRecyclerView();
+                break;
+            case R.id.category_mot :
+                filterCategory = Constants.FILTER_CATEGORY_WORD;
+                getAllItemUnchecked(FILTER_POPUP_MENU_SELECTED);
+                setUpButtonsTitle(FILTER_POPUP_MENU_SELECTED);
+                setUpFilterChecked(FILTER_POPUP_MENU_SELECTED);
+                setUpRecyclerView();
+                break;
+            case R.id.category_autres :
+                filterCategory = Constants.FILTER_CATEGORY_OTHER;
+                getAllItemUnchecked(FILTER_POPUP_MENU_SELECTED);
+                setUpButtonsTitle(FILTER_POPUP_MENU_SELECTED);
+                setUpFilterChecked(FILTER_POPUP_MENU_SELECTED);
+                setUpRecyclerView();
+                break;
+            case R.id.menu_filter_dificulty_asc :
+                sortType = Constants.SORT_DIFICULTY_ASC;
+                getAllItemUnchecked(SORT_POPUP_MENU_SELECTED);
+                setUpButtonsTitle(SORT_POPUP_MENU_SELECTED);
+                setUpFilterChecked(SORT_POPUP_MENU_SELECTED);
+                setUpRecyclerView();
+                break;
+            case R.id.menu_filter_dificulty_desc :
+                sortType = Constants.SORT_DIFICULTY_DESC;
+                getAllItemUnchecked(SORT_POPUP_MENU_SELECTED);
+                setUpButtonsTitle(SORT_POPUP_MENU_SELECTED);
+                setUpFilterChecked(SORT_POPUP_MENU_SELECTED);
+                setUpRecyclerView();
+                break;
+            case R.id.menu_filter_date_asc :
+                sortType = Constants.SORT_DATE_ASC;
+                getAllItemUnchecked(SORT_POPUP_MENU_SELECTED);
+                setUpButtonsTitle(SORT_POPUP_MENU_SELECTED);
+                setUpFilterChecked(SORT_POPUP_MENU_SELECTED);
+                setUpRecyclerView();
+                break;
+            case R.id.menu_filter_date_desc :
+                sortType = Constants.SORT_DATE_DESC;
+                getAllItemUnchecked(SORT_POPUP_MENU_SELECTED);
+                setUpButtonsTitle(SORT_POPUP_MENU_SELECTED);
+                setUpFilterChecked(SORT_POPUP_MENU_SELECTED);
+                setUpRecyclerView();
+                break;
+            case R.id.menu_filter_player_asc :
+                sortType = Constants.SORT_PLAYER_ASC;
+                getAllItemUnchecked(SORT_POPUP_MENU_SELECTED);
+                setUpButtonsTitle(SORT_POPUP_MENU_SELECTED);
+                setUpFilterChecked(SORT_POPUP_MENU_SELECTED);
+                setUpRecyclerView();
+                break;
+            case R.id.menu_filter_player_desc :
+                sortType = Constants.SORT_PlAYER_DESC;
+                getAllItemUnchecked(SORT_POPUP_MENU_SELECTED);
+                setUpButtonsTitle(SORT_POPUP_MENU_SELECTED);
+                setUpFilterChecked(SORT_POPUP_MENU_SELECTED);
+                setUpRecyclerView();
+                break;
+        }
+        return false;
+    }
+
+
+
+
+
+    private void setUpCategoryMenus(PopupMenu popupMenu, int popupMenuSelected){
+        switch (popupMenuSelected){
+            case SORT_POPUP_MENU_SELECTED :
+                itemEnigmaDificultyAsc = popupMenu.getMenu().findItem(R.id.menu_filter_dificulty_asc);
+                itemEnigmaDificultyDesc = popupMenu.getMenu().findItem(R.id.menu_filter_dificulty_desc);
+                itemEnigmaDateAsc = popupMenu.getMenu().findItem(R.id.menu_filter_date_asc);
+                itemEnigmaDateDesc = popupMenu.getMenu().findItem(R.id.menu_filter_date_desc);
+                itemEnigmaPlayerAsc = popupMenu.getMenu().findItem(R.id.menu_filter_player_asc);
+                itemEnigmaPlayerDesc = popupMenu.getMenu().findItem(R.id.menu_filter_player_desc);
+                break;
+            case FILTER_POPUP_MENU_SELECTED :
+                itemAll = popupMenu.getMenu().findItem(R.id.category_all);
+                itemPersonage = popupMenu.getMenu().findItem(R.id.category_personnage);
+                itemCinema = popupMenu.getMenu().findItem(R.id.category_cinéma);
+                itemMusic = popupMenu.getMenu().findItem(R.id.category_musique);
+                itemExpressions = popupMenu.getMenu().findItem(R.id.category_expressions);
+                itemObject = popupMenu.getMenu().findItem(R.id.category_objet);
+                itemWord = popupMenu.getMenu().findItem(R.id.category_mot);
+                itemOther = popupMenu.getMenu().findItem(R.id.category_autres);
+                break;
         }
     }
 
-    private void setUpFilterChecked(String filter) {
-        switch (filter) {
-            case Constants.FILTER_CATEGORY :
-                switch (categoryChecked) {
-                    case Constants.ITEM_ALL_NAME:
+    private void setUpButtonsTitle(int menuSelected) {
+        RelativeLayout linearLayout = findViewById(R.id.activity_play_filter_layout);
+        switch (menuSelected){
+            case FILTER_POPUP_MENU_SELECTED :
+                tvCategoryButton = linearLayout.findViewById(R.id.category_button_text_view);
+                tvCategoryButton.setText(filterCategory);
+                break;
+            case SORT_POPUP_MENU_SELECTED :
+                tvSortButton = linearLayout.findViewById(R.id.sort_filter_button_text_view);
+                tvSortButton.setText(sortType);
+        }
+    }
+
+    private void setUpFilterChecked(int menuSelected) {
+        switch (menuSelected){
+            case FILTER_POPUP_MENU_SELECTED :
+                switch (filterCategory) {
+                    case Constants.FILTER_CATEGORY_ALL:
                         itemAll.setChecked(true);
                         break;
-                    case Constants.ITEM_PERSONAGE_NAME:
+                    case Constants.FILTER_CATEGORY_PERSONAGE:
                         itemPersonage.setChecked(true);
                         break;
-                    case Constants.ITEM_CINEMA_NAME:
+                    case Constants.FILTER_CATEGORY_CINEMA:
                         itemCinema.setChecked(true);
                         break;
-                    case Constants.ITEM_MUSIC_NAME:
+                    case Constants.FILTER_CATEGORY_MUSIC:
                         itemMusic.setChecked(true);
                         break;
-                    case Constants.ITEM_EXPRESSION_NAME:
+                    case Constants.FILTER_CATEGORY_EXPRESSION:
                         itemExpressions.setChecked(true);
                         break;
-                    case Constants.ITEM_OBJECT_NAME:
+                    case Constants.FILTER_CATEGORY_OBJECT:
                         itemObject.setChecked(true);
                         break;
-                    case Constants.ITEM_OTHER_NAME:
+                    case Constants.FILTER_CATEGORY_WORD:
+                        itemOther.setChecked(true);
+                        break;
+                    case Constants.FILTER_CATEGORY_OTHER:
                         itemOther.setChecked(true);
                         break;
                 }
                 break;
-            case Constants.FILTER_ENIGMA :
-                switch (enigmaItemChecked){
-                    case Constants.ITEM_ENIGMA_ALL_NAME :
-                        itemEnigmaAll.setChecked(true);
-                        enigmaButtonString = Constants.BUTTON_ENIGMA_ALL_TEXT;
+            case SORT_POPUP_MENU_SELECTED :
+                switch (sortType) {
+                    case Constants.SORT_DIFICULTY_ASC:
+                        itemEnigmaDificultyAsc.setChecked(true);
                         break;
-                    case Constants.ITEM_ENIGMA_OWN_NAME :
-                        itemEnigmaOwn.setChecked(true);
-                        enigmaButtonString = Constants.BUTTON_ENIGMA_OWN_TEXT;
+                    case Constants.SORT_DIFICULTY_DESC:
+                        itemEnigmaDificultyDesc.setChecked(true);
                         break;
-                    case Constants.ITEM_ENIGMA_RESOLVED_NAME :
-                        itemEnigmaResolved.setChecked(true);
-                        enigmaButtonString = Constants.BUTTON_ENIGMA_RESOLVED_TEXT;
+                    case Constants.SORT_DATE_ASC:
+                        itemEnigmaDateAsc.setChecked(true);
                         break;
-                    case Constants.ITEM_ENIGMA_UNRESOLVED_NAME :
-                        itemEnigmaUnresolved.setChecked(true);
-                        enigmaButtonString = Constants.BUTTON_ENIGMA_UNRESOLVED_TEXT;
+                    case Constants.SORT_DATE_DESC:
+                        itemEnigmaDateDesc.setChecked(true);
                         break;
-                    case Constants.ITEM_ENIGMA_WITH_MESSAGE_NAME:
-                        itemEnigmaWithMessage.setChecked(true);
-                        enigmaButtonString = Constants.BUTTON_ENIGMA_WITH_MESSAGE_TEXT;
+                    case Constants.SORT_PLAYER_ASC:
+                        itemEnigmaPlayerAsc.setChecked(true);
+                        break;
+                    case Constants.SORT_PlAYER_DESC:
+                        itemEnigmaPlayerDesc.setChecked(true);
                         break;
                 }
                 break;
         }
     }
 
-    private void getAllItemUnchecked(String filter) {
-        switch (filter) {
-            case Constants.FILTER_CATEGORY :
+    private void getAllItemUnchecked(int menuSelected) {
+        switch (menuSelected){
+            case FILTER_POPUP_MENU_SELECTED :
                 if (itemAll.isChecked()) itemAll.setChecked(false);
                 if (itemPersonage.isChecked()) itemPersonage.setChecked(false);
                 if (itemCinema.isChecked()) itemCinema.setChecked(false);
@@ -462,94 +407,110 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                 if (itemWord.isChecked()) itemWord.setChecked(false);
                 if (itemOther.isChecked()) itemOther.setChecked(false);
                 break;
-            case Constants.FILTER_ENIGMA :
-                if (itemEnigmaAll.isChecked()) itemEnigmaAll.setChecked(false);
-                if (itemEnigmaOwn.isChecked()) itemEnigmaOwn.setChecked(false);
-                if (itemEnigmaResolved.isChecked()) itemEnigmaResolved.setChecked(false);
-                if (itemEnigmaUnresolved.isChecked()) itemEnigmaUnresolved.setChecked(false);
-                if (itemEnigmaWithMessage.isChecked()) itemEnigmaWithMessage.setChecked(false);
+            case SORT_POPUP_MENU_SELECTED :
+                if (itemEnigmaDificultyAsc.isChecked()) itemEnigmaDificultyAsc.setChecked(false);
+                if (itemEnigmaDificultyDesc.isChecked()) itemEnigmaDificultyDesc.setChecked(false);
+                if (itemEnigmaDateAsc.isChecked()) itemEnigmaDateAsc.setChecked(false);
+                if (itemEnigmaDateDesc.isChecked()) itemEnigmaDateDesc.setChecked(false);
+                if (itemEnigmaPlayerAsc.isChecked()) itemEnigmaPlayerAsc.setChecked(false);
+                if (itemEnigmaPlayerDesc.isChecked()) itemEnigmaPlayerDesc.setChecked(false);
                 break;
         }
     }
 
-    private void updateButtonText(String filter) {
-        RelativeLayout linearLayout = findViewById(R.id.activity_play_filter_layout);
-        switch (filter){
-            case Constants.FILTER_CATEGORY :
-                tvCategoryButton = linearLayout.findViewById(R.id.category_button_text_view);
-                tvCategoryButton.setText(categoryButtonString);
-                break;
-            case Constants.FILTER_ENIGMA :
-              /*  tvEnigmaButton = linearLayout.findViewById(R.id.enigma_button_text_view);
-                tvEnigmaButton.setText(enigmaButtonString);*/
-                break;
-        }
-    }
+
 
     public void setUpRecyclerView(){
         final Query query = EnigmaHelper.getAllEnigma(filterCategory);
         final ArrayList <Enigma> enigmaList = new ArrayList<>();
-        enigmaAdapter = new EnigmaAdapter(enigmaList, PlayActivity.this);
+        final int tag = tabTag;
+        final String sort = sortType;
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         final Enigma enigma = document.toObject(Enigma.class);
-                        switch (enigmaItemChecked) {
-                            case Constants.ITEM_ENIGMA_ALL_NAME:
-                                enigmaList.add(enigma);
-                                break;
-                            case Constants.ITEM_ENIGMA_OWN_NAME:
-                                if(enigma.getUserUid().equals(getCurrentUser().getUid())) {
-                                    enigmaList.add(enigma);
-                                }
-                                break;
-                            case Constants.ITEM_ENIGMA_RESOLVED_NAME :
-                                if(enigma.getResolvedUserUid().contains(getCurrentUser().getUid())) {
-                                    enigmaList.add(enigma);
-                                }
-                                break;
-                            case Constants.ITEM_ENIGMA_UNRESOLVED_NAME :
+                        switch (tag) {
+                            case TAB_UNSOLVED_ENIGMA_TAG:
                                 if (!enigma.getResolvedUserUid().contains(getCurrentUser().getUid())
-                                        && !enigma.getUserUid().equals(getCurrentUser().getUid())){
-                                    enigmaList.add(enigma);
+                                        && !enigma.getUserUid().equals(getCurrentUser().getUid())
+                                        && !userEnigmaHistoryList.contains(enigma.getUid())){
+                                        enigmaList.add(enigma);
                                 }
                                 break;
-                            case Constants.ITEM_ENIGMA_WITH_MESSAGE_NAME :
-                                UserHelper.getUser(getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                       User user = documentSnapshot.toObject(User.class);
-                                        Log.d(TAG, "onSuccess: userMessage = " + user.getUserMessageList().toString() );
-                                    }
-                                });
+                            case TAB_HISTORY_ENIGMA_TAG:
+                                if (userEnigmaHistoryList.contains(enigma.getUid())) {
+                                        enigmaList.add(enigma);
+                                }
+                                break;
+                            case TAB_USER_ENIGMA_TAG:
+                                if (enigma.getResolvedUserUid().contains(getCurrentUser().getUid())
+                                        || enigma.getUserUid().equals(getCurrentUser().getUid())) {
+                                        enigmaList.add(enigma);
+                                }
                                 break;
                         }
-                    }
+                        switch (sort){
+                            case Constants.SORT_DIFICULTY_ASC :
+                                Collections.sort(enigmaList, new Enigma.DifficultyComparatorAsc());
+                                break;
+                            case Constants.SORT_DIFICULTY_DESC :
+                                Collections.sort(enigmaList, new Enigma.DifficultyComparatorDesc());
+                                break;
+                            case Constants.SORT_DATE_ASC :
+                                Collections.sort(enigmaList, new Enigma.DateComparatorAsc());
+                                break;
+                            case Constants.SORT_DATE_DESC :
+                                Collections.sort(enigmaList, new Enigma.DateComparatorDesc());
+                                break;
+                            case Constants.SORT_PLAYER_ASC :
+                                Collections.sort(enigmaList, new Enigma.PlayerComparatorAsc());
+                                break;
+                            case Constants.SORT_PlAYER_DESC :
+                                Collections.sort(enigmaList, new Enigma.PlayerComparatorDesc());
+                                break;
 
+                        }
+                        enigmaRecyclerView = findViewById(R.id.activity_play_enigma_recycler_view);
+                        enigmaRecyclerView.setHasFixedSize(true);
+                        if (tag < 1) {
+                            enigmaLayoutManager = new GridLayoutManager(PlayActivity.this, GRID_LAYOUT_NUMBER_OF_ROWS);
+                            mEnigmaGridAdapter = new EnigmaGridAdapter(enigmaList, PlayActivity.this);
+                            enigmaRecyclerView.setLayoutManager(enigmaLayoutManager);
+                            mEnigmaGridAdapter.notifyDataSetChanged();
+                            enigmaRecyclerView.setAdapter(mEnigmaGridAdapter);
+                            tvEmptyRecyclerView.setVisibility(mEnigmaGridAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
+
+                            mEnigmaGridAdapter.setOnItemClickListener(new EnigmaGridAdapter.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(int position) {
+                                    Enigma enigma = enigmaList.get(position);
+                                    Intent solveEnigmaIntent = new Intent(PlayActivity.this, SolveEnigmaActivity.class);
+                                    solveEnigmaIntent.putExtra(EXTRA_ENIGMA_PATH, enigma.getUid());
+                                    startActivityForResult(solveEnigmaIntent, INTENT_SOLVE_ACTIVITY_KEY);
+                                }
+                            });
+                        } else {
+                            enigmaLayoutManager = new LinearLayoutManager(PlayActivity.this);
+                            mEnigmaLinearAdapter = new EnigmaLinearAdapter(enigmaList, PlayActivity.this);
+                            enigmaRecyclerView.setLayoutManager(enigmaLayoutManager);
+                            mEnigmaLinearAdapter.notifyDataSetChanged();
+                            enigmaRecyclerView.setAdapter(mEnigmaLinearAdapter);
+                            tvEmptyRecyclerView.setVisibility(mEnigmaLinearAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
+
+                            mEnigmaLinearAdapter.setOnItemClickListener(new EnigmaLinearAdapter.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(int position) {
+                                    Enigma enigma = enigmaList.get(position);
+                                    Intent solveEnigmaIntent = new Intent(PlayActivity.this, SolveEnigmaActivity.class);
+                                    solveEnigmaIntent.putExtra(EXTRA_ENIGMA_PATH, enigma.getUid());
+                                    startActivityForResult(solveEnigmaIntent, INTENT_SOLVE_ACTIVITY_KEY);
+                                }
+                            });
+                        }
+                    }
                 }
-
-                unsolvedRecyclerView = findViewById(R.id.activity_play_enigma_recycler_view);
-                unsolvedRecyclerView.setHasFixedSize(true);
-                unsolvedLayoutManager = new GridLayoutManager(PlayActivity.this, GRID_LAYOUT_NUMBER_OF_ROWS);
-                enigmaAdapter = new EnigmaAdapter(enigmaList, PlayActivity.this);
-
-                unsolvedRecyclerView.setLayoutManager(unsolvedLayoutManager);
-                enigmaAdapter.notifyDataSetChanged();
-                unsolvedRecyclerView.setAdapter(enigmaAdapter);
-
-                tvNoEnigma.setVisibility(enigmaAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
-
-                enigmaAdapter.setOnItemClickListener(new EnigmaAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(int position) {
-                        Enigma enigma = enigmaList.get(position);
-                        Intent solveEnigmaIntent = new Intent(PlayActivity.this, SolveEnigmaActivity.class);
-                        solveEnigmaIntent.putExtra(EXTRA_ENIGMA_PATH, enigma.getUid());
-                        startActivityForResult(solveEnigmaIntent, INTENT_SOLVE_ACTIVITY_KEY);
-                    }
-                });
             }
         });
     }

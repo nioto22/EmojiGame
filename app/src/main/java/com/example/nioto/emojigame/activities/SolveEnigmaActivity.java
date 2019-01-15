@@ -155,8 +155,8 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
 
                                 enigmaCategory.setText(enigma.getCategory());
                                 enigmaEnigma.setText(enigma.getEnigma());
-                                enigmaDifficulty.setText(enigma.getDifficultyFormarted());
-                                enigmaEditResponse.setText(enigma.getSolution());
+                                enigmaDifficulty.setText( enigma.getDificulty());
+                                enigmaEditResponse.setText(String.valueOf(enigma.getSolution()));
                                 UserHelper.getUser(enigma.getUserUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                     @Override
                                     public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -190,7 +190,7 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
                         } else {
                             tvPodiumNobody.setVisibility(View.GONE);
                             layoutPodiumDifficulty.setVisibility(View.VISIBLE);
-                            tvPodiumDifficulty.setText(enigma.getDifficultyFormarted());
+                            tvPodiumDifficulty.setText(enigma.getDificulty());
                             layoutPodiumUsers.setVisibility(View.VISIBLE);
 
                             if (userPodiumList.size() >= 1){

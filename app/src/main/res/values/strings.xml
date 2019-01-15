@@ -58,8 +58,7 @@
     <string name="toolbar_title_create_enigma_activity">Créer une Enigme</string>
     <string name="create_button">CREER</string>
     <string name="tv_category_choosed">Choisissez une catégorie</string>
-    <string name="login_welcome">Bienvenue</string>
-    <string name="login_text_game">Venez défier vos amis dans ce jeu de rébus d\'un nouveau genre</string>
+    <string name="login_text_game">Bienvenue \nVenez défier vos amis dans ce jeu de rébus d\'un nouveau genre</string>
     <string name="login_text_connexion">Pour commencer à vous amuser, connectez vous : </string>
 
 
@@ -109,14 +108,12 @@
     <string name="by_category_button_category_text">CATEGORIE</string>
     <string name="by_enigma_button_filter_title_text">Enigmes</string>
     <string name="by_enigma_button_detail_text">TOUTES</string>
-    <string name="by_player_button_filter_title_text">Chercher un</string>
-    <string name="by_player_button_filter_detail_text">JOUEUR</string>
     <string name="chat_item_image_profile_content_description">Image Profile</string>
     <string name="chat_item_image_owner_content_description">Image OWNER</string>
     <string name="chat_title_image_sent_content_description">Image Sent</string>
     <string name="enigma_item_enigma_text">ENIGMA</string>
     <string name="enigma_item_category_title">Catégorie :</string>
-    <string name="enigma_item_enigma_solved_title_text">Enigme résolue :</string>
+    <string name="enigma_item_enigma_solved_title_text">Enigme rapporte :</string>
     <string name="enigma_item_create_by_title_text">Créée par :</string>
     <string name="popup_help_example_title">EXEMPLE</string>
     <string name="popup_help_enigma_help">Entrez ici votre énigme sous forme d\'émoji !!   Attention chaque syllabe doit être représentée !</string>
@@ -130,6 +127,10 @@
     <string name="popup_help_explanation_text">Porte_Feuille</string>
     <string name="popup_help_explanation_help">Entrez ici la signification de chaque Emoji séparée par un _</string>
     <string name="image_example_content_description">Image Example</string>
+    <string name="user_enigma_image_content_description">user enigma</string>
+    <string name="history_enigma_image_content_description">history button</string>
+    <string name="suspension_points">...</string>
+    <string name="sort_filter_button_text_title">Trier par</string>
 
 
 </resources>
