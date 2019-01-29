@@ -2,7 +2,11 @@ package com.example.nioto.emojigame.utils;
 
 public class Constants {
 
-
+    //PLAY ACTIVITY
+    // TOOLBAR TITLES
+    public static final String TOOLBAR_TITLE_IN_PLAY = "Enigmes en Jeu";
+    public static final String TOOLBAR_TITLE_HISTORIC = "Enigmes Jouées";
+    public static final String TOOLBAR_TITLE_OWN = "Enigmes Crées";
     // SORT / FILTER OPTIONS
     public static final String FILTER_CATEGORY_ALL = "CATEGORIE";
     public static final String FILTER_CATEGORY_PERSONAGE = "PERSONNAGE";

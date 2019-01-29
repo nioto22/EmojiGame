@@ -1,20 +1,16 @@
 package com.example.nioto.emojigame.models;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.example.nioto.emojigame.api.UserHelper;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.ServerTimestamp;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
 public class Enigma {
+    private static final String TAG = "Enigma";
 
     private String uid;
     private String userUid;
@@ -74,10 +70,10 @@ public class Enigma {
     }
     public void setDificulty() {
         if (this.message != null) {
-        String[] messageSplit = this.message.split("_");
+            String[] messageSplit = this.message.split("_");
             int numberOfSplit = messageSplit.length;
             int enigmaLenght = this.enigma.length();
-            int additionalPoints = (enigmaLenght / numberOfSplit < 2) ? 0 : (enigmaLenght / numberOfSplit < 4) ? enigmaLenght/numberOfSplit*25 : 75;
+            int additionalPoints = (numberOfSplit > 3 ) ? (enigmaLenght / numberOfSplit < 2) ? 0 : (enigmaLenght / numberOfSplit < 4) ? enigmaLenght/numberOfSplit*25 : 50 : 0;
             this.dificulty = (numberOfSplit * 25) + additionalPoints ;
         } else {
             this.dificulty = 25;
@@ -122,6 +118,7 @@ public class Enigma {
     public static class PlayerComparatorDesc implements Comparator<Enigma> {
         @Override
         public int compare(Enigma e1, Enigma e2) {
+
             return e2.userUid.compareTo(e1.userUid);
         }
     }

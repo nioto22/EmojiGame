@@ -61,6 +61,9 @@ public class CreateEnigmaActivity extends BaseActivity {
     @BindView(R.id.create_activity_update_button) Button updateButton;
     @BindView(R.id.create_activity_enigma_help) ImageButton enigmaHelp;
 
+    @BindView(R.id.create_activity_toolbar_coins_text_view) TextView tvCoinsToolbar;
+    @BindView(R.id.create_activity_toolbar_smileys_text_view) TextView tvSmileysToolbar;
+
     PopupWindow helpPopUpWindow;
 
     // FOR CATEGORY LIST VIEW
@@ -79,6 +82,8 @@ public class CreateEnigmaActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setUpToolbar();
         // Hide the keyboard.
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
@@ -104,6 +109,25 @@ public class CreateEnigmaActivity extends BaseActivity {
     // ------------------
     //      UI
     // ------------------
+
+    public void setUpToolbar(){
+        // Get username from FireBase
+        UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                User currentUser = documentSnapshot.toObject(User.class);
+                // Set points
+                assert currentUser != null;
+                String userPoints = String.valueOf(currentUser.getPoints());
+                tvCoinsToolbar.setText(userPoints);
+
+                // Set smileys
+                String userSmileys = String.valueOf(currentUser.getSmileys());
+                tvSmileysToolbar.setText(userSmileys);
+            }
+        });
+    }
+
 
     private void initiateListView() {
         expandableListView = findViewById(R.id.create_activity_list_category);
@@ -187,6 +211,12 @@ public class CreateEnigmaActivity extends BaseActivity {
     // ------------------
     //      ACTION
     // ------------------
+
+    // BACK BUTTON
+    @OnClick (R.id.create_activity_toolbar_return_button)
+    public void onClickBackButton(View v){
+        onBackPressed();
+    }
 
     @OnClick (R.id.create_activity_create_button)
     public void onClickCreateButton(){

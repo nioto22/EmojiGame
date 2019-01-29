@@ -87,7 +87,7 @@
     <string name="solve_activity_category_title">Catégorie</string>
     <string name="download_text">Chargement …</string>
     <string name="solve_activity_create_by_title">Créé par :</string>
-    <string name="solve_activity_number_enigma_solved_title">Enigme résolue :</string>
+    <string name="solve_activity_number_enigma_solved_title">Enigme rapporte :</string>
     <string name="resolve_button_image_content_description">resolve button</string>
     <string name="hint_button_image_content_description">hint button</string>
     <string name="podium_button_image_content_description">podium button</string>

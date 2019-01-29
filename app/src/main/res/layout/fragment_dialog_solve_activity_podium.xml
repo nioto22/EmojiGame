@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/fragment_dialog_solve_activity_podium_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="PODIUM"
+        android:textStyle="bold"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/colorYellow"
+        android:background="@drawable/button_fragment_dialog"
+        android:padding="@dimen/default_small_margin"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_dialog_solve_activity_podium_linear_layout_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"/>
+
+    <RelativeLayout
+        android:id="@+id/fragment_dialog_solve_activity_podium_linear_layout_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default_large_margin"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/button_fragment_dialog"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_dialog_solve_activity_podium_button_validate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_dialog_solve_activity_podium_title"
+        android:visibility="gone">
+        <!-- MESSAGE RECYCLER NO RESOLUTION -->
+        <TextView
+            android:id="@+id/fragment_dialog_solve_activity_podium_tv_no_resolution"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_large_margin"
+            android:text="@string/solve_activity_podium_no_solve_text"
+            android:textColor="@color/primaryTextColor"
+            android:textAlignment="center"
+            android:visibility="gone"/>
+        <!-- MESSAGE DIFFICULTY -->
+        <LinearLayout
+            android:id="@+id/fragment_dialog_solve_activity_podium_layout_difficulty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/fragment_dialog_solve_activity_podium_tv_no_resolution"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="25dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/fragment_dialog_solve_activity_podium_tv_difficulty_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:text="@string/solve_activity_podium_number_enigma_solved"
+                android:textColor="@color/primaryTextColor"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <TextView
+                android:id="@+id/fragment_dialog_solve_activity_podium_tv_difficulty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:text="@string/solve_activity_nothing_text"
+                android:textColor="@color/primaryTextColor"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/fragment_dialog_solve_activity_podium_difficulty_text_times"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:text=" fois"
+                android:textColor="@color/primaryTextColor"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textStyle="bold"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/fragment_dialog_solve_activity_podium_layout_users"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/fragment_dialog_solve_activity_podium_layout_difficulty"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical"
+            android:padding="@dimen/default_margin"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/fragment_dialog_solve_activity_podium_tv_user1_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/default_margin"
+                    android:text="@string/solve_activity_podium_first_place_text"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/blue_point_dark"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/fragment_dialog_solve_activity_podium_tv_user1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/default_margin"
+                    android:text="@string/solve_activity_nothing_text"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/blue_point_dark"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/fragment_dialog_solve_activity_podium_tv_user2_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/default_margin"
+                    android:text="@string/solve_activity_podium_second_place_text"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/colorGreen"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/fragment_dialog_solve_activity_podium_tv_user2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/default_margin"
+                    android:text="@string/solve_activity_nothing_text"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/colorGreen"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/fragment_dialog_solve_activity_podium_tv_user3_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/default_margin"
+                    android:text="@string/solve_activity_podium_third_place_text"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/buttonOrangeLight"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/fragment_dialog_solve_activity_podium_tv_user3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/default_margin"
+                    android:text="@string/solve_activity_nothing_text"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/buttonOrangeLight"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+
+    <Button
+        android:id="@+id/fragment_dialog_solve_activity_podium_button_validate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="OK"
+        android:textStyle="bold"
+        android:textColor="@color/primaryTextColor"
+        android:background="@drawable/button_fragment_dialog"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_dialog_solve_activity_podium_linear_layout_content"
+        android:visibility="gone"/>
+</android.support.constraint.ConstraintLayout>

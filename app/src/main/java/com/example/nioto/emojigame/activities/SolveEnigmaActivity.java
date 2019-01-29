@@ -1,52 +1,41 @@
 package com.example.nioto.emojigame.activities;
 
+
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputEditText;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ViewFlipper;
 
-import com.bumptech.glide.Glide;
 import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.api.EnigmaHelper;
-import com.example.nioto.emojigame.api.MessageHelper;
 import com.example.nioto.emojigame.api.UserHelper;
 import com.example.nioto.emojigame.base.BaseActivity;
+import com.example.nioto.emojigame.dialog_fragment.Podium_dialog_fragment;
 import com.example.nioto.emojigame.models.Enigma;
-import com.example.nioto.emojigame.models.Message;
 import com.example.nioto.emojigame.models.User;
 import com.example.nioto.emojigame.utils.Constants;
 import com.example.nioto.emojigame.view.ChatAdapter;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.Query;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Listener{
+public class SolveEnigmaActivity extends BaseActivity{
 
     private static final String TAG = "SolveEnigmaActivity";
 
@@ -57,31 +46,13 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
     @BindView(R.id.solve_enigma_activity_enigma_layout_tv_enigma) TextView enigmaEnigma;
     @BindView(R.id.solve_enigma_activity_enigma_layout_user) TextView enigmaUser;
     @BindView(R.id.solve_enigma_activity_enigma_layout_difficulty) TextView enigmaDifficulty;
-    // VIEW FLIPPER UI
-    @BindView(R.id.solve_enigma_activity_onglet_view_flipper) ViewFlipper viewFlipper;
     // RESOLVE UI
-    @BindView(R.id.solve_enigma_activity_onglet_resolve_response) EditText enigmaResponse;
-    @BindView(R.id.solve_enigma_activity_onglet_resolve_response_title) TextView enigmaResponseTitle;
-    @BindView(R.id.solve_enigma_activity_onglet_resolve_edit_response) TextView enigmaEditResponse;
-    @BindView(R.id.solve_enigma_activity_onglet_resolve_send_button) Button enigmaResolveSendButton;
-    @BindView(R.id.solve_enigma_activity_onglet_resolve_edit_button) Button enigmaResolveEditButton;
-    @BindView(R.id.solve_enigma_activity_enigma_button) ImageButton enigmaTabEditButton;
-    // CHAT UI
-    @BindView(R.id.solve_enigma_activity_chat_recycler_view) RecyclerView recyclerView;
-    @BindView(R.id.solve_enigma_activity_chat_text_view_recycler_view_empty) TextView textViewRecyclerViewEmpty;
-    @BindView(R.id.solve_enigma_activity_chat_message_edit_text) TextInputEditText editTextMessage;
-    // PODIUM UI
-    @BindView(R.id.solve_enigma_activity_onglet_podium_tv_no_resolution) TextView tvPodiumNobody;
-    @BindView(R.id.solve_enigma_activity_onglet_podium_layout_difficulty) LinearLayout layoutPodiumDifficulty;
-    @BindView(R.id.solve_enigma_activity_onglet_podium_tv_difficulty) TextView tvPodiumDifficulty;
-    @BindView(R.id.solve_enigma_activity_onglet_podium_layout_users) LinearLayout layoutPodiumUsers;
-    @BindView(R.id.solve_enigma_activity_onglet_podium_tv_user1) TextView tvPodiumUser1;
-    @BindView(R.id.solve_enigma_activity_onglet_podium_tv_user2) TextView tvPodiumUser2;
-    @BindView(R.id.solve_enigma_activity_onglet_podium_tv_user3) TextView tvPodiumUser3;
-    // TABS BOTTOM STROKE
-    @BindView(R.id.solve_enigma_activity_bottom_stroke_solve_tab) ImageView solveBottomStroke;
-    @BindView(R.id.solve_enigma_activity_bottom_stroke_hint_tab) ImageView hintBottomStroke;
-    @BindView(R.id.solve_enigma_activity_bottom_stroke_podium_tab) ImageView podiumBottomStroke;
+    @BindView(R.id.solve_enigma_activity_solve_response) EditText enigmaResponse;
+    @BindView(R.id.solve_enigma_activity_solve_response_title) TextView enigmaResponseTitle;
+    @BindView(R.id.solve_enigma_activity_solve_edit_response) TextView enigmaEditResponse;
+    @BindView(R.id.solve_enigma_activity_solve_send_button) Button enigmaResolveSendButton;
+    @BindView(R.id.solve_enigma_activity_solve_edit_button) Button enigmaResolveEditButton;
+
 
 
     // FOR DATA
@@ -96,8 +67,6 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
         super.onCreate(savedInstanceState);
         this.getFirestoreUser();
         getEnigmaUI();
-        getHintUI();
-        getPodiumUI();
     }
 
     @Override
@@ -146,7 +115,6 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
                             enigmaEditResponse.setVisibility(View.VISIBLE);
                             enigmaResolveSendButton.setVisibility(View.GONE);
                             enigmaResolveEditButton.setVisibility(View.VISIBLE);
-                            enigmaTabEditButton.setImageResource(R.drawable.ic_edit);
                         }
                         EnigmaHelper.getEnigma(enigmaUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                             @Override
@@ -155,7 +123,7 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
 
                                 enigmaCategory.setText(enigma.getCategory());
                                 enigmaEnigma.setText(enigma.getEnigma());
-                                enigmaDifficulty.setText( enigma.getDificulty());
+                                enigmaDifficulty.setText(String.valueOf(enigma.getDificulty()));
                                 enigmaEditResponse.setText(String.valueOf(enigma.getSolution()));
                                 UserHelper.getUser(enigma.getUserUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                     @Override
@@ -171,7 +139,7 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
             }
         }
     }
-
+/*
     private void getPodiumUI(){
         Intent intent = getIntent();
         if (null != intent) {
@@ -227,6 +195,7 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
         }
     }
 
+
     private void getHintUI(){
         this.configureChatRecyclerView();
     }
@@ -280,25 +249,41 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
                 break;
         }
     }
-
+*/
 
 // --------------------
 // CALLBACK
 // --------------------
 
-    @Override
+ /*   @Override
     public void onDataChanged() {
         // 7 - Show TextView in case RecyclerView is empty
         textViewRecyclerViewEmpty.setVisibility(this.chatAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
     }
 
-
+*/
 
     // --------------------
 //       ACTION
 // --------------------
-// RESOLVE PART
-    @OnClick (R.id.solve_enigma_activity_onglet_resolve_edit_button)
+
+    // PODIUM BUTTON
+    @OnClick (R.id.solve_enigma_activity_bottom_button_podium)
+    public void onClickPodiumButton(){
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        DialogFragment newFragment = Podium_dialog_fragment.newInstance(enigmaUid);
+        newFragment.show(ft, "dialog");
+    }
+
+    // RESOLVE PART
+    @OnClick (R.id.solve_enigma_activity_solve_edit_button)
     public void onClickResolvedEditButton(){
         Intent intent = new Intent(SolveEnigmaActivity.this, CreateEnigmaActivity.class);
         intent.putExtra(Constants.EXTRA_BUNDLE_EDIT_ENIGMA_ACTIVITY, enigmaUid);
@@ -306,7 +291,7 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
     }
 
 
-    @OnClick (R.id.solve_enigma_activity_onglet_resolve_send_button)
+    @OnClick (R.id.solve_enigma_activity_solve_send_button)
     public void onClickResolvedSendButton(){
         UserHelper.getUser(currentUserUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -404,66 +389,6 @@ public class SolveEnigmaActivity extends BaseActivity implements ChatAdapter.Lis
         });
     }
 
-    // CHAT PART
-    @OnClick(R.id.solve_enigma_activity_chat_send_button)
-    public void onClickSendMessage() {
-        Log.d(TAG, "onClickSendMessage: ");
-        if (!TextUtils.isEmpty(editTextMessage.getText()) && currentUser != null) {
-            //Update userMessageList
-            Log.d(TAG, "onClickSendMessage: enigmaUid = " + enigmaUid);
-            EnigmaHelper.getEnigma(enigmaUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    final Enigma enigma = documentSnapshot.toObject(Enigma.class);
-                    UserHelper.getUser(enigma.getUserUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                        @Override
-                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            User enigmaUser = documentSnapshot.toObject(User.class);
-                            ArrayList<String> userMessageList = new ArrayList<>();
-                            if (enigmaUser != null && enigmaUser.getUserMessageList() != null) {
-                                userMessageList = enigmaUser.getUserMessageList();
-                            }
-                            userMessageList.add(enigmaUid);
-                            UserHelper.updateUserMessageList(userMessageList, enigmaUser.getUid());
-                        }
-                    });
-                }
-            });
-            // Send Message
-            MessageHelper.createMessageForChat(editTextMessage.getText().toString(), enigmaUid, currentUser).addOnFailureListener(this.onFailureListener());
-            this.editTextMessage.setText("");
-
-        }
-    }
-
-
-    // TABS PART
-    @OnClick (R.id.solve_enigma_activity_enigma_button)
-    public void onClickEnigmaButton(View v){ animateView(0); }
-    @OnClick (R.id.solve_enigma_activity_hint_button)
-    public void onClickChatButton(View v){
-        animateView(1);
-    }
-    @OnClick (R.id.solve_enigma_activity_podium_button)
-    public void onClickPodiumButton(View v){
-        animateView(2);
-    }
-
-    private void animateView (int tag){
-        displayTabsBottomStroke(tag);
-        int position = ongletViewTag - tag;
-        if (position < 0){
-            viewFlipper.setInAnimation(this, R.anim.slide_in_right);
-            viewFlipper.setOutAnimation(this, R.anim.slide_out_left);
-            viewFlipper.setDisplayedChild(tag);
-            ongletViewTag = tag;
-        } else if (position > 0){
-            viewFlipper.setInAnimation(this, android.R.anim.slide_in_left);
-            viewFlipper.setOutAnimation(this, android.R.anim.slide_out_right);
-            viewFlipper.setDisplayedChild(tag);
-            ongletViewTag = tag;
-        }
-    }
 
     // --------------------
 // REST REQUESTS

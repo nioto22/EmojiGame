@@ -9,7 +9,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/emojigame_icone"
         android:label="@string/app_name"
         android:roundIcon="@drawable/emojigame_icone"
         android:supportsRtl="true">
@@ -37,12 +37,12 @@
             android:name="com.example.nioto.emojigame.activities.CreateEnigmaActivity"
             android:label="@string/toolbar_title_create_enigma_activity"
             android:parentActivityName="com.example.nioto.emojigame.MainActivity"
-            android:theme="@style/AppTheme"
+            android:theme="@style/AppTheme.NoTitle"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.example.nioto.emojigame.activities.PlayActivity"
             android:parentActivityName="com.example.nioto.emojigame.MainActivity"
-            android:theme="@style/AppTheme"
+            android:theme="@style/AppTheme.NoTitle"
             android:screenOrientation="portrait" />
         <activity android:name="com.example.nioto.emojigame.activities.SolveEnigmaActivity"
             android:label="Résoudre une Enigme"
