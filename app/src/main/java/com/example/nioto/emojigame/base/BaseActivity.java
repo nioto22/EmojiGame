@@ -1,6 +1,7 @@
 package com.example.nioto.emojigame.base;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -15,12 +17,15 @@ import android.widget.Toast;
 import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.api.UserHelper;
 import com.example.nioto.emojigame.models.User;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseUserMetadata;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.gson.Gson;
 
 import java.util.UUID;
 
@@ -29,8 +34,11 @@ import butterknife.ButterKnife;
 public abstract class BaseActivity extends AppCompatActivity {
     private static final String TAG = "BaseActivity";
 
-    @Nullable
-    private User currentUser;
+
+    private SharedPreferences mSharedPreferences;
+    public static final String SHARED_PREFERENCES_CURRENT_USER_TAG = "SHARED_PREFERENCES_CURRENT_USER_TAG";
+    private static User[] currentUser = new User[1];
+
     // --------------------
     // LIFE CYCLE
     // --------------------
@@ -74,6 +82,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         return FirebaseAuth.getInstance().getCurrentUser();
     }
 
+
+
+
+
     @Nullable
     protected Boolean isNewUser() {
         Boolean result;
@@ -92,13 +104,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         return (this.getCurrentUser() !=null);
     }
 
-    protected void getCurrentUserFromFirestore(){
+    protected User getCurrentUserFromFirestore(){
+        Log.d(TAG, "getCurrentUserFromFirestore: " + this.getCurrentUser().getUid());
         UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                currentUser = documentSnapshot.toObject(User.class);
+                currentUser[0] = documentSnapshot.toObject(User.class);
             }
         });
+        return currentUser[0];
     }
 
     protected String getPhotoUrl(){

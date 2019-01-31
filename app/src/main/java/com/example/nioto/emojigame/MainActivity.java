@@ -1,6 +1,7 @@
 package com.example.nioto.emojigame;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -29,6 +30,7 @@ public class MainActivity extends BaseActivity {
     private static final String TAG = "MainActivity";
 
     private String photoUrl;
+    private User currentUser;
 
     // FOR DESIGN
     @BindView(R.id.main_activity_main_linear_layout) LinearLayout mainLinearLayout;
@@ -85,10 +87,11 @@ public class MainActivity extends BaseActivity {
             photoUrl = getPhotoUrl();
 
             // Get username from FireBase
-            UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+           UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                     User currentUser = documentSnapshot.toObject(User.class);
+
                     // Set Username
                     String username = TextUtils.isEmpty(currentUser.getUsername())
                             ? getString(R.string.info_no_username_found)
@@ -121,12 +124,10 @@ public class MainActivity extends BaseActivity {
                     // Set smileys
                     String userSmileys = String.valueOf(currentUser.getSmileys());
                     mainTextViewUserSmileys.setText(userSmileys);
-
-
                 }
-            });
+           });
 
-        }
+       }
     }
 
     // --------------------
