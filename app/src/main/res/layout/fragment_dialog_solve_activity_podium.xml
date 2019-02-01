@@ -6,17 +6,16 @@
     android:layout_height="match_parent">
 
 
-    <TextView
+    <ImageView
         android:id="@+id/fragment_dialog_solve_activity_podium_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:text="PODIUM"
-        android:textStyle="bold"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@color/colorYellow"
+        android:src="@drawable/podium_title"
         android:background="@drawable/button_fragment_dialog"
-        android:padding="@dimen/default_small_margin"
+        android:paddingTop="@dimen/default_small_margin"
+        android:paddingStart="@dimen/default_small_margin"
+        android:paddingEnd="@dimen/default_small_margin"
         app:layout_constraintBottom_toTopOf="@+id/fragment_dialog_solve_activity_podium_linear_layout_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

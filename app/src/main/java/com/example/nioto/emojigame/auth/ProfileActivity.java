@@ -25,6 +25,7 @@ import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.api.UserHelper;
 import com.example.nioto.emojigame.base.BaseActivity;
 import com.example.nioto.emojigame.models.User;
+import com.example.nioto.emojigame.utils.Constants;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -70,13 +71,28 @@ public class ProfileActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.configureToolbar();
+        this.setUpToolbar();
         this.updateUIWhenCreating();
     }
 
     @Override
     public int getFragmentLayout() { return (R.layout.activity_profile);}
 
+    @Override
+    public void getToolbarViews() {
+        this.tvCoinsToolbar = findViewById(R.id.profile_activity_toolbar_coins_text_view);
+        this.tvSmileysToolbar = findViewById(R.id.profile_activity_toolbar_smileys_text_view);
+        this.tvTitleToolbar = findViewById(R.id.profile_activity_toolbar_title);
+        this.toolbarTitle = Constants.PROFILE_ACTIVITY_TITLE;
+        this.toolbarBackButton = findViewById(R.id.profile_activity_toolbar_return_button);
+
+        this.toolbarBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

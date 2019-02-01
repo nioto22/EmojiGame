@@ -61,9 +61,6 @@ public class CreateEnigmaActivity extends BaseActivity {
     @BindView(R.id.create_activity_update_button) Button updateButton;
     @BindView(R.id.create_activity_enigma_help) ImageButton enigmaHelp;
 
-    @BindView(R.id.create_activity_toolbar_coins_text_view) TextView tvCoinsToolbar;
-    @BindView(R.id.create_activity_toolbar_smileys_text_view) TextView tvSmileysToolbar;
-
     PopupWindow helpPopUpWindow;
 
     // FOR CATEGORY LIST VIEW
@@ -105,29 +102,25 @@ public class CreateEnigmaActivity extends BaseActivity {
         return R.layout.activity_create_enigma;
     }
 
+    @Override
+    public void getToolbarViews() {
+        this.tvCoinsToolbar = findViewById(R.id.create_activity_toolbar_coins_text_view);
+        this.tvSmileysToolbar = findViewById(R.id.create_activity_toolbar_smileys_text_view);
+        this.tvTitleToolbar = findViewById(R.id.create_activity_toolbar_title);
+        this.toolbarTitle = Constants.CREATE_ACTIVITY_TITLE;
+        this.toolbarBackButton = findViewById(R.id.create_activity_toolbar_return_button);
 
-    // ------------------
-    //      UI
-    // ------------------
-
-    public void setUpToolbar(){
-        // Get username from FireBase
-        UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        this.toolbarBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User currentUser = documentSnapshot.toObject(User.class);
-                // Set points
-                assert currentUser != null;
-                String userPoints = String.valueOf(currentUser.getPoints());
-                tvCoinsToolbar.setText(userPoints);
-
-                // Set smileys
-                String userSmileys = String.valueOf(currentUser.getSmileys());
-                tvSmileysToolbar.setText(userSmileys);
+            public void onClick(View view) {
+                onBackPressed();
             }
         });
     }
 
+    // ------------------
+    //      UI
+    // ------------------
 
     private void initiateListView() {
         expandableListView = findViewById(R.id.create_activity_list_category);

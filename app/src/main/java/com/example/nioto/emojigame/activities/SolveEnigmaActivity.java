@@ -1,15 +1,14 @@
 package com.example.nioto.emojigame.activities;
 
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +20,8 @@ import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.api.EnigmaHelper;
 import com.example.nioto.emojigame.api.UserHelper;
 import com.example.nioto.emojigame.base.BaseActivity;
+import com.example.nioto.emojigame.database.EnigmaPlayed;
+import com.example.nioto.emojigame.database.EnigmaPlayedManager;
 import com.example.nioto.emojigame.dialog_fragment.Podium_dialog_fragment;
 import com.example.nioto.emojigame.models.Enigma;
 import com.example.nioto.emojigame.models.User;
@@ -59,13 +60,12 @@ public class SolveEnigmaActivity extends BaseActivity{
     private String enigmaUid;
     private User currentUser;
     private String currentUserUid = Objects.requireNonNull(this.getCurrentUser()).getUid();
-    private int ongletViewTag = 0;
-    private ChatAdapter chatAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.getFirestoreUser();
+        this.setUpToolbar();
         getEnigmaUI();
     }
 
@@ -93,7 +93,21 @@ public class SolveEnigmaActivity extends BaseActivity{
         return R.layout.activity_solve_enigma;
     }
 
+    @Override
+    public void getToolbarViews() {
+        this.tvCoinsToolbar = findViewById(R.id.solve_enigma_activity_toolbar_coins_text_view);
+        this.tvSmileysToolbar = findViewById(R.id.solve_enigma_activity_toolbar_smileys_text_view);
+        this.tvTitleToolbar = findViewById(R.id.solve_enigma_activity_toolbar_title);
+        this.toolbarTitle = Constants.SOLVE_ACTIVITY_TITLE;
+        this.toolbarBackButton = findViewById(R.id.solve_enigma_activity_toolbar_return_button);
 
+        this.toolbarBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+    }
 
     // --------------------
     //    UI
@@ -139,133 +153,10 @@ public class SolveEnigmaActivity extends BaseActivity{
             }
         }
     }
-/*
-    private void getPodiumUI(){
-        Intent intent = getIntent();
-        if (null != intent) {
-            if (intent.hasExtra(PlayActivity.EXTRA_ENIGMA_PATH)) {
-                enigmaUid = intent.getStringExtra(PlayActivity.EXTRA_ENIGMA_PATH);
-
-                EnigmaHelper.getEnigma(enigmaUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        Enigma enigma = documentSnapshot.toObject(Enigma.class);
-                        List<String> userPodiumList = enigma.getResolvedUserUid();
-                        if (userPodiumList.size() == 0){
-                            tvPodiumNobody.setVisibility(View.VISIBLE);
-                            layoutPodiumDifficulty.setVisibility(View.GONE);
-                            layoutPodiumUsers.setVisibility(View.GONE);
-                        } else {
-                            tvPodiumNobody.setVisibility(View.GONE);
-                            layoutPodiumDifficulty.setVisibility(View.VISIBLE);
-                            tvPodiumDifficulty.setText(enigma.getDificulty());
-                            layoutPodiumUsers.setVisibility(View.VISIBLE);
-
-                            if (userPodiumList.size() >= 1){
-                                UserHelper.getUser(userPodiumList.get(0)).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        User user1 = documentSnapshot.toObject(User.class);
-                                        tvPodiumUser1.setText(user1.getUsername());
-                                    }
-                                });
-                            }
-                            if (userPodiumList.size() >= 2){
-                                UserHelper.getUser(userPodiumList.get(1)).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        User user2 = documentSnapshot.toObject(User.class);
-                                        tvPodiumUser2.setText(user2.getUsername());
-                                    }
-                                });
-                            }
-                            if (userPodiumList.size() >= 3){
-                                UserHelper.getUser(userPodiumList.get(2)).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        User user3 = documentSnapshot.toObject(User.class);
-                                        tvPodiumUser3.setText(user3.getUsername());
-                                    }
-                                });
-                            }
-                        }
-                    }
-                });
-            }
-        }
-    }
-
-
-    private void getHintUI(){
-        this.configureChatRecyclerView();
-    }
-
-    private void configureChatRecyclerView() {
-        // Track current enigma uid
-        Intent intent = getIntent();
-        if (null != intent) {
-            if (intent.hasExtra(PlayActivity.EXTRA_ENIGMA_PATH)) {
-                enigmaUid = intent.getStringExtra(PlayActivity.EXTRA_ENIGMA_PATH);
-            }
-        }
-        //Configure Adapter & RecyclerView
-        this.chatAdapter = new
-                ChatAdapter(generateOptionsForAdapter(MessageHelper.getAllMessageForChat(this.enigmaUid)),
-                Glide.with(this),
-                this,
-                this.getCurrentUser().getUid());
-        chatAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                recyclerView.smoothScrollToPosition(chatAdapter.getItemCount()); // Scroll to bottom on new messages
-            }
-        });
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(this.chatAdapter);
-    }
-
-    // Create options for RecyclerView from a Query
-    private FirestoreRecyclerOptions<Message> generateOptionsForAdapter(Query query){
-        return new FirestoreRecyclerOptions.Builder<Message>()
-                .setQuery(query, Message.class)
-                .setLifecycleOwner(this)
-                .build();
-    }
-
-    public void displayTabsBottomStroke(int tabTag ){
-        solveBottomStroke.setVisibility(View.INVISIBLE);
-        hintBottomStroke.setVisibility(View.INVISIBLE);
-        podiumBottomStroke.setVisibility(View.INVISIBLE);
-
-        switch (tabTag){
-            case 0 :
-                solveBottomStroke.setVisibility(View.VISIBLE);
-                break;
-            case 1 :
-                hintBottomStroke.setVisibility(View.VISIBLE);
-                break;
-            case 2 :
-                podiumBottomStroke.setVisibility(View.VISIBLE);
-                break;
-        }
-    }
-*/
-
-// --------------------
-// CALLBACK
-// --------------------
-
- /*   @Override
-    public void onDataChanged() {
-        // 7 - Show TextView in case RecyclerView is empty
-        textViewRecyclerViewEmpty.setVisibility(this.chatAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
-    }
-
-*/
 
     // --------------------
-//       ACTION
-// --------------------
+    //       ACTION
+    // --------------------
 
     // PODIUM BUTTON
     @OnClick (R.id.solve_enigma_activity_bottom_button_podium)
@@ -310,6 +201,11 @@ public class SolveEnigmaActivity extends BaseActivity{
                             final Enigma enigma = documentSnapshot.toObject(Enigma.class);
                             if (enigma.getSolution() != null) {
                                 if (enigma.getSolution().equalsIgnoreCase(response)) {
+                                    // Change enigmaPlayed isSolved state in internal db
+                                    EnigmaPlayedManager dbManager = new EnigmaPlayedManager(SolveEnigmaActivity.this);
+                                    dbManager.open();
+                                    dbManager.updateEnigmaIsSolved(enigma.getUid(), true);
+                                    dbManager.close();
                                     // Add ResolvedUID to enigma
                                     List<String> resolvedUserUidList = enigma.getResolvedUserUid();
                                     resolvedUserUidList.add(currentUserUid);
@@ -328,7 +224,7 @@ public class SolveEnigmaActivity extends BaseActivity{
                                                 }
                                             });
                                             // Update number of points
-                                            int points = (numberOfResolvedTimes == 1) ? 50 : (numberOfResolvedTimes == 2) ? 30 : (numberOfResolvedTimes == 3) ? 20 : 10;
+                                            int points = enigma.getDificulty();
                                             currentUser.addPoints(points);
                                             UserHelper.updateUserPoints(currentUser.getPoints(), currentUserUid).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
@@ -337,18 +233,19 @@ public class SolveEnigmaActivity extends BaseActivity{
                                             });
                                             // AlertDialog
                                             String message;
+                                            String stPoints = "\n" + String.valueOf(enigma.getDificulty()) + " points !!";
                                             switch (numberOfResolvedTimes) {
                                                 case (1):
-                                                    message = getString(R.string.solve_activity_enigma_solved_first_place);
+                                                    message = getString(R.string.solve_activity_enigma_solved_first_place) + stPoints;
                                                     break;
                                                 case (2):
-                                                    message = getString(R.string.solve_activity_enigma_solved_second_place);
+                                                    message = getString(R.string.solve_activity_enigma_solved_second_place) + stPoints;
                                                     break;
                                                 case (3):
-                                                    message = getString(R.string.solve_activity_enigma_solved_third_place);
+                                                    message = getString(R.string.solve_activity_enigma_solved_third_place) + stPoints;
                                                     break;
                                                 default:
-                                                    message = getString(R.string.solve_activity_enigma_solved_fourth_place);
+                                                    message = getString(R.string.solve_activity_enigma_solved_fourth_place) + stPoints;
 
                                             }
                                             AlertDialog.Builder builder = new AlertDialog.Builder(SolveEnigmaActivity.this);
@@ -362,7 +259,6 @@ public class SolveEnigmaActivity extends BaseActivity{
                                                         public void onClick(DialogInterface dialogInterface, int which) {
                                                             //End of activity
                                                             Intent intent = new Intent();
-                                                            // intent.putExtra(BUNDLE_EXTRA_SCORE, numberOfResolvedTimes);
                                                             setResult(RESULT_OK, intent);
                                                             finish();
                                                         }

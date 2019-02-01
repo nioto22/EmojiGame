@@ -74,7 +74,7 @@ public class UserHelper {
         return UserHelper.getUsersCollection().document(uid).update("points", points);
     }
 
-    public static Task<Void> updateUserSmileysMinusOne (int smileys, String uid) {
+    public static Task<Void> updateUserSmileys (int smileys, String uid) {
         return UserHelper.getUsersCollection().document(uid).update("smileys", smileys);
     }
 

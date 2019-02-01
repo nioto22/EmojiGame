@@ -1,6 +1,7 @@
 package com.example.nioto.emojigame.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,6 +16,7 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.api.EnigmaHelper;
@@ -28,6 +30,7 @@ import com.example.nioto.emojigame.utils.Constants;
 import com.example.nioto.emojigame.view.EnigmaGridAdapter;
 import com.example.nioto.emojigame.view.EnigmaLinearAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -37,7 +40,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.Date;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -66,9 +70,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     @BindView(R.id.play_enigma_activity_bottom_stroke_history_tab) ImageView historyBottomStroke;
     @BindView(R.id.play_enigma_activity_bottom_stroke_player_tab) ImageView playerBottomStroke;
     @BindView(R.id.activity_play_enigma_title_historic) ImageView titleHistoric;
-    @BindView(R.id.play_enigma_activity_toolbar_coins_text_view) TextView tvCoinsToolbar;
-    @BindView(R.id.play_enigma_activity_toolbar_smileys_text_view) TextView tvSmileysToolbar;
-    @BindView(R.id.play_enimga_activity_toolbar_title) TextView tvTitleToolbar;
+
 
     // PopupMenus
     public static final int SORT_POPUP_MENU_SELECTED = 0;
@@ -102,6 +104,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     private int previousTab = TAB_UNSOLVED_ENIGMA_TAG;
     // For User History
     private ArrayList<String> userEnigmaHistoryList = new ArrayList<>();
+    private SharedPreferences sharedPreferences;
 
 
 
@@ -111,7 +114,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getUserHistoryEnigmaArray();
-        setUpToolbar();
+        this.setUpToolbar();
         setUpFilterButtonsViews();
         setUpRecyclerView();
     }
@@ -119,6 +122,22 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     @Override
     public int getFragmentLayout() {
         return R.layout.activity_play;
+    }
+
+    @Override
+    public void getToolbarViews() {
+        this.tvCoinsToolbar = findViewById(R.id.play_enigma_activity_toolbar_coins_text_view);
+        this.tvSmileysToolbar = findViewById(R.id.play_enigma_activity_toolbar_smileys_text_view);
+        this.tvTitleToolbar = findViewById(R.id.play_enigma_activity_toolbar_title);
+        this.toolbarTitle = Constants.PLAY_ACTIVITY_TITLE;
+        this.toolbarBackButton = findViewById(R.id.play_enigma_activity_toolbar_return_button);
+
+        this.toolbarBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
     }
 
     // ------------------
@@ -138,7 +157,6 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
         }
         cursor.close();
         dbManager.close();
-
     }
 
     private void insertEnigmaInDataBase(String enigmaUid){
@@ -157,14 +175,10 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
 
 
     // ------------------
-    //      UI
+    //      ACTIONS
     // ------------------
 
-    // BACK BUTTON
-    @OnClick (R.id.play_enigma_activity_toolbar_return_button)
-    public void onClickBackButton(View v){
-        onBackPressed();
-    }
+
 
     // TABS PART
     @OnClick(R.id.play_enigma_activity_enigma_button)
@@ -196,81 +210,6 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
             setUpRecyclerView();
             previousTab = tabTag;
         }
-    }
-
-
-
-    public void displayTabsBottomStroke(){
-        solveBottomStroke.setVisibility(View.INVISIBLE);
-        historyBottomStroke.setVisibility(View.INVISIBLE);
-        playerBottomStroke.setVisibility(View.INVISIBLE);
-
-        switch (tabTag){
-            case 0 :
-                solveBottomStroke.setVisibility(View.VISIBLE);
-                tvTitleToolbar.setText(Constants.TOOLBAR_TITLE_IN_PLAY);
-                break;
-            case 1 :
-                historyBottomStroke.setVisibility(View.VISIBLE);
-                tvTitleToolbar.setText(Constants.TOOLBAR_TITLE_HISTORIC);
-                break;
-            case 2 :
-                playerBottomStroke.setVisibility(View.VISIBLE);
-                tvTitleToolbar.setText(Constants.TOOLBAR_TITLE_OWN);
-                break;
-        }
-    }
-
-    public void setUpToolbar(){
-        // Get username from FireBase
-        UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User currentUser = documentSnapshot.toObject(User.class);
-                // Set points
-                assert currentUser != null;
-                String userPoints = String.valueOf(currentUser.getPoints());
-                tvCoinsToolbar.setText(userPoints);
-
-                // Set smileys
-                String userSmileys = String.valueOf(currentUser.getSmileys());
-                tvSmileysToolbar.setText(userSmileys);
-            }
-        });
-    }
-
-    public void setUpFilterButtonsViews(){
-        final View buttonSort = findViewById(R.id.activity_play_filter_button_sort);
-        tvSortButton = buttonSort.findViewById(R.id.sort_filter_button_text_view);
-        tvSortButton.setText(sortType);
-        final View buttonCategory = findViewById(R.id.activity_play_filter_button_category);
-        tvCategoryButton = buttonCategory.findViewById(R.id.category_button_text_view);
-        tvCategoryButton.setText(filterCategory);
-
-        buttonSort.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                popupMenuSort = new PopupMenu(PlayActivity.this, buttonSort);
-                popupMenuSort.setOnMenuItemClickListener(PlayActivity.this);
-                popupMenuSort.inflate(R.menu.sort_menu);
-                setUpCategoryMenus(popupMenuSort, SORT_POPUP_MENU_SELECTED );
-                setUpFilterChecked(SORT_POPUP_MENU_SELECTED);
-                popupMenuSort.show();
-            }
-        });
-
-
-        buttonCategory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                popupMenuCategory = new PopupMenu(PlayActivity.this, buttonCategory);
-                popupMenuCategory.setOnMenuItemClickListener(PlayActivity.this);
-                popupMenuCategory.inflate(R.menu.filter_category_menu);
-                setUpCategoryMenus(popupMenuCategory, FILTER_POPUP_MENU_SELECTED);
-                setUpFilterChecked(FILTER_POPUP_MENU_SELECTED);
-                popupMenuCategory.show();
-            }
-        });
     }
 
 
@@ -380,6 +319,86 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
         }
         return false;
     }
+
+    private void startSmileysTimer() {
+        //getting the current time in milliseconds, and creating a Date object from it:
+        Date date = new Date(System.currentTimeMillis());
+        //converting it back to a milliseconds representation:
+        long millis = date.getTime();
+
+        sharedPreferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putLong(Constants.KEY_SMILEYS_TIMER_START, millis);
+        editor.apply();
+
+        /*
+        Read it back:
+        Date myDate = new Date(sharedPreferences.getLong(Constants.KEY_SMILEYS_TIMER_START, 0));
+         */
+    }
+
+    // ------------------
+    //      UI
+    // ------------------
+
+    public void displayTabsBottomStroke(){
+        solveBottomStroke.setVisibility(View.INVISIBLE);
+        historyBottomStroke.setVisibility(View.INVISIBLE);
+        playerBottomStroke.setVisibility(View.INVISIBLE);
+
+        switch (tabTag){
+            case 0 :
+                solveBottomStroke.setVisibility(View.VISIBLE);
+                tvTitleToolbar.setText(Constants.TOOLBAR_TITLE_IN_PLAY);
+                break;
+            case 1 :
+                historyBottomStroke.setVisibility(View.VISIBLE);
+                tvTitleToolbar.setText(Constants.TOOLBAR_TITLE_HISTORIC);
+                break;
+            case 2 :
+                playerBottomStroke.setVisibility(View.VISIBLE);
+                tvTitleToolbar.setText(Constants.TOOLBAR_TITLE_OWN);
+                break;
+        }
+    }
+
+
+
+    public void setUpFilterButtonsViews(){
+        final View buttonSort = findViewById(R.id.activity_play_filter_button_sort);
+        tvSortButton = buttonSort.findViewById(R.id.sort_filter_button_text_view);
+        tvSortButton.setText(sortType);
+        final View buttonCategory = findViewById(R.id.activity_play_filter_button_category);
+        tvCategoryButton = buttonCategory.findViewById(R.id.category_button_text_view);
+        tvCategoryButton.setText(filterCategory);
+
+        buttonSort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popupMenuSort = new PopupMenu(PlayActivity.this, buttonSort);
+                popupMenuSort.setOnMenuItemClickListener(PlayActivity.this);
+                popupMenuSort.inflate(R.menu.sort_menu);
+                setUpCategoryMenus(popupMenuSort, SORT_POPUP_MENU_SELECTED );
+                setUpFilterChecked(SORT_POPUP_MENU_SELECTED);
+                popupMenuSort.show();
+            }
+        });
+
+
+        buttonCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popupMenuCategory = new PopupMenu(PlayActivity.this, buttonCategory);
+                popupMenuCategory.setOnMenuItemClickListener(PlayActivity.this);
+                popupMenuCategory.inflate(R.menu.filter_category_menu);
+                setUpCategoryMenus(popupMenuCategory, FILTER_POPUP_MENU_SELECTED);
+                setUpFilterChecked(FILTER_POPUP_MENU_SELECTED);
+                popupMenuCategory.show();
+            }
+        });
+    }
+
+
 
     private void setUpCategoryMenus(PopupMenu popupMenu, int popupMenuSelected){
         switch (popupMenuSelected){
@@ -496,8 +515,6 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     }
     */
 
-
-
     public void setUpRecyclerView(){
         final Query query = EnigmaHelper.getAllEnigma(filterCategory);
         final ArrayList <Enigma> enigmaList = new ArrayList<>();
@@ -508,7 +525,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
+                    for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
                         final Enigma enigma = document.toObject(Enigma.class);
                         switch (tab) {
                             case TAB_UNSOLVED_ENIGMA_TAG:
@@ -577,11 +594,36 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                             mEnigmaGridAdapter.setOnItemClickListener(new EnigmaGridAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(int position) {
-                                    Enigma enigma = enigmaList.get(position);
+                                    final Enigma enigma = enigmaList.get(position);
                                     insertEnigmaInDataBase(enigma.getUid());
-                                    Intent solveEnigmaIntent = new Intent(PlayActivity.this, SolveEnigmaActivity.class);
-                                    solveEnigmaIntent.putExtra(EXTRA_ENIGMA_PATH, enigma.getUid());
-                                    startActivityForResult(solveEnigmaIntent, INTENT_SOLVE_ACTIVITY_KEY);
+                                    // Get CurrentUser
+                                    UserHelper.getUser(getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            final User currentUser = documentSnapshot.toObject(User.class);
+                                            if (currentUser.getSmileys() > 0 && !userEnigmaHistoryList.contains(enigma.getUid()) ) {
+                                                if (currentUser.getSmileys() == 1) {startSmileysTimer();}
+                                                UserHelper.updateUserSmileys((currentUser.getSmileys() - 1), currentUser.getUid()).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        // TO DO TOAST FAILURE
+                                                        Toast.makeText(PlayActivity.this, "Une erreur s'est produite", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                                Intent solveEnigmaIntent = new Intent(PlayActivity.this, SolveEnigmaActivity.class);
+                                                solveEnigmaIntent.putExtra(EXTRA_ENIGMA_PATH, enigma.getUid());
+                                                startActivityForResult(solveEnigmaIntent, INTENT_SOLVE_ACTIVITY_KEY);
+                                            } else if (userEnigmaHistoryList.contains(enigma.getUid())) {
+                                                Intent solveEnigmaIntent = new Intent(PlayActivity.this, SolveEnigmaActivity.class);
+                                                solveEnigmaIntent.putExtra(EXTRA_ENIGMA_PATH, enigma.getUid());
+                                                startActivityForResult(solveEnigmaIntent, INTENT_SOLVE_ACTIVITY_KEY);
+                                            }else {
+                                                // TO DO DIALOG SMILEYS
+                                                Toast.makeText(PlayActivity.this, "Dialog Smileys", Toast.LENGTH_SHORT).show();
+                                            }
+
+                                        }
+                                    });
                                 }
                             });
                         } else {
@@ -610,6 +652,8 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
         });
         previousTab = tabTag;
     }
+
+
 
 }
 

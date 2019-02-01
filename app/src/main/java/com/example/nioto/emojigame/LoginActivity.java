@@ -29,6 +29,9 @@ public class LoginActivity extends BaseActivity {
     @Override
     public int getFragmentLayout() { return R.layout.activity_login; }
 
+    @Override
+    public void getToolbarViews() { }
+
     public void instantClick(View v){
         startSignInActivity();
     }

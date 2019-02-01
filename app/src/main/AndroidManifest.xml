@@ -31,7 +31,7 @@
             android:name="com.example.nioto.emojigame.auth.ProfileActivity"
             android:label="@string/toolbar_title_profile_activity"
             android:parentActivityName="com.example.nioto.emojigame.MainActivity"
-            android:theme="@style/AppTheme"
+            android:theme="@style/AppTheme.NoTitle"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.example.nioto.emojigame.activities.CreateEnigmaActivity"
@@ -47,7 +47,7 @@
         <activity android:name="com.example.nioto.emojigame.activities.SolveEnigmaActivity"
             android:label="Résoudre une Enigme"
             android:parentActivityName="com.example.nioto.emojigame.activities.PlayActivity"
-            android:theme="@style/AppTheme"
+            android:theme="@style/AppTheme.NoTitle"
             android:screenOrientation="portrait"/>
     </application>
 

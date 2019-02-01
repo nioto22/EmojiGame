@@ -4,6 +4,7 @@ public class Constants {
 
     //PLAY ACTIVITY
     // TOOLBAR TITLES
+    public static final String PLAY_ACTIVITY_TITLE = "EmojiGame";
     public static final String TOOLBAR_TITLE_IN_PLAY = "Enigmes en Jeu";
     public static final String TOOLBAR_TITLE_HISTORIC = "Enigmes Jouées";
     public static final String TOOLBAR_TITLE_OWN = "Enigmes Crées";
@@ -32,7 +33,17 @@ public class Constants {
     public static final String FIREBASE_CATEGORY_OTHER_TEXT = "Autres";
 
     // SOLVE ACTIVITY
+    public static final String SOLVE_ACTIVITY_TITLE = "Résoudre l\'énigme";
     // EXTRA_BUNDLE
     public static final String EXTRA_BUNDLE_EDIT_ENIGMA_ACTIVITY = "EXTRA_BUNDLE_EDIT_ENIGMA_ACTIVITY";
     public static final int INTENT_UPDATE_ACTIVITY_KEY = 14;
+
+    // CREATE ACTIVITY
+    public static final String CREATE_ACTIVITY_TITLE = "Créer votre énigme";
+    // PROFILE ACTIVITY
+    public static final String PROFILE_ACTIVITY_TITLE = "Votre Profil";
+
+    // SHARED PREFERENCES
+    public static final String KEY_SMILEYS_TIMER_START = "KEY_SMILEYS_TIMER_START";
+
 }

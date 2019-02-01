@@ -8,13 +8,104 @@
     android:orientation="vertical"
     tools:context="com.example.nioto.emojigame.activities.SolveEnigmaActivity">
 
+    <!-- Activity Toolbar -->
+    <RelativeLayout
+        android:id="@+id/solve_enigma_activity_toolbar_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/primaryColor">
+
+        <ImageButton
+            android:id="@+id/solve_enigma_activity_toolbar_return_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:layout_margin="@dimen/default_margin"
+            android:background="@color/fui_transparent"
+            android:src="@drawable/ic_back_arrow" />
+
+        <TextView
+            android:id="@+id/solve_enigma_activity_toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/solve_enigma_activity_toolbar_return_button"
+            android:layout_toStartOf="@+id/solve_enigma_activity_toolbar_smileys_ll"
+            android:layout_margin="@dimen/default_margin"
+            android:paddingStart="@dimen/default_margin"
+            android:paddingEnd="@dimen/default_margin"
+            android:text="@string/app_name"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/primaryTextColor"/>
+        <LinearLayout
+            android:id="@+id/solve_enigma_activity_toolbar_coins_ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/background_toolbar_image"
+            android:layout_alignParentEnd="true"
+            android:gravity="center"
+            android:layout_margin="@dimen/default_margin">
+            <TextView
+                android:id="@+id/solve_enigma_activity_toolbar_coins_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/default_small_margin_5dp"
+                android:text="@string/main_activity_points_text"
+                android:textColor="@color/primaryTextColor"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                />
+            <ImageButton
+                android:id="@+id/solve_enigma_activity_toolbar_coins_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_coin"
+                android:background="@color/fui_transparent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/default_small_margin_5dp"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/solve_enigma_activity_toolbar_smileys_ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_toStartOf="@+id/solve_enigma_activity_toolbar_coins_ll"
+            android:background="@drawable/background_toolbar_image"
+            android:layout_margin="@dimen/default_margin">
+            <TextView
+                android:id="@+id/solve_enigma_activity_toolbar_smileys_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/default_small_margin_5dp"
+                android:text="@string/main_activity_points_text"
+                android:textColor="@color/primaryTextColor"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                />
+            <ImageButton
+                android:id="@+id/solve_enigma_activity_toolbar_smileys_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_smiley"
+                android:background="@color/fui_transparent"
+                android:layout_gravity="center_vertical"
+                android:paddingStart="@dimen/default_small_margin_5dp"
+                android:paddingEnd="@dimen/default_small_margin_5dp"/>
+        </LinearLayout>
+
+    </RelativeLayout>
 
     <!-- ENIGMA LAYOUT  -->
     <LinearLayout
         android:id="@+id/solve_enigma_activity_enigma_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="6dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
@@ -24,7 +115,7 @@
         app:layout_constraintBottom_toTopOf="@+id/solve_enigma_activity_solve_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/solve_enigma_activity_toolbar_linear_layout">
 
         <RelativeLayout
             android:id="@+id/solve_enigma_activity_enigma_layout_enigma"
@@ -115,10 +206,11 @@
                     android:text="@string/download_text"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="@color/secondaryTextColor" />
+
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_coin"/>
+                    android:src="@drawable/ic_coin" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

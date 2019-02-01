@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -38,7 +39,7 @@ public class Podium_dialog_fragment extends DialogFragment {
     private static final String TAG = "Podium_dialog_fragment";
     // FOR DESIGN
     private RelativeLayout rlGlobalLayout;
-    private TextView tvTitle;
+    private ImageView ivTitle;
     private TextView tvPodiumNobody;
     private LinearLayout layoutPodiumDifficulty;
     private LinearLayout layoutPodiumUsers;
@@ -75,7 +76,7 @@ public class Podium_dialog_fragment extends DialogFragment {
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         // txt= (TextView) inflaterView.findViewById(R.id.type);
         rlGlobalLayout = v.findViewById(R.id.fragment_dialog_solve_activity_podium_linear_layout_content);
-        tvTitle = v.findViewById(R.id.fragment_dialog_solve_activity_podium_title);
+        ivTitle = v.findViewById(R.id.fragment_dialog_solve_activity_podium_title);
         tvPodiumNobody = v.findViewById(R.id.fragment_dialog_solve_activity_podium_tv_no_resolution);
         tvPodiumDifficulty = v.findViewById(R.id.fragment_dialog_solve_activity_podium_tv_difficulty);
         layoutPodiumDifficulty = v.findViewById(R.id.fragment_dialog_solve_activity_podium_layout_difficulty);
@@ -97,7 +98,7 @@ public class Podium_dialog_fragment extends DialogFragment {
                     tvPodiumNobody.setVisibility(View.VISIBLE);
                     layoutPodiumDifficulty.setVisibility(View.GONE);
                     layoutPodiumUsers.setVisibility(View.GONE);
-                    tvTitle.setVisibility(View.VISIBLE);
+                    ivTitle.setVisibility(View.VISIBLE);
                     rlGlobalLayout.setVisibility(View.VISIBLE);
                     okButton.setVisibility(View.VISIBLE);
                 } else {
@@ -106,7 +107,7 @@ public class Podium_dialog_fragment extends DialogFragment {
                     layoutPodiumDifficulty.setVisibility(View.VISIBLE);
                     tvPodiumDifficulty.setText(String.valueOf(enigma.getNumbersOfResolvedUserUid()));
                     layoutPodiumUsers.setVisibility(View.VISIBLE);
-                    tvTitle.setVisibility(View.VISIBLE);
+                    ivTitle.setVisibility(View.VISIBLE);
                     rlGlobalLayout.setVisibility(View.VISIBLE);
                     okButton.setVisibility(View.VISIBLE);
 

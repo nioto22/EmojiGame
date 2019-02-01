@@ -1,6 +1,7 @@
 package com.example.nioto.emojigame.view;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.api.UserHelper;
+import com.example.nioto.emojigame.database.EnigmaPlayedManager;
 import com.example.nioto.emojigame.models.Enigma;
 import com.example.nioto.emojigame.models.User;
 import com.example.nioto.emojigame.utils.Constants;
@@ -29,9 +31,11 @@ public class EnigmaGridAdapter extends RecyclerView.Adapter<EnigmaGridAdapter.Un
     private static final int STATE_ENIGMA_OWN = 0 ;
     private static final int STATE_ENIGMA_SOLVED = 1 ;
     private static final int STATE_ENIGMA_UNSOLVED = 2 ;
+    private static final int STATE_ENIGMA_ONGOING = 3 ;
     private OnItemClickListener mListener;
     private ArrayList <Enigma> mEnigmaArrayList;
     private Context context;
+    private ArrayList<String> mEnigmaPlayedList = new ArrayList<>();
 
 
     public static class UnsolvedEnigmaViewHolder extends RecyclerView.ViewHolder{
@@ -89,30 +93,7 @@ public class EnigmaGridAdapter extends RecyclerView.Adapter<EnigmaGridAdapter.Un
     @Override
     public void onBindViewHolder(@NonNull final UnsolvedEnigmaViewHolder holder, int position) {
         final Enigma enigma = mEnigmaArrayList.get(position);
-     /*   holder.tvEnigma.setText(enigma.getEnigma());
-        holder.tvCategory.setText(enigma.getCategory());
-        holder.tvDifficulty.setText(enigma.getDifficultyFormarted());
-        UserHelper.getUser(enigma.getUserUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User user = documentSnapshot.toObject(User.class);
-                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                String currentUserUid = currentUser.getUid();
-                holder.tvUser.setText(user.getUsername());
-
-                if (enigma.getUserUid().equals(currentUserUid)) {
-                    holder.tvState.setText("CREE PAR VOUS");
-                    holder.tvState.setTextColor(Color.parseColor("#6BB18C"));
-                } else if (enigma.getResolvedUserUid().contains(currentUserUid)) {
-                    holder.tvState.setText("RESOLUE");
-                    holder.tvState.setTextColor(Color.parseColor("#c63f17"));
-                } else {
-                    holder.tvState.setText("NON RESOLUE");
-                    holder.tvState.setTextColor(Color.parseColor("#0D47A1"));
-                }
-            }
-        });
-    */
+        getEnigmasPlayedList(context);
 
         holder.ivCategoryImage.setBackground(categoryBackground(enigma.getCategory()));
         holder.tvEnigmaCategory.setText(enigma.getCategory());
@@ -129,11 +110,28 @@ public class EnigmaGridAdapter extends RecyclerView.Adapter<EnigmaGridAdapter.Un
                     holder.ivEnigmaStateImage.setImageResource(stateBackground(STATE_ENIGMA_OWN));
                 } else if (enigma.getResolvedUserUid().contains(currentUserUid)) {
                     holder.ivEnigmaStateImage.setImageResource(stateBackground(STATE_ENIGMA_SOLVED));
+                } else if (mEnigmaPlayedList != null && mEnigmaPlayedList.contains(enigma.getUid())){
+                    holder.ivEnigmaStateImage.setImageResource(stateBackground(STATE_ENIGMA_ONGOING));
                 } else {
                     holder.ivEnigmaStateImage.setImageResource(stateBackground(STATE_ENIGMA_UNSOLVED));
                 }
             }
         });
+    }
+
+    private void getEnigmasPlayedList(Context context) {
+        EnigmaPlayedManager dbManager = new EnigmaPlayedManager(context);
+        dbManager.open();
+
+        Cursor cursor = dbManager.getAllEnigmasPlayed();
+        if (cursor.moveToFirst()) {
+            do {
+                mEnigmaPlayedList.add(cursor.getString(cursor.getColumnIndex(EnigmaPlayedManager.ENIGMA_UID)));
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+        dbManager.close();
     }
 
     private String numberOfPoints(String message) {
@@ -153,6 +151,9 @@ public class EnigmaGridAdapter extends RecyclerView.Adapter<EnigmaGridAdapter.Un
                 break;
             case STATE_ENIGMA_UNSOLVED :
                 stateDrawable = R.drawable.ic_state_new;
+                break;
+            case STATE_ENIGMA_ONGOING :
+                stateDrawable = R.drawable.ic_state_ongoing;
                 break;
             default:
                 stateDrawable = R.drawable.ic_state_new;

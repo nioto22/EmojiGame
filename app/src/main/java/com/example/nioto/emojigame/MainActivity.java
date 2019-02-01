@@ -1,9 +1,9 @@
 package com.example.nioto.emojigame;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -19,8 +19,10 @@ import com.example.nioto.emojigame.api.UserHelper;
 import com.example.nioto.emojigame.auth.ProfileActivity;
 import com.example.nioto.emojigame.base.BaseActivity;
 import com.example.nioto.emojigame.models.User;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -59,6 +61,9 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    public void getToolbarViews() {}
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -87,47 +92,53 @@ public class MainActivity extends BaseActivity {
             photoUrl = getPhotoUrl();
 
             // Get username from FireBase
-           UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            DocumentReference userListener = UserHelper.getUsersCollection().document(this.getCurrentUser().getUid());
+            userListener.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                 @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    User currentUser = documentSnapshot.toObject(User.class);
-
-                    // Set Username
-                    String username = TextUtils.isEmpty(currentUser.getUsername())
-                            ? getString(R.string.info_no_username_found)
-                            : currentUser.getUsername();
-                    mainButtonUsername.setText(username);
-
-                    // Set Photo
-                    String photoFirebaseUrl = currentUser.getUrlPicture();
-                    if (currentUser.getHasChangedPicture()){
-                        if (photoFirebaseUrl != null){
-                            Glide.with(MainActivity.this)
-                                    .load(photoFirebaseUrl)
-                                    .apply(RequestOptions.circleCropTransform())
-                                    .into(mainImageViewProfile);
-                        }
-                    } else {
-                        photoUrl = getPhotoUrl();
-                        if (photoUrl != null) {
-                            Glide.with(MainActivity.this)
-                                    .load(photoUrl)
-                                    .apply(RequestOptions.circleCropTransform())
-                                    .into(mainImageViewProfile);
-                        }
+                public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                    if( e != null) {
+                        Log.w(TAG, "onEvent: Error", e);
+                        return;
                     }
+                    if (documentSnapshot != null && documentSnapshot.exists()) {
+                        User currentUser = documentSnapshot.toObject(User.class);
 
-                    // Set points
-                    String userPoints = String.valueOf(currentUser.getPoints());
-                    mainTextViewUserPoints.setText(userPoints);
+                        // Set Username
+                        String username = TextUtils.isEmpty(currentUser.getUsername())
+                                ? getString(R.string.info_no_username_found)
+                                : currentUser.getUsername();
+                        mainButtonUsername.setText(username);
 
-                    // Set smileys
-                    String userSmileys = String.valueOf(currentUser.getSmileys());
-                    mainTextViewUserSmileys.setText(userSmileys);
+                        // Set Photo
+                        String photoFirebaseUrl = currentUser.getUrlPicture();
+                        if (currentUser.getHasChangedPicture()) {
+                            if (photoFirebaseUrl != null) {
+                                Glide.with(MainActivity.this)
+                                        .load(photoFirebaseUrl)
+                                        .apply(RequestOptions.circleCropTransform())
+                                        .into(mainImageViewProfile);
+                            }
+                        } else {
+                            photoUrl = getPhotoUrl();
+                            if (photoUrl != null) {
+                                Glide.with(MainActivity.this)
+                                        .load(photoUrl)
+                                        .apply(RequestOptions.circleCropTransform())
+                                        .into(mainImageViewProfile);
+                            }
+                        }
+
+                        // Set points
+                        String userPoints = String.valueOf(currentUser.getPoints());
+                        mainTextViewUserPoints.setText(userPoints);
+
+                        // Set smileys
+                        String userSmileys = String.valueOf(currentUser.getSmileys());
+                        mainTextViewUserSmileys.setText(userSmileys);
+                    }
                 }
-           });
-
-       }
+            });
+        }
     }
 
     // --------------------

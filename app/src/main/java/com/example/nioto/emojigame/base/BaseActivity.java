@@ -7,25 +7,30 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.api.UserHelper;
 import com.example.nioto.emojigame.models.User;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseUserMetadata;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.gson.Gson;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.UUID;
 
@@ -38,6 +43,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     private SharedPreferences mSharedPreferences;
     public static final String SHARED_PREFERENCES_CURRENT_USER_TAG = "SHARED_PREFERENCES_CURRENT_USER_TAG";
     private static User[] currentUser = new User[1];
+    // ToolbarViews
+    protected TextView tvCoinsToolbar;
+    protected TextView tvSmileysToolbar;
+    protected TextView tvTitleToolbar;
+    protected ImageButton toolbarBackButton;
+    protected String toolbarTitle;
 
     // --------------------
     // LIFE CYCLE
@@ -51,26 +62,73 @@ public abstract class BaseActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(this, getString(R.string.error_no_internet), Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
+        } else {
+
+
         }
         ButterKnife.bind(this); //Configure Butterknife
+
 
     }
 
     public abstract int getFragmentLayout();
+    public abstract void getToolbarViews();
 
     // --------------------
     // UI
     // --------------------
 
-    protected void configureToolbar(){
-        ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
+    /* protected void configureToolbar(){
+         ActionBar ab = getSupportActionBar();
+         ab.setDisplayHomeAsUpEnabled(true);
+     }
+     */
+    protected void setUpToolbar(){
+        this.getToolbarViews();
+        tvTitleToolbar.setText(toolbarTitle);
+        // Get username from FireBase
+        DocumentReference userListener = UserHelper.getUsersCollection().document(this.getCurrentUser().getUid());
+        userListener.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                if( e != null) {
+                    Log.w(TAG, "onEvent: Error", e);
+                    return;
+                }
+                if (documentSnapshot != null && documentSnapshot.exists()){
+                    User currentUser = documentSnapshot.toObject(User.class);
+                    // Set points
+                    assert currentUser != null;
+                    String userPoints = String.valueOf(currentUser.getPoints());
+                    tvCoinsToolbar.setText(userPoints);
+
+                    // Set smileys
+                    String userSmileys = String.valueOf(currentUser.getSmileys());
+                    tvSmileysToolbar.setText(userSmileys);
+                }
+            }
+        });
+                /*UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                User currentUser = documentSnapshot.toObject(User.class);
+                // Set points
+                assert currentUser != null;
+                String userPoints = String.valueOf(currentUser.getPoints());
+                tvCoinsToolbar.setText(userPoints);
+
+                // Set smileys
+                String userSmileys = String.valueOf(currentUser.getSmileys());
+                tvSmileysToolbar.setText(userSmileys);
+            }
+        }); */
     }
 
 
     // --------------------
     // UTILS
     // --------------------
+
 
     // Show Snack Bar with a message
     protected void showSnackBar(LinearLayout linearLayout, String message){

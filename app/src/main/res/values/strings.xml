@@ -27,10 +27,10 @@
 
     <!-- SOLVE ACTIVITY -->
     <string name="solve_activity_enigma_response_title">La solution : </string>
-    <string name="solve_activity_enigma_solved_first_place">Vous êtes le premier à résoudre cette énigme, \n vous remportez 50 points</string>
-    <string name="solve_activity_enigma_solved_second_place">Vous êtes le second à résoudre cette énigme,\n vous remportez 30 points</string>
-    <string name="solve_activity_enigma_solved_third_place">Vous êtes le troisième à résoudre cette énigme, \n vous remportez 20 points</string>
-    <string name="solve_activity_enigma_solved_fourth_place">Vous avez résolu l\'énigme, \n vous remportez 10 points</string>
+    <string name="solve_activity_enigma_solved_first_place">Vous êtes le premier à résoudre cette énigme, vous remportez </string>
+    <string name="solve_activity_enigma_solved_second_place">Vous êtes le second à résoudre cette énigme, vous remportez </string>
+    <string name="solve_activity_enigma_solved_third_place">Vous êtes le troisième à résoudre cette énigme, vous remportez </string>
+    <string name="solve_activity_enigma_solved_fourth_place">Vous avez résolu l\'énigme, vous remportez </string>
     <string name="solve_activity_alert_dialog_solved_title">Félicitations !</string>
     <string name="solve_activity_alert_dialog_ok">OK</string>
     <string name="solve_activity_toast_wrong_answer">Désolé mais cette réponse n\'est pas exacte !! </string>
