@@ -9,6 +9,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -104,7 +105,6 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     private int previousTab = TAB_UNSOLVED_ENIGMA_TAG;
     // For User History
     private ArrayList<String> userEnigmaHistoryList = new ArrayList<>();
-    private SharedPreferences sharedPreferences;
 
 
 
@@ -177,7 +177,6 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     // ------------------
     //      ACTIONS
     // ------------------
-
 
 
     // TABS PART
@@ -320,22 +319,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
         return false;
     }
 
-    private void startSmileysTimer() {
-        //getting the current time in milliseconds, and creating a Date object from it:
-        Date date = new Date(System.currentTimeMillis());
-        //converting it back to a milliseconds representation:
-        long millis = date.getTime();
 
-        sharedPreferences = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putLong(Constants.KEY_SMILEYS_TIMER_START, millis);
-        editor.apply();
-
-        /*
-        Read it back:
-        Date myDate = new Date(sharedPreferences.getLong(Constants.KEY_SMILEYS_TIMER_START, 0));
-         */
-    }
 
     // ------------------
     //      UI
@@ -602,7 +586,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                                             final User currentUser = documentSnapshot.toObject(User.class);
                                             if (currentUser.getSmileys() > 0 && !userEnigmaHistoryList.contains(enigma.getUid()) ) {
-                                                if (currentUser.getSmileys() == 1) {startSmileysTimer();}
+                                                startTimer();
                                                 UserHelper.updateUserSmileys((currentUser.getSmileys() - 1), currentUser.getUid()).addOnFailureListener(new OnFailureListener() {
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {

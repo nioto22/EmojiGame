@@ -44,6 +44,20 @@ public class Constants {
     public static final String PROFILE_ACTIVITY_TITLE = "Votre Profil";
 
     // SHARED PREFERENCES
-    public static final String KEY_SMILEYS_TIMER_START = "KEY_SMILEYS_TIMER_START";
+    public static final String SHARED_PREF_NAME = "SHARED_PREF_NAME";
+    public static final String SHARED_PREF_LIFE_LEFT_TIME = "SHARED_PREF_LIFE_LEFT_TIME";
+    public static final String SHARED_PREF_LIFE_END_TIME = "SHARED_PREF_LIFE_END_TIME";
+    public static final String SHARED_PREF_LIFE_IS_TIMER_RUNNING = "SHARED_PREF_LIFE_IS_TIMER_RUNNING";
+
+    //TIMER
+    public static final long TIMES_UP_UNTIL_NEW_LIFE = 10800000;
+    public static final long TIMES_UP_FOR_FIVE_NEW_LIFE = 54000000;
+
+    // DIALOG FRAGMENT
+    public static final String PODIUM_DIALOG_FRAGMENT_TAG = "podiumDialog";
+    public static final String SMILEYS_DIALOG_FRAGMENT_TAG = "smileysDialog";
+    public static final String PODIUM_DIALOG_ARG_ENIGMA = "enigma";
+    public static final String LIFE_DIALOG_ARG_USER = "user";
+    public static final String LIFE_DIALOG_ARG_TIME_LEFT = "timeLeft";
 
 }

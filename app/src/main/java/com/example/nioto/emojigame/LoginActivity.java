@@ -101,7 +101,7 @@ public class LoginActivity extends BaseActivity {
     // 1 - Http request that create user in firestore
     private void createUserInFirestore(){
 
-        if (this.getCurrentUser() != null && this.isNewUser()){
+        if (this.getCurrentUser() != null ){ // && isNewUser
             String urlPicture = (this.getCurrentUser().getPhotoUrl() != null) ? this.getCurrentUser().getPhotoUrl().toString() : null;
             String username = this.getCurrentUser().getDisplayName();
             String uid = this.getCurrentUser().getUid();

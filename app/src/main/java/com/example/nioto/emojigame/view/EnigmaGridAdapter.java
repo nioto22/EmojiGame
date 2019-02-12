@@ -103,7 +103,9 @@ public class EnigmaGridAdapter extends RecyclerView.Adapter<EnigmaGridAdapter.Un
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 User user = documentSnapshot.toObject(User.class);
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                assert currentUser != null;
                 String currentUserUid = currentUser.getUid();
+                assert user != null;
                 holder.tvEnigmaUser.setText(user.getUsername());
 
                 if (enigma.getUserUid().equals(currentUserUid)) {

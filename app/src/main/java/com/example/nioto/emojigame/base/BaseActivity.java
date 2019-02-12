@@ -4,13 +4,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,19 +19,21 @@ import android.widget.Toast;
 import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.api.UserHelper;
 import com.example.nioto.emojigame.models.User;
+import com.example.nioto.emojigame.utils.Constants;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthSettings;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseUserMetadata;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import butterknife.ButterKnife;
@@ -40,7 +42,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private static final String TAG = "BaseActivity";
 
 
-    private SharedPreferences mSharedPreferences;
+
     public static final String SHARED_PREFERENCES_CURRENT_USER_TAG = "SHARED_PREFERENCES_CURRENT_USER_TAG";
     private static User[] currentUser = new User[1];
     // ToolbarViews
@@ -49,6 +51,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected TextView tvTitleToolbar;
     protected ImageButton toolbarBackButton;
     protected String toolbarTitle;
+
+    // LIFE TIMER
+    private long mTimeLeftInMillis;
+    private Boolean mTimerRunning;
+    private long mEndTime;
+    private CountDownTimer mCountDownTimer;
 
     // --------------------
     // LIFE CYCLE
@@ -62,13 +70,8 @@ public abstract class BaseActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(this, getString(R.string.error_no_internet), Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
-        } else {
-
-
         }
         ButterKnife.bind(this); //Configure Butterknife
-
-
     }
 
     public abstract int getFragmentLayout();
@@ -78,11 +81,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     // UI
     // --------------------
 
-    /* protected void configureToolbar(){
-         ActionBar ab = getSupportActionBar();
-         ab.setDisplayHomeAsUpEnabled(true);
-     }
-     */
+
     protected void setUpToolbar(){
         this.getToolbarViews();
         tvTitleToolbar.setText(toolbarTitle);
@@ -108,26 +107,135 @@ public abstract class BaseActivity extends AppCompatActivity {
                 }
             }
         });
-                /*UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User currentUser = documentSnapshot.toObject(User.class);
-                // Set points
-                assert currentUser != null;
-                String userPoints = String.valueOf(currentUser.getPoints());
-                tvCoinsToolbar.setText(userPoints);
 
-                // Set smileys
-                String userSmileys = String.valueOf(currentUser.getSmileys());
-                tvSmileysToolbar.setText(userSmileys);
-            }
-        }); */
     }
 
 
     // --------------------
     // UTILS
     // --------------------
+
+    // COUNTDOWNTIMER
+
+    protected void startTimer(){
+        Log.d(TAG, "startTimer: start");
+        mEndTime = System.currentTimeMillis() + mTimeLeftInMillis;
+
+        mCountDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                mTimeLeftInMillis = millisUntilFinished;
+            }
+
+            @Override
+            public void onFinish() {
+                mTimerRunning = false;
+
+
+                UserHelper.getUser(getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        User user = documentSnapshot.toObject(User.class);
+                        int smiles = user.getSmileys();
+                        smiles++;
+
+                        Log.d(TAG, "onFinish: Timer finished, new life = " + smiles);
+                        if (smiles < 6) {
+                            UserHelper.updateUserSmileys(smiles, user.getUid()).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d(TAG, "onFailure: Fail to updateUserSmileys : " + e);
+                                }
+                            });
+                            if (smiles < 5) {
+                                mTimeLeftInMillis = Constants.TIMES_UP_UNTIL_NEW_LIFE;
+                                if (mCountDownTimer != null) {
+                                    mCountDownTimer.cancel();
+                                }
+                                startTimer();
+                            }
+                        }
+                    }
+                });
+            }
+        }.start();
+        mTimerRunning = true;
+    }
+
+    public void updateUserSmileys(final long timeLeftInMillis){
+        UserHelper.getUser(getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                User user = documentSnapshot.toObject(User.class);
+                int smileys = user.getSmileys();
+                Log.d(TAG, "onSuccess: UpdateUserSmileys : user smileys = " + smileys);
+                int additionalSmileys = (int) (timeLeftInMillis / Constants.TIMES_UP_UNTIL_NEW_LIFE);
+                Log.d(TAG, "onSuccess: UpdateUserSmileys : additional smileys = " + additionalSmileys);
+                smileys = (smileys + additionalSmileys > 5 ) ? 5 : smileys + additionalSmileys;
+                Log.d(TAG, "onSuccess: UpdateUserSmileys : new user smileys = " + smileys);
+                UserHelper.updateUserSmileys(smileys, user.getUid()).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onFailure: Fail to update smileys");
+                    }
+                });
+            }
+        });
+
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        SharedPreferences mSharedPreferences = getSharedPreferences(Constants.SHARED_PREF_NAME, MODE_PRIVATE);
+
+
+        mTimeLeftInMillis = mSharedPreferences.getLong(Constants.SHARED_PREF_LIFE_LEFT_TIME, Constants.TIMES_UP_UNTIL_NEW_LIFE);
+        Log.d(TAG, "onStart: timeLeft = " + mTimeLeftInMillis);
+        mTimerRunning = mSharedPreferences.getBoolean(Constants.SHARED_PREF_LIFE_IS_TIMER_RUNNING, false);
+
+        if (mTimerRunning) {
+            mEndTime = mSharedPreferences.getLong(Constants.SHARED_PREF_LIFE_END_TIME, 0);
+            mTimeLeftInMillis = mEndTime - System.currentTimeMillis();
+
+            if (mTimeLeftInMillis < 0) {
+                mTimeLeftInMillis = 0;
+                mTimerRunning = false;
+            } else {
+                startTimer();
+            }
+        }
+    }
+
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        SharedPreferences mSharedPreferences = getSharedPreferences(Constants.SHARED_PREF_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+
+        editor.putLong(Constants.SHARED_PREF_LIFE_LEFT_TIME, mTimeLeftInMillis);
+        editor.putBoolean(Constants.SHARED_PREF_LIFE_IS_TIMER_RUNNING, mTimerRunning);
+        editor.putLong(Constants.SHARED_PREF_LIFE_END_TIME, mEndTime);
+
+        editor.apply();
+
+        if (mCountDownTimer != null) {
+            mCountDownTimer.cancel();
+        }
+    }
+
+
+    protected void updateCountDownText(){
+
+    }
+
+    protected void updateCountDown(){
+
+    }
+
 
 
     // Show Snack Bar with a message
@@ -146,15 +254,17 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Nullable
     protected Boolean isNewUser() {
-        Boolean result;
-        FirebaseUserMetadata metadata = this.getCurrentUser().getMetadata();
-        if (metadata != null) {
+      final Boolean result;
+      /*  FirebaseUserMetadata metadata = Objects.requireNonNull(this.getCurrentUser()).getMetadata();
+        if (metadata != null && metadata.getCreationTimestamp() == metadata.getLastSignInTimestamp()) {
             // It's a new user
-// It's not
-            result = metadata.getCreationTimestamp() == metadata.getLastSignInTimestamp();
+            result = true;
         } else {
             result = false;
         }
+        */
+        result = UserHelper.getUsersCollection().document(this.getCurrentUser().getUid()).getId().equals(this.getCurrentUser().getUid());
+
         return result;
     }
 
@@ -198,6 +308,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
+        assert cm != null;
         return cm.getActiveNetworkInfo()!= null;
     }
 

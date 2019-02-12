@@ -6,6 +6,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.Query;
 
 import java.util.Collections;
@@ -20,7 +21,12 @@ public class EnigmaHelper {
     // --- COLLECTION REFERENCE ---
 
     public static CollectionReference getEnigmaCollection(){
-        return FirebaseFirestore.getInstance().collection(COLLECTION_NAME);
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setTimestampsInSnapshotsEnabled(true)
+                .build();
+        firestore.setFirestoreSettings(settings);
+        return firestore.collection(COLLECTION_NAME);
     }
 
     // --- CREATE ---

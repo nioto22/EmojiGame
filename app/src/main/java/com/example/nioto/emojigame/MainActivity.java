@@ -2,6 +2,9 @@ package com.example.nioto.emojigame;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -18,7 +21,10 @@ import com.example.nioto.emojigame.activities.PlayActivity;
 import com.example.nioto.emojigame.api.UserHelper;
 import com.example.nioto.emojigame.auth.ProfileActivity;
 import com.example.nioto.emojigame.base.BaseActivity;
+import com.example.nioto.emojigame.dialog_fragment.EmojiLifeDialogFragment;
+import com.example.nioto.emojigame.dialog_fragment.PodiumDialogFragment;
 import com.example.nioto.emojigame.models.User;
+import com.example.nioto.emojigame.utils.Constants;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -53,6 +59,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         if (this.getCurrentUser() == null) startLoginActivity();
         this.updateUIWhenCreating();
+
     }
 
     @Override
@@ -161,6 +168,20 @@ public class MainActivity extends BaseActivity {
     @OnClick (R.id.main_activity_button_play)
     public void onClickPlayButton(){
         startActivityForResult(new Intent(this, PlayActivity.class),INTENT_PLAY_ACTIVITY_KEY);
+    }
+
+    @OnClick (R.id.main_activity_button_add_smileys)
+    public void onClickSmileysButton(){
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(Constants.SMILEYS_DIALOG_FRAGMENT_TAG);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        DialogFragment newFragment = EmojiLifeDialogFragment.newInstance(getCurrentUser().getUid());
+        newFragment.show(ft, Constants.SMILEYS_DIALOG_FRAGMENT_TAG);
     }
 
     // --------------------

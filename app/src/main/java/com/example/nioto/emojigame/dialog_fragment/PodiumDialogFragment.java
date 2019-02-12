@@ -4,9 +4,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,24 +17,18 @@ import android.widget.TextView;
 import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.api.EnigmaHelper;
 import com.example.nioto.emojigame.api.UserHelper;
-import com.example.nioto.emojigame.base.BaseActivity;
 import com.example.nioto.emojigame.models.Enigma;
 import com.example.nioto.emojigame.models.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
+import com.example.nioto.emojigame.utils.Constants;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
-import butterknife.BindView;
 
-public class Podium_dialog_fragment extends DialogFragment {
+public class PodiumDialogFragment extends DialogFragment {
 
-    private static final String TAG = "Podium_dialog_fragment";
+    private static final String TAG = "PodiumDialogFragment";
     // FOR DESIGN
     private RelativeLayout rlGlobalLayout;
     private ImageView ivTitle;
@@ -51,11 +43,11 @@ public class Podium_dialog_fragment extends DialogFragment {
 
     private String enigmaUid;
 
-    public static Podium_dialog_fragment newInstance(String enigma){
-        Podium_dialog_fragment dialogFragment = new Podium_dialog_fragment();
+    public static PodiumDialogFragment newInstance(String enigma){
+        PodiumDialogFragment dialogFragment = new PodiumDialogFragment();
 
         Bundle args = new Bundle();
-        args.putString("enigma", enigma);
+        args.putString(Constants.PODIUM_DIALOG_ARG_ENIGMA, enigma);
         dialogFragment.setArguments(args);
 
         return dialogFragment;
@@ -65,7 +57,7 @@ public class Podium_dialog_fragment extends DialogFragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            enigmaUid = getArguments().getString("enigma");
+            enigmaUid = getArguments().getString(Constants.PODIUM_DIALOG_ARG_ENIGMA);
         }
 
     }
@@ -74,7 +66,7 @@ public class Podium_dialog_fragment extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_dialog_solve_activity_podium, container, false);
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        // txt= (TextView) inflaterView.findViewById(R.id.type);
+
         rlGlobalLayout = v.findViewById(R.id.fragment_dialog_solve_activity_podium_linear_layout_content);
         ivTitle = v.findViewById(R.id.fragment_dialog_solve_activity_podium_title);
         tvPodiumNobody = v.findViewById(R.id.fragment_dialog_solve_activity_podium_tv_no_resolution);

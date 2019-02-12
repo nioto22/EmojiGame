@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "359872136600",
+    "firebase_url": "https://emojigame-3f41e.firebaseio.com",
+    "project_id": "emojigame-3f41e",
+    "storage_bucket": "emojigame-3f41e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:359872136600:android:d492e6a4f58eb734",
+        "android_client_info": {
+          "package_name": "com.example.nioto.emojigame"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "359872136600-cqsikup95oajgn7esjoln889i2696obm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.nioto.emojigame",
+            "certificate_hash": "28b196f689f67881bfb60c7fb0c9926d1a0d4a47"
+          }
+        },
+        {
+          "client_id": "359872136600-59g8r1hneekovodl2t6kvb3sqo21fnd9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3BhuxquGk8PqBEY_4FBW__wO6EwCP_L8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "359872136600-59g8r1hneekovodl2t6kvb3sqo21fnd9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -4,6 +4,7 @@ package com.example.nioto.emojigame.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -20,13 +21,11 @@ import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.api.EnigmaHelper;
 import com.example.nioto.emojigame.api.UserHelper;
 import com.example.nioto.emojigame.base.BaseActivity;
-import com.example.nioto.emojigame.database.EnigmaPlayed;
 import com.example.nioto.emojigame.database.EnigmaPlayedManager;
-import com.example.nioto.emojigame.dialog_fragment.Podium_dialog_fragment;
+import com.example.nioto.emojigame.dialog_fragment.PodiumDialogFragment;
 import com.example.nioto.emojigame.models.Enigma;
 import com.example.nioto.emojigame.models.User;
 import com.example.nioto.emojigame.utils.Constants;
-import com.example.nioto.emojigame.view.ChatAdapter;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -39,6 +38,10 @@ import butterknife.OnClick;
 public class SolveEnigmaActivity extends BaseActivity{
 
     private static final String TAG = "SolveEnigmaActivity";
+
+    private CountDownTimer countDownTimer;
+    private long timeLeftInMillis = 10800000;
+    private TextView textTest;
 
 
     // FOR DESIGN
@@ -158,19 +161,28 @@ public class SolveEnigmaActivity extends BaseActivity{
     //       ACTION
     // --------------------
 
+    // HINT PART
+    @OnClick(R.id.solve_enigma_activity_bottom_button_hint_one)
+    public void onClickHintOneButton() {
+    }
+
+    @OnClick(R.id.solve_enigma_activity_bottom_button_hint_two)
+    public void onClickHintTwoButton() {
+    }
+
     // PODIUM BUTTON
     @OnClick (R.id.solve_enigma_activity_bottom_button_podium)
     public void onClickPodiumButton(){
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(Constants.PODIUM_DIALOG_FRAGMENT_TAG);
         if (prev != null) {
             ft.remove(prev);
         }
         ft.addToBackStack(null);
 
         // Create and show the dialog.
-        DialogFragment newFragment = Podium_dialog_fragment.newInstance(enigmaUid);
-        newFragment.show(ft, "dialog");
+        DialogFragment newFragment = PodiumDialogFragment.newInstance(enigmaUid);
+        newFragment.show(ft, Constants.PODIUM_DIALOG_FRAGMENT_TAG);
     }
 
     // RESOLVE PART
