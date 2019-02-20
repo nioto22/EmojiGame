@@ -1,7 +1,9 @@
 package com.example.nioto.emojigame;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -22,9 +24,10 @@ import com.example.nioto.emojigame.api.UserHelper;
 import com.example.nioto.emojigame.auth.ProfileActivity;
 import com.example.nioto.emojigame.base.BaseActivity;
 import com.example.nioto.emojigame.dialog_fragment.EmojiLifeDialogFragment;
-import com.example.nioto.emojigame.dialog_fragment.PodiumDialogFragment;
 import com.example.nioto.emojigame.models.User;
 import com.example.nioto.emojigame.utils.Constants;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -58,9 +61,14 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (this.getCurrentUser() == null) startLoginActivity();
+        MobileAds.initialize(this, Constants.ADD_MOBS_APPLICATION_ID);
         this.updateUIWhenCreating();
 
+
     }
+
+
+
 
     @Override
     public int getFragmentLayout() {
@@ -174,13 +182,12 @@ public class MainActivity extends BaseActivity {
     public void onClickSmileysButton(){
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag(Constants.SMILEYS_DIALOG_FRAGMENT_TAG);
-        if (prev != null) {
-            ft.remove(prev);
-        }
+        if (prev != null) { ft.remove(prev);}
         ft.addToBackStack(null);
 
         // Create and show the dialog.
-        DialogFragment newFragment = EmojiLifeDialogFragment.newInstance(getCurrentUser().getUid());
+        String userUid =  getCurrentUser().getUid();
+        DialogFragment newFragment = EmojiLifeDialogFragment.newInstance(userUid, this.mEndTime, this.mTimerRunning );
         newFragment.show(ft, Constants.SMILEYS_DIALOG_FRAGMENT_TAG);
     }
 
@@ -191,4 +198,35 @@ public class MainActivity extends BaseActivity {
     private void startLoginActivity() { startActivity(new Intent(this, LoginActivity.class));}
     private void startProfileActivity() { startActivity(new Intent(this, ProfileActivity.class));}
 
+    // ------------------
+    //     UTILS
+    // ------------------
+
+
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

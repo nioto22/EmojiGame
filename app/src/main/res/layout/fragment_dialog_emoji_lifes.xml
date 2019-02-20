@@ -137,14 +137,18 @@
                     android:layout_height="wrap_content"
                     android:padding="@dimen/default_large_margin"
                     android:src="@drawable/pay_life_button"
-                    android:background="@color/fui_transparent"/>
+                    android:background="@color/fui_transparent"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
                 <ImageButton
                     android:id="@+id/fragment_dialog_emoji_lifes_button_extra_life_with_ad"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/default_large_margin"
                     android:src="@drawable/view_adv_button"
-                    android:background="@color/fui_transparent"/>
+                    android:background="@color/fui_transparent"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
             </LinearLayout>
         </LinearLayout>
         <!-- FULL LIFE -->

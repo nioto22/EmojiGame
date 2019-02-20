@@ -32,10 +32,11 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.vanniktech.emoji.EmojiManager;
+import com.vanniktech.emoji.google.GoogleEmojiProvider;
 
 import java.util.Objects;
 import java.util.UUID;
-
 import butterknife.ButterKnife;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -53,10 +54,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected String toolbarTitle;
 
     // LIFE TIMER
-    private long mTimeLeftInMillis;
-    private Boolean mTimerRunning;
-    private long mEndTime;
-    private CountDownTimer mCountDownTimer;
+    protected long mTimeLeftInMillis;
+    protected Boolean mTimerRunning;
+    protected long mEndTime;
+    protected CountDownTimer mCountDownTimer;
 
     // --------------------
     // LIFE CYCLE
@@ -64,6 +65,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        EmojiManager.install(new GoogleEmojiProvider());
         super.onCreate(savedInstanceState);
         this.setContentView(this.getFragmentLayout());
         if (!isNetworkConnected()) {
@@ -72,7 +74,10 @@ public abstract class BaseActivity extends AppCompatActivity {
             toast.show();
         }
         ButterKnife.bind(this); //Configure Butterknife
+
     }
+
+
 
     public abstract int getFragmentLayout();
     public abstract void getToolbarViews();
@@ -119,6 +124,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected void startTimer(){
         Log.d(TAG, "startTimer: start");
+
         mEndTime = System.currentTimeMillis() + mTimeLeftInMillis;
 
         mCountDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
@@ -129,9 +135,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                mTimerRunning = false;
-
-
+                mTimeLeftInMillis = Constants.TIMES_UP_UNTIL_NEW_LIFE;
                 UserHelper.getUser(getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -148,11 +152,15 @@ public abstract class BaseActivity extends AppCompatActivity {
                                 }
                             });
                             if (smiles < 5) {
-                                mTimeLeftInMillis = Constants.TIMES_UP_UNTIL_NEW_LIFE;
                                 if (mCountDownTimer != null) {
                                     mCountDownTimer.cancel();
                                 }
                                 startTimer();
+                            } else {
+                                mTimerRunning = false;
+                                if (mCountDownTimer != null) {
+                                    mCountDownTimer.cancel();
+                                }
                             }
                         }
                     }
@@ -162,26 +170,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         mTimerRunning = true;
     }
 
-    public void updateUserSmileys(final long timeLeftInMillis){
-        UserHelper.getUser(getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User user = documentSnapshot.toObject(User.class);
-                int smileys = user.getSmileys();
-                Log.d(TAG, "onSuccess: UpdateUserSmileys : user smileys = " + smileys);
-                int additionalSmileys = (int) (timeLeftInMillis / Constants.TIMES_UP_UNTIL_NEW_LIFE);
-                Log.d(TAG, "onSuccess: UpdateUserSmileys : additional smileys = " + additionalSmileys);
-                smileys = (smileys + additionalSmileys > 5 ) ? 5 : smileys + additionalSmileys;
-                Log.d(TAG, "onSuccess: UpdateUserSmileys : new user smileys = " + smileys);
-                UserHelper.updateUserSmileys(smileys, user.getUid()).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "onFailure: Fail to update smileys");
-                    }
-                });
-            }
-        });
-
+    protected void startTimerNewOne(){
+        mTimeLeftInMillis = Constants.TIMES_UP_UNTIL_NEW_LIFE;
+        mTimerRunning = false;
+        if (mCountDownTimer != null) {
+            mCountDownTimer.cancel();
+        }
+        startTimer();
     }
 
 
@@ -192,7 +187,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
         mTimeLeftInMillis = mSharedPreferences.getLong(Constants.SHARED_PREF_LIFE_LEFT_TIME, Constants.TIMES_UP_UNTIL_NEW_LIFE);
-        Log.d(TAG, "onStart: timeLeft = " + mTimeLeftInMillis);
+
+        Log.d(TAG, "onStart: timeLeft = " +  "Timer est à : " + mTimeLeftInMillis);
         mTimerRunning = mSharedPreferences.getBoolean(Constants.SHARED_PREF_LIFE_IS_TIMER_RUNNING, false);
 
         if (mTimerRunning) {
@@ -200,8 +196,36 @@ public abstract class BaseActivity extends AppCompatActivity {
             mTimeLeftInMillis = mEndTime - System.currentTimeMillis();
 
             if (mTimeLeftInMillis < 0) {
-                mTimeLeftInMillis = 0;
-                mTimerRunning = false;
+                DocumentReference userListener = UserHelper.getUsersCollection().document(this.getCurrentUser().getUid());
+                userListener.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(TAG, "onEvent: Error", e);
+                            return;
+                        }
+                        if (documentSnapshot != null && documentSnapshot.exists()) {
+                            User currentUser = documentSnapshot.toObject(User.class);
+                            int smileys = currentUser.getSmileys();
+                            while (mTimeLeftInMillis < 0 && mTimerRunning){
+                                smileys ++;
+                                if (smileys < 6) {
+                                    UserHelper.updateUserSmileys(smileys, currentUser.getUid()).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.d(TAG, "onFailure: Fail to update user smileys");
+                                        }
+                                    });
+                                    mTimeLeftInMillis += Constants.TIMES_UP_UNTIL_NEW_LIFE;
+                                } else {
+                                    mTimeLeftInMillis = Constants.TIMES_UP_UNTIL_NEW_LIFE;
+                                    mTimerRunning = false;
+                                }
+
+                            }
+                        }
+                    }
+                });
             } else {
                 startTimer();
             }
@@ -215,7 +239,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onStop();
         SharedPreferences mSharedPreferences = getSharedPreferences(Constants.SHARED_PREF_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = mSharedPreferences.edit();
-
+        Log.d(TAG, "onStart: timeLeft = " +  "Timer est à : " + mTimeLeftInMillis + "EndTimer est à : " + mEndTime + "boolean running est à " + mTimerRunning);
         editor.putLong(Constants.SHARED_PREF_LIFE_LEFT_TIME, mTimeLeftInMillis);
         editor.putBoolean(Constants.SHARED_PREF_LIFE_IS_TIMER_RUNNING, mTimerRunning);
         editor.putLong(Constants.SHARED_PREF_LIFE_END_TIME, mEndTime);
@@ -227,14 +251,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-
-    protected void updateCountDownText(){
-
-    }
-
-    protected void updateCountDown(){
-
-    }
 
 
 

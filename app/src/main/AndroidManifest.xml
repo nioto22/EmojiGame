@@ -13,6 +13,12 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/emojigame_icone"
         android:supportsRtl="true">
+
+        <!-- AdMob App ID-->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-7652009776235513~1976717846"/>
+        <!--     -->
         <activity
             android:name="com.example.nioto.emojigame.MainActivity"
             android:theme="@style/AppTheme.NoTitle"

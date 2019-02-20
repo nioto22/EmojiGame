@@ -1,7 +1,5 @@
 package com.example.nioto.emojigame.dialog_fragment;
 
-import android.support.v4.app.DialogFragment;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -10,6 +8,7 @@ import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +23,11 @@ import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.api.UserHelper;
 import com.example.nioto.emojigame.models.User;
 import com.example.nioto.emojigame.utils.Constants;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -37,7 +41,7 @@ import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class EmojiLifeDialogFragment extends DialogFragment {
+public class EmojiLifeDialogFragment extends DialogFragment implements RewardedVideoAdListener {
 
     private static final String TAG = "EmojiLifeDialogFragment";
 
@@ -47,6 +51,7 @@ public class EmojiLifeDialogFragment extends DialogFragment {
     private Boolean mTimerRunning;
     private long mEndTime;
     private CountDownTimer mCountDownTimer;
+    private Boolean mRewardedVideoIsDone = false;
 
     // FOR DESIGN
     // GLOBAL
@@ -67,11 +72,16 @@ public class EmojiLifeDialogFragment extends DialogFragment {
     // BUTTON
     private Button okButton;
 
-    public static EmojiLifeDialogFragment newInstance(String userUid){
+    // FOR REWARDED VIDEO AD
+    private RewardedVideoAd mVideoAd;
+
+    public static EmojiLifeDialogFragment newInstance(String userUid, long mEndTime, Boolean mTimerRunning){
         EmojiLifeDialogFragment dialogFragment = new EmojiLifeDialogFragment();
 
         Bundle args = new Bundle();
         args.putString(Constants.LIFE_DIALOG_ARG_USER, userUid);
+        args.putLong(Constants.LIFE_DIALOG_ARG_END_TIME, mEndTime);
+        args.putBoolean(Constants.LIFE_DIALOG_ARG_TIMER_RUNNING, mTimerRunning);
         dialogFragment.setArguments(args);
 
         return dialogFragment;
@@ -79,29 +89,40 @@ public class EmojiLifeDialogFragment extends DialogFragment {
 
 
     public void onCreate(Bundle savedInstanceState) {
+        mVideoAd = MobileAds.getRewardedVideoAdInstance(getActivity());   // Possible issue there
+        mVideoAd.setRewardedVideoAdListener(this);
+        loadRewardedVideoAd();
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null) {
-            userUid = getArguments().getString(Constants.LIFE_DIALOG_ARG_USER);
-            SharedPreferences prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(Constants.SHARED_PREF_NAME, MODE_PRIVATE);
 
-            mTimeLeftInMillis = prefs.getLong(Constants.SHARED_PREF_LIFE_LEFT_TIME, Constants.TIMES_UP_UNTIL_NEW_LIFE);
-            Log.d(TAG, "onStart: timeLeft = " + mTimeLeftInMillis);
-            mTimerRunning = prefs.getBoolean(Constants.SHARED_PREF_LIFE_IS_TIMER_RUNNING, false);
+        userUid = getArguments().getString(Constants.LIFE_DIALOG_ARG_USER);
+        if (mRewardedVideoIsDone) {
+            mRewardedVideoIsDone = false;
+        } else {
+            if (getArguments() != null) {
+                mTimerRunning = getArguments().getBoolean(Constants.LIFE_DIALOG_ARG_TIMER_RUNNING);
+                mEndTime = getArguments().getLong(Constants.LIFE_DIALOG_ARG_END_TIME);
 
-            if (mTimerRunning) {
-                mEndTime = prefs.getLong(Constants.SHARED_PREF_LIFE_END_TIME, 0);
-                mTimeLeftInMillis = mEndTime - System.currentTimeMillis();
+                Log.d(TAG, "onCreate: mEndtime = " + mEndTime);
+                Log.d(TAG, "onCreate: mTimerRunning = " + mTimerRunning);
 
-                if (mTimeLeftInMillis < 0) {
-                    mTimeLeftInMillis = 0;
-                    mTimerRunning = false;
-                } else {
-                    startTimer();
+                if (mTimerRunning) {
+                    mTimeLeftInMillis = mEndTime - System.currentTimeMillis();
+
+                    if (mTimeLeftInMillis < 0) {
+                        // mTimeLeftInMillis = 0;
+                        mTimerRunning = false;
+                    } else {
+                        startTimer();
+                    }
                 }
             }
         }
+
+
     }
+
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState) {
@@ -178,7 +199,7 @@ public class EmojiLifeDialogFragment extends DialogFragment {
                                 } else mTimeLeftInMillis = 0;
 
                             } else {
-                                showSnackBar(globalConstraintLayout, "Vous n'avez pas assez d'EmojiCoins pour acheter une vie !!");
+                                showSnackBar(globalConstraintLayout, getString(R.string.snackbar_message_no_enough_coins));
                             }
                         }
                     });
@@ -186,15 +207,13 @@ public class EmojiLifeDialogFragment extends DialogFragment {
                     imageButtonWatchForLife.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            showSnackBar(globalConstraintLayout, "Pour les tests uniquement !!");
-                            UserHelper.updateUserSmileys(user.getSmileys() - 1, userUid).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.d(TAG, "onFailure: Fail to update User Smileys");
+                            if (user.getSmileys() < 5) {
+                                if (mVideoAd.isLoaded()) {
+                                    mVideoAd.show();
                                 }
-                            });
-                            mTimeLeftInMillis = Constants.TIMES_UP_UNTIL_NEW_LIFE;
-                            startTimer();
+                            } else {
+                                showSnackBar(globalConstraintLayout, getString(R.string.snackbar_message_life_at_maximum));
+                            }
                         }
                     });
                 }
@@ -211,7 +230,7 @@ public class EmojiLifeDialogFragment extends DialogFragment {
     }
 
     public void dismissDialog(){
-        SharedPreferences prefs = getActivity().getSharedPreferences(Constants.SHARED_PREF_NAME, MODE_PRIVATE);
+        SharedPreferences prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(Constants.SHARED_PREF_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putLong(Constants.SHARED_PREF_LIFE_LEFT_TIME, mTimeLeftInMillis);
         editor.putBoolean(Constants.SHARED_PREF_LIFE_IS_TIMER_RUNNING, mTimerRunning);
@@ -240,11 +259,10 @@ public class EmojiLifeDialogFragment extends DialogFragment {
     }
 
     private void startTimer(){
+        Log.d(TAG, "startTimer: start");
+
         mEndTime = System.currentTimeMillis() + mTimeLeftInMillis;
 
-        if (mCountDownTimer != null) {
-            mCountDownTimer.cancel();
-        }
         mCountDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -254,8 +272,7 @@ public class EmojiLifeDialogFragment extends DialogFragment {
 
             @Override
             public void onFinish() {
-                mTimerRunning = false;
-
+                mTimeLeftInMillis = Constants.TIMES_UP_UNTIL_NEW_LIFE;
                 UserHelper.getUser(userUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -272,11 +289,15 @@ public class EmojiLifeDialogFragment extends DialogFragment {
                                 }
                             });
                             if (smiles < 5) {
-                                mTimeLeftInMillis = Constants.TIMES_UP_UNTIL_NEW_LIFE;
                                 if (mCountDownTimer != null) {
                                     mCountDownTimer.cancel();
                                 }
                                 startTimer();
+                            } else {
+                                mTimerRunning = false;
+                                if (mCountDownTimer != null) {
+                                    mCountDownTimer.cancel();
+                                }
                             }
                         }
                     }
@@ -286,8 +307,95 @@ public class EmojiLifeDialogFragment extends DialogFragment {
         mTimerRunning = true;
     }
 
+
+
+
     // Show Snack Bar with a message
     protected void showSnackBar(ConstraintLayout constraintLayout, String message){
         Snackbar.make(constraintLayout, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+
+    // Rewarded Video Add
+    private void loadRewardedVideoAd(){
+        if (!mVideoAd.isLoaded()){
+            mVideoAd.loadAd(Constants.ADD_MOBS_VIDEO_TEST_ID,
+                    new AdRequest.Builder().build());
+        }
+    }
+
+    @Override
+    public void onRewardedVideoAdLoaded() { }
+    @Override
+    public void onRewardedVideoAdOpened() { }
+    @Override
+    public void onRewardedVideoStarted() { }
+    @Override
+    public void onRewardedVideoAdClosed() {
+        loadRewardedVideoAd();
+    }
+
+    @Override
+    public void onRewarded(RewardItem rewardItem) {
+        mRewardedVideoIsDone = true;
+        showSnackBar(globalConstraintLayout, getString(R.string.snackbar_message_win_new_life));
+
+
+        UserHelper.getUser(userUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                User user = documentSnapshot.toObject(User.class);
+                int smiles = user.getSmileys();
+                smiles++;
+
+                Log.d(TAG, "onFinish: Timer finished, new life = " + smiles);
+                if (smiles < 6) {
+                    UserHelper.updateUserSmileys(smiles, user.getUid()).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d(TAG, "onFailure: Fail to updateUserSmileys : " + e);
+                        }
+                    });
+                    if (smiles < 5) {
+                        if (mTimerRunning) mCountDownTimer.cancel();
+                        mTimeLeftInMillis = Constants.TIMES_UP_UNTIL_NEW_LIFE;
+                        startTimer();
+                    } else {
+                        mTimerRunning = false;
+                    }
+                }
+            }
+        });
+
+    }
+    @Override
+    public void onRewardedVideoAdLeftApplication() {
+        Log.d(TAG, "onRewardedVideoAdLeftApplication: ");
+    }
+    @Override
+    public void onRewardedVideoAdFailedToLoad(int i) {
+        Log.d(TAG, "onRewardedVideoAdFailedToLoad: ");
+    }
+    @Override
+    public void onRewardedVideoCompleted() {
+        Log.d(TAG, "onRewardedVideoCompleted: ");
+    }
+
+    @Override
+    public void onPause() {
+        mVideoAd.pause(getActivity());
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        mVideoAd.resume(getActivity());
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroyView() {
+        mVideoAd.destroy(getActivity());
+        super.onDestroyView();
     }
 }

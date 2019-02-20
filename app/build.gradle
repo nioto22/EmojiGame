@@ -70,5 +70,11 @@ dependencies {
 
     // GSON
     implementation 'com.google.code.gson:gson:2.8.5'
+
+    // ADD MOB
+    implementation 'com.google.android.gms:play-services-ads:17.1.1'
+
+    // EMOJI COMPAT
+    implementation 'com.vanniktech:emoji-google:0.5.1'
 }
 apply plugin: 'com.google.gms.google-services'

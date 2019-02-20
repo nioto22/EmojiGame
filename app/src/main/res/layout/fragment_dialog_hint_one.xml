@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout android:id="@+id/fragment_dialog_hint_one_global_constraint_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/fragment_dialog_hint_one_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/button_fragment_dialog"
+        android:padding="@dimen/default_small_margin"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_dialog_hint_one_background_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_hint_title" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/fragment_dialog_hint_one_background_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default_large_margin"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_dialog_hint_one_button_validate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_dialog_hint_one_title">
+
+        <LinearLayout
+            android:id="@+id/fragment_dialog_hint_one_linear_layout_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/default_small_margin"
+            android:padding="@dimen/default_large_margin"
+            android:layout_alignParentStart="true"
+            android:background="@drawable/button_fragment_dialog"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/fragment_dialog_hint_one_second_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_hint_one_second_title"
+                android:padding="@dimen/default_small_margin"
+                android:textColor="@color/primaryTextColor"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/fragment_dialog_hint_one_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_hint_one_text"
+                android:textColor="@color/primaryTextColor"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:gravity="center"/>
+            <LinearLayout
+                android:id="@+id/fragment_dialog_hint_one_linear_layout_buttons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <ImageButton
+                    android:id="@+id/fragment_dialog_hint_one_video_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/default_large_margin"
+                    android:src="@drawable/view_adv_button"
+                    android:background="@color/fui_transparent"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+
+    <Button
+        android:id="@+id/fragment_dialog_hint_one_button_validate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ok"
+        android:textStyle="bold"
+        android:textColor="@color/primaryTextColor"
+        android:background="@drawable/button_fragment_dialog"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_dialog_hint_one_background_content"/>
+</android.support.constraint.ConstraintLayout>

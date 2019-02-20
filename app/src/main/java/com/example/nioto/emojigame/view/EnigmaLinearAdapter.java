@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.vanniktech.emoji.EmojiTextView;
 
 import java.util.ArrayList;
 
@@ -37,7 +38,7 @@ public class EnigmaLinearAdapter extends RecyclerView.Adapter<EnigmaLinearAdapte
 
 
     public static class UnsolvedEnigmaViewHolder extends RecyclerView.ViewHolder{
-        public TextView tvEnigma;
+        public EmojiTextView tvEnigma;
         public TextView tvCategory;
         public TextView tvDifficulty;
         public TextView tvUser;

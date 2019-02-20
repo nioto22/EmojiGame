@@ -72,9 +72,9 @@ public class Enigma {
         if (this.message != null) {
             String[] messageSplit = this.message.split("_");
             int numberOfSplit = messageSplit.length;
-            int enigmaLenght = this.enigma.length();
-            int additionalPoints = (numberOfSplit > 3 ) ? (enigmaLenght / numberOfSplit < 2) ? 0 : (enigmaLenght / numberOfSplit < 4) ? enigmaLenght/numberOfSplit*25 : 50 : 0;
-            this.dificulty = (numberOfSplit * 25) + additionalPoints ;
+            //int enigmaLenght = this.enigma.length();
+            //int additionalPoints = (numberOfSplit > 3 ) ? (enigmaLenght / numberOfSplit < 2) ? 0 : (enigmaLenght / numberOfSplit < 4) ? enigmaLenght/numberOfSplit*25 : 50 : 0;
+            this.dificulty = (numberOfSplit * 25)  ;  // + additionalPoints
         } else {
             this.dificulty = 25;
         }

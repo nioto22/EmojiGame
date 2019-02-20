@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,6 @@ import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
@@ -44,13 +42,14 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class CreateEnigmaActivity extends BaseActivity {
+public class CreateEnigmaActivity extends BaseActivity  {
 
     private static final String TAG = "CreateEnigmaActivity";
 
     // FOR DESIGN
+    @BindView(R.id.create_enigma_activity_rl_global) LinearLayout rootView;
     @BindView(R.id.create_activity_tv_category_choosed) TextView textViewCategoryChoosed;
-    @BindView(R.id.create_activity_et_enigma) TextInputEditText etEnigma;
+    @BindView(R.id.create_activity_et_enigma)   TextInputEditText etEnigma;
     @BindView(R.id.create_activity_et_solution) TextInputEditText etSolution;
     @BindView(R.id.create_activity_et_message) TextInputEditText etMessage;
     @BindView(R.id.create_activity_enigma_frame_layout) FrameLayout flEnigmaLayout;
@@ -80,6 +79,7 @@ public class CreateEnigmaActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // initiateEmojiPopup();
         setUpToolbar();
         // Hide the keyboard.
         getWindow().setSoftInputMode(
@@ -121,6 +121,14 @@ public class CreateEnigmaActivity extends BaseActivity {
     // ------------------
     //      UI
     // ------------------
+
+ /*   private  void initiateEmojiPopup(){
+        final EmojiPopup emojiPopup = EmojiPopup.Builder.fromRootView(rootView).build(moreEmoji);
+        emojiPopup.toggle(); // Toggles visibility of the Popup.
+        emojiPopup.dismiss(); // Dismisses the Popup.
+        emojiPopup.isShowing(); // Returns true when Popup is showing.
+    }
+    */
 
     private void initiateListView() {
         expandableListView = findViewById(R.id.create_activity_list_category);
@@ -213,7 +221,7 @@ public class CreateEnigmaActivity extends BaseActivity {
 
     @OnClick (R.id.create_activity_create_button)
     public void onClickCreateButton(){
-        if(checkMandatoryInputsNotNull()){
+        if(checkEnigmaCompatibility()){
             progressBar.setVisibility(View.VISIBLE);
             final String uid = generateUniqueUid();
             final String userUid = this.getCurrentUser().getUid();
@@ -224,7 +232,7 @@ public class CreateEnigmaActivity extends BaseActivity {
                     User currentUser = documentSnapshot.toObject(User.class);
                     List<String> userEnigmaUidList = currentUser.getUserEnigmaUidList();
                     userEnigmaUidList.add(uid);
-                    currentUser.addPoints(10);
+                    currentUser.addPoints(50);
                     UserHelper.updateUserEnigmaUidList(userEnigmaUidList,userUid);
                     UserHelper.updateUserPoints(currentUser.getPoints(), userUid);
                 }
@@ -237,7 +245,7 @@ public class CreateEnigmaActivity extends BaseActivity {
 
     @OnClick (R.id.create_activity_update_button)
     public void onClickUpdateButton(){
-        if (checkMandatoryInputsNotNull()){
+        if (checkEnigmaCompatibility()){
             progressBar.setVisibility(View.VISIBLE);
             EnigmaHelper.getEnigma(enigmaUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
@@ -278,21 +286,32 @@ public class CreateEnigmaActivity extends BaseActivity {
     // UTILS
     // --------------------
 
-    private Boolean checkMandatoryInputsNotNull(){
+    private Boolean checkEnigmaCompatibility() {
         mEnigma = etEnigma.getText().toString();
         mSolution = etSolution.getText().toString();
         mCategory = textViewCategoryChoosed.getText().toString() +
                 ((textViewCategoryChoosed.getText().equals(Constants.FIREBASE_CATEGORY_OTHER_TEXT) && etOther != null) ?
-                        " : " + etOther.getText().toString() : "") ;
+                        " : " + etOther.getText().toString() : "");
         mMessage = etMessage.getText().toString();
 
         String categoryHint = getResources().getString(R.string.tv_category_choosed);
-        if (mEnigma.equals("") || mSolution.equals("") || mCategory.equals(categoryHint)) {
+        if (mEnigma.equals("") || mSolution.equals("") || mCategory.equals(categoryHint) || mMessage.equals("")) {
             Toast toast = Toast.makeText(this, getString(R.string.toast_missing_enigma_info), Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
             return false;
-        } else return true;
+        } else return explanationIsCorrect(mMessage);
+    }
+
+    private Boolean explanationIsCorrect(String mMessage){
+        if (mMessage.indexOf('_') >= 0){
+            return true;
+        } else {
+            Toast toast = Toast.makeText(this, getString(R.string.toast_wrong_explanation), Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+            return false;
+        }
     }
 
     public static void hideKeyboardwithoutPopulate(Activity activity) {

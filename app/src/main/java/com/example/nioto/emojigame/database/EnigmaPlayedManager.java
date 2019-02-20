@@ -62,6 +62,7 @@ public class EnigmaPlayedManager {
     public int convertBooleanToInt(Boolean input){
         return input ? 1 : -1;
     }
+    public Boolean convertIntToBoolean(int input){ return input > 0; }
 
     public int updateEnigmaPlayed (EnigmaPlayed enigmaPlayed){
         ContentValues values = new ContentValues();
@@ -119,7 +120,7 @@ public class EnigmaPlayedManager {
 
         EnigmaPlayed enigma= new EnigmaPlayed("");
 
-        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE "+ENIGMA_UID+"="+enigmaUid, null);
+        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+" where "+ENIGMA_UID+" = \'"+enigmaUid + "\'", null);
         if (c.moveToFirst()) {
             enigma.setEnigmaUid(c.getString(c.getColumnIndex(ENIGMA_UID)));
             enigma.setEnigmaIsSolved(c.getInt(c.getColumnIndex(ENIGMA_IS_SOLVED)));
@@ -145,7 +146,7 @@ public class EnigmaPlayedManager {
     }
 
     public Boolean isEnigmaExists(String enigmaUid) {
-        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE "+ENIGMA_UID+"="+enigmaUid, null);
+        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+" where "+ENIGMA_UID+" = \'" +enigmaUid + "\'", null);
         return c.moveToFirst();
     }
 

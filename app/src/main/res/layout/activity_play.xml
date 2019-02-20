@@ -23,7 +23,9 @@
             android:layout_alignParentStart="true"
             android:layout_margin="@dimen/default_margin"
             android:background="@color/fui_transparent"
-            android:src="@drawable/ic_back_arrow" />
+            android:src="@drawable/ic_back_arrow"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
 
         <TextView
             android:id="@+id/play_enigma_activity_toolbar_title"
@@ -63,7 +65,9 @@
                 android:src="@drawable/ic_coin"
                 android:background="@color/fui_transparent"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="@dimen/default_small_margin_5dp"/>
+                android:layout_marginEnd="@dimen/default_small_margin_5dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"/>
 
         </LinearLayout>
         <LinearLayout
@@ -92,7 +96,9 @@
                 android:background="@color/fui_transparent"
                 android:layout_gravity="center_vertical"
                 android:paddingStart="@dimen/default_small_margin_5dp"
-                android:paddingEnd="@dimen/default_small_margin_5dp"/>
+                android:paddingEnd="@dimen/default_small_margin_5dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"/>
         </LinearLayout>
 
     </RelativeLayout>

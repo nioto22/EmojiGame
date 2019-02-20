@@ -1,15 +1,16 @@
 package com.example.nioto.emojigame.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -25,6 +26,7 @@ import com.example.nioto.emojigame.api.UserHelper;
 import com.example.nioto.emojigame.base.BaseActivity;
 import com.example.nioto.emojigame.database.EnigmaPlayed;
 import com.example.nioto.emojigame.database.EnigmaPlayedManager;
+import com.example.nioto.emojigame.dialog_fragment.EmojiLifeDialogFragment;
 import com.example.nioto.emojigame.models.Enigma;
 import com.example.nioto.emojigame.models.User;
 import com.example.nioto.emojigame.utils.Constants;
@@ -35,14 +37,17 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Objects;
+
+import javax.annotation.Nullable;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -107,16 +112,27 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     private ArrayList<String> userEnigmaHistoryList = new ArrayList<>();
 
 
+    // FOR DATAS
+    private Query query = EnigmaHelper.getAllEnigma(filterCategory);
+
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         getUserHistoryEnigmaArray();
         this.setUpToolbar();
         setUpFilterButtonsViews();
         setUpRecyclerView();
+
+        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                setUpRecyclerView();
+            }
+        });
     }
 
     @Override
@@ -443,7 +459,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                         itemObject.setChecked(true);
                         break;
                     case Constants.FILTER_CATEGORY_WORD:
-                        itemOther.setChecked(true);
+                        itemWord.setChecked(true);
                         break;
                     case Constants.FILTER_CATEGORY_OTHER:
                         itemOther.setChecked(true);
@@ -500,11 +516,12 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     */
 
     public void setUpRecyclerView(){
-        final Query query = EnigmaHelper.getAllEnigma(filterCategory);
+        query = EnigmaHelper.getAllEnigma(filterCategory);
         final ArrayList <Enigma> enigmaList = new ArrayList<>();
         final int tab = tabTag;
         final int prevTab = previousTab;
         final String sort = sortType;
+
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -585,25 +602,24 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                                         @Override
                                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                                             final User currentUser = documentSnapshot.toObject(User.class);
-                                            if (currentUser.getSmileys() > 0 && !userEnigmaHistoryList.contains(enigma.getUid()) ) {
-                                                startTimer();
+                                            if (currentUser.getSmileys() > 0 && !enigma.getResolvedUserUid().contains(currentUser.getUid()) ) {
+                                                startTimerNewOne();
                                                 UserHelper.updateUserSmileys((currentUser.getSmileys() - 1), currentUser.getUid()).addOnFailureListener(new OnFailureListener() {
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {
-                                                        // TO DO TOAST FAILURE
-                                                        Toast.makeText(PlayActivity.this, "Une erreur s'est produite", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(PlayActivity.this, getString(R.string.error_unknown_error), Toast.LENGTH_SHORT).show();
                                                     }
                                                 });
                                                 Intent solveEnigmaIntent = new Intent(PlayActivity.this, SolveEnigmaActivity.class);
                                                 solveEnigmaIntent.putExtra(EXTRA_ENIGMA_PATH, enigma.getUid());
                                                 startActivityForResult(solveEnigmaIntent, INTENT_SOLVE_ACTIVITY_KEY);
-                                            } else if (userEnigmaHistoryList.contains(enigma.getUid())) {
+                                            } else if (enigma.getResolvedUserUid().contains(currentUser.getUid())) {
                                                 Intent solveEnigmaIntent = new Intent(PlayActivity.this, SolveEnigmaActivity.class);
                                                 solveEnigmaIntent.putExtra(EXTRA_ENIGMA_PATH, enigma.getUid());
                                                 startActivityForResult(solveEnigmaIntent, INTENT_SOLVE_ACTIVITY_KEY);
                                             }else {
-                                                // TO DO DIALOG SMILEYS
-                                                Toast.makeText(PlayActivity.this, "Dialog Smileys", Toast.LENGTH_SHORT).show();
+                                                // No more life
+                                                Toast.makeText(PlayActivity.this, getString(R.string.toast_no_more_life), Toast.LENGTH_SHORT).show();
                                             }
 
                                         }
@@ -617,13 +633,22 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                             enigmaRecyclerView.setLayoutAnimation(animation);
                             mEnigmaLinearAdapter.notifyDataSetChanged();
                             enigmaRecyclerView.setAdapter(mEnigmaLinearAdapter);
+                            if (tab == 1){
+                                if (userEnigmaHistoryList.size() < 1 ){
+                                    tvEmptyRecyclerView.setText(getText(R.string.no_enigma_already_played));
+                                } else {
+                                    tvEmptyRecyclerView.setText(getText(R.string.no_enigma_filter));
+                                }
+                            } else {
+                                tvEmptyRecyclerView.setText(getString(R.string.no_enigma_created));
+                            }
                             tvEmptyRecyclerView.setVisibility(mEnigmaLinearAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
 
                             mEnigmaLinearAdapter.setOnItemClickListener(new EnigmaLinearAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(int position) {
                                     Enigma enigma = enigmaList.get(position);
-                                    if (tab != 2) insertEnigmaInDataBase(enigma.getUid());
+                                   // if (tab != 2) insertEnigmaInDataBase(enigma.getUid());
                                     Intent solveEnigmaIntent = new Intent(PlayActivity.this, SolveEnigmaActivity.class);
                                     solveEnigmaIntent.putExtra(EXTRA_ENIGMA_PATH, enigma.getUid());
                                     startActivityForResult(solveEnigmaIntent, INTENT_SOLVE_ACTIVITY_KEY);
