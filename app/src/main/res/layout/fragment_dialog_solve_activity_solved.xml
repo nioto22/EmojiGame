@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerInParent="true">
+
+
+    <ImageView
+        android:id="@+id/fragment_dialog_solve_activity_solved_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/button_fragment_dialog"
+        android:paddingStart="@dimen/default_small_margin"
+        android:paddingTop="@dimen/default_small_margin"
+        android:paddingEnd="@dimen/default_small_margin"
+        android:src="@drawable/solved_title"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_dialog_solve_activity_solved_linear_layout_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <RelativeLayout
+        android:id="@+id/fragment_dialog_solve_activity_solved_linear_layout_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/button_fragment_dialog"
+        android:orientation="vertical"
+        android:padding="@dimen/default_large_margin"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_dialog_solve_activity_solved_button_validate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_dialog_solve_activity_solved_title"
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/fragment_dialog_solve_activity_solved_tv_congratulation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/default_large_margin"
+            android:text="@string/fragment_dialog_solve_activity_solved_tv_congratulation"
+            android:textAlignment="center"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+            android:textColor="@color/primaryTextColor" />
+        <!-- MESSAGE DIFFICULTY -->
+        <TextView
+            android:id="@+id/fragment_dialog_solve_activity_solved_tv_awards"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/fragment_dialog_solve_activity_solved_tv_congratulation"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/default_large_margin"
+            android:layout_marginBottom="25dp"
+            android:gravity="center_horizontal"
+            android:text="_"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+            android:textColor="@color/primaryTextColor"
+            android:textStyle="bold" />
+
+        <com.facebook.share.widget.ShareButton
+            android:id="@+id/fragment_dialog_solve_activity_solved_button_facebook_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/fragment_dialog_solve_activity_solved_tv_awards"
+            android:layout_centerHorizontal="true"
+            android:gravity="center" />
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/fragment_dialog_solve_activity_solved_button_validate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_fragment_dialog"
+        android:text="OK"
+        android:textColor="@color/primaryTextColor"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_dialog_solve_activity_solved_linear_layout_content"
+        tools:visibility="visible" />
+</android.support.constraint.ConstraintLayout>

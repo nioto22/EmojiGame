@@ -65,6 +65,8 @@
     <!-- FACEBOOK PURPOSE -->
     <string name="facebook_application_id" translatable="false">205811963639659</string>
     <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb205811963639659</string>
+
+    <!-- CREATE ACTIVITY -->
     <string name="button_update_photo">Mettre à jour la photo</string>
     <string name="toolbar_title_create_enigma_activity">Créer une Enigme</string>
     <string name="create_button">CREER</string>
@@ -147,6 +149,7 @@
     <string name="sort_filter_button_text_title">Trier par</string>
     <string name="dialog_hint_one_second_title">Coup de pouce 1 :</string>
     <string name="dialog_hint_one_text">Regardez une vidéo pour obtenir   le nombre de lettres de l\'énigme</string>
+    <string name="fragment_dialog_solve_activity_solved_tv_congratulation">Réponse correct, félicitations !!</string>
 
 
 </resources>

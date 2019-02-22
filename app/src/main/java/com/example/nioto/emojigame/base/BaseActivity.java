@@ -77,15 +77,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     }
 
-
-
     public abstract int getFragmentLayout();
     public abstract void getToolbarViews();
 
     // --------------------
     // UI
     // --------------------
-
 
     protected void setUpToolbar(){
         this.getToolbarViews();

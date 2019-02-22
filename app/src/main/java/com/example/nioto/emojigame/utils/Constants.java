@@ -2,6 +2,7 @@ package com.example.nioto.emojigame.utils;
 
 public class Constants {
     // APPLICATION
+    public static final String APPLICATION_PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=pro.cloudteam.emojinationtest";  // TEST URI
     public static final String ADD_MOBS_APPLICATION_ID = "ca-app-pub-7652009776235513~1976717846";
     public static final String ADD_MOBS_VIDEO_TEST_ID = "ca-app-pub-3940256099942544/5224354917"; // FOR TEST ONLY
     public static final String ADD_MOBS_VIDEO_ID = "ca-app-pub-7652009776235513/3263370046"; // FOR REAL
@@ -61,10 +62,15 @@ public class Constants {
     public static final String SMILEYS_DIALOG_FRAGMENT_TAG = "smileysDialog";
     public static final String HINT_ONE_DIALOG_FRAGMENT_TAG = "hintOneDialog";
     public static final String HINT_TWO_DIALOG_FRAGMENT_TAG = "hintTwoDialog";
+    public static final String SOLVED_DIALOG_FRAGMENT_TAG = "solvedDialog";
     public static final String PODIUM_DIALOG_ARG_ENIGMA = "enigma";
     public static final String LIFE_DIALOG_ARG_USER = "user";
     public static final String LIFE_DIALOG_ARG_END_TIME = "endTime";
     public static final String LIFE_DIALOG_ARG_TIMER_RUNNING = "timmerRunning";
     public static final String HINT_ONE_DIALOG_ARG_ENIGMA = "enigma";
+    public static final String SOLVED_DIALOG_ARG_POINTS = "points";
+    public static final String SOLVED_DIALOG_ARG_ENIGMA = "solvedEnigma";
+    public static final String SOLVED_DIALOG_ARG_RESOLVED_TIMES = "numberOfResolvedTimes";
+    public static final String SOLVED_DIALOG_ARG_CATEGORY = "enigmaCategory";
 
 }

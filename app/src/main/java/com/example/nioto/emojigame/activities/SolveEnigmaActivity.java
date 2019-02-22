@@ -1,14 +1,12 @@
 package com.example.nioto.emojigame.activities;
 
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -29,6 +27,7 @@ import com.example.nioto.emojigame.database.EnigmaPlayed;
 import com.example.nioto.emojigame.database.EnigmaPlayedManager;
 import com.example.nioto.emojigame.dialog_fragment.HintOneDialogFragment;
 import com.example.nioto.emojigame.dialog_fragment.PodiumDialogFragment;
+import com.example.nioto.emojigame.dialog_fragment.SolvedDialogFragment;
 import com.example.nioto.emojigame.models.Enigma;
 import com.example.nioto.emojigame.models.User;
 import com.example.nioto.emojigame.utils.Constants;
@@ -522,39 +521,20 @@ public class SolveEnigmaActivity extends BaseActivity{
                                                 public void onSuccess(Void aVoid) {
                                                 }
                                             });
-                                            // AlertDialog
-                                            String message;
-                                            String stPoints = "\n" + String.valueOf(enigma.getDificulty()) + " points !!";
-                                            switch (numberOfResolvedTimes) {
-                                                case (1):
-                                                    message = getString(R.string.solve_activity_enigma_solved_first_place) + stPoints;
-                                                    break;
-                                                case (2):
-                                                    message = getString(R.string.solve_activity_enigma_solved_second_place) + stPoints;
-                                                    break;
-                                                case (3):
-                                                    message = getString(R.string.solve_activity_enigma_solved_third_place) + stPoints;
-                                                    break;
-                                                default:
-                                                    message = getString(R.string.solve_activity_enigma_solved_fourth_place) + stPoints;
+                                            // SolvedDialogFragment
+                                            String category = enigma.getCategory();
+                                            String stPoints = String.valueOf(enigma.getDificulty()) + " points !!";
+
+                                            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                                            Fragment prev = getSupportFragmentManager().findFragmentByTag(Constants.SOLVED_DIALOG_FRAGMENT_TAG);
+                                            if (prev != null) {
+                                                ft.remove(prev);
                                             }
-                                            AlertDialog.Builder builder = new AlertDialog.Builder(SolveEnigmaActivity.this);
-                                            TextView alertMessage = new TextView(SolveEnigmaActivity.this);
-                                            alertMessage.setText(message);
-                                            alertMessage.setGravity(Gravity.CENTER);
-                                            builder.setTitle(getString(R.string.solve_activity_alert_dialog_solved_title))
-                                                    .setView(alertMessage)
-                                                    .setPositiveButton(getString(R.string.solve_activity_alert_dialog_ok), new DialogInterface.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(DialogInterface dialogInterface, int which) {
-                                                            //End of activity
-                                                            Intent intent = new Intent();
-                                                            setResult(RESULT_OK, intent);
-                                                            finish();
-                                                        }
-                                                    })
-                                                    .create()
-                                                    .show();
+                                            ft.addToBackStack(null);
+
+                                            // Create and show the dialog.
+                                            DialogFragment newFragment = SolvedDialogFragment.newInstance( stPoints, enigma.getEnigma(),numberOfResolvedTimes , category );
+                                            newFragment.show(ft, Constants.SOLVED_DIALOG_FRAGMENT_TAG);
                                         }
                                     });
                                 } else {
