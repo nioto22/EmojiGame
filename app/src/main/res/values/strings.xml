@@ -53,6 +53,7 @@
     <string name="snackbar_message_no_enough_coins">Vous n\'avez pas assez d\'EmojiCoins pour acheter une vie !!</string>
     <string name="snackbar_message_life_at_maximum">Vous avez atteint le nombre maximum de vie !!</string>
     <string name="snackbar_message_win_new_life">Félicitation, vous gagnez une vie supplémentaire !!</string>
+    <string name="snackbar_message_win_new_coins">Félicitation, vous remportez 50 EmojiCoins !!</string>
     <string name="snackbar_message_activate_hint_one">Félicitation, vous avez activé le coup de pouce \"Nombre de lettre\" !!</string>
     <!-- MENTOR_CHAT ACTIVITY -->
     <string name="toolbar_title_mentor_chat_activity">Chats de discussions</string>
@@ -150,6 +151,7 @@
     <string name="dialog_hint_one_second_title">Coup de pouce 1 :</string>
     <string name="dialog_hint_one_text">Regardez une vidéo pour obtenir   le nombre de lettres de l\'énigme</string>
     <string name="fragment_dialog_solve_activity_solved_tv_congratulation">Réponse correct, félicitations !!</string>
+    <string name="fragment_dialog_emoji_coins_text_view_question_text">Besoin de plus d\'EmojiCoins ?</string>
 
 
 </resources>

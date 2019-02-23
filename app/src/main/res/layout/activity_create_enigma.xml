@@ -23,8 +23,7 @@
             android:layout_margin="@dimen/default_margin"
             android:background="@color/fui_transparent"
             android:src="@drawable/ic_back_arrow"
-            android:focusable="true"
-            android:focusableInTouchMode="true" />
+            android:focusable="true" />
 
         <TextView
             android:id="@+id/create_activity_toolbar_title"
@@ -66,7 +65,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="@dimen/default_small_margin_5dp"
                 android:focusable="true"
-                android:focusableInTouchMode="true"/>
+                />
 
         </LinearLayout>
         <LinearLayout
@@ -97,7 +96,7 @@
                 android:paddingStart="@dimen/default_small_margin_5dp"
                 android:paddingEnd="@dimen/default_small_margin_5dp"
                 android:focusable="true"
-                android:focusableInTouchMode="true"/>
+                />
         </LinearLayout>
 
     </RelativeLayout>

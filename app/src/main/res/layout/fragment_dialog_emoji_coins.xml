@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    android:id="@+id/fragment_dialog_emoji_coins_global_constraint_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:id="@+id/fragment_dialog_emoji_coins_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/button_fragment_dialog"
+        android:padding="@dimen/default_small_margin"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_dialog_emoji_coins_linear_layout_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/coins_title"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/fragment_dialog_emoji_coins_coins_number_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/primaryTextColor"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textStyle="bold"
+                android:paddingEnd="@dimen/default_small_margin_5dp"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_coin"
+                android:paddingStart="@dimen/default_small_margin_5dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/fragment_dialog_emoji_coins_linear_layout_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/button_fragment_dialog"
+        android:padding="@dimen/default_large_margin"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_dialog_emoji_coins_button_validate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_dialog_emoji_coins_title">
+
+
+        <LinearLayout
+            android:id="@+id/fragment_dialog_emoji_coins_linear_layout_more_coins"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/default_small_margin"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/fragment_dialog_emoji_coins_text_view_question_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginBottom="@dimen/default_large_margin"
+                android:padding="@dimen/default_margin"
+                android:text="@string/fragment_dialog_emoji_coins_text_view_question_text"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/primaryTextColor"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pour obtenir des EmojiCoins :"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/primaryTextColor" />
+
+            <LinearLayout
+                android:id="@+id/fragment_dialog_emoji_coins_linear_layout_buttons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/default_large_margin"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/fragment_dialog_emoji_coins_more_coins_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="@dimen/default_small_margin"
+                        android:text="Créez une énigme"
+                        android:textColor="@color/primaryTextColor" />
+
+                    <Button
+                        android:id="@+id/fragment_dialog_emoji_coins_button_create"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/button_main_edit"
+                        android:focusable="true"
+                        android:src="@drawable/view_adv_button"
+                        android:text="@string/main_activity_create_button_text"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                        android:textColor="@color/primaryTextColor" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/default_large_margin"
+                        android:text="Regardez une vidéo"
+                        android:layout_marginTop="@dimen/default_small_margin"
+                        android:textColor="@color/primaryTextColor" />
+
+                    <ImageButton
+                        android:id="@+id/fragment_dialog_emoji_coins_button_extra_coins_with_ad"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/default_large_margin"
+                        android:background="@color/fui_transparent"
+                        android:focusable="true"
+                        android:src="@drawable/view_adv_button" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+    <Button
+        android:id="@+id/fragment_dialog_emoji_coins_button_validate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="OK"
+        android:textStyle="bold"
+        android:textColor="@color/primaryTextColor"
+        android:background="@drawable/button_fragment_dialog"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_dialog_emoji_coins_linear_layout_content" />
+</android.support.constraint.ConstraintLayout>

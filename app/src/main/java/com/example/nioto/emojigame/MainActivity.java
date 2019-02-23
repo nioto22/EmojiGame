@@ -23,6 +23,7 @@ import com.example.nioto.emojigame.activities.PlayActivity;
 import com.example.nioto.emojigame.api.UserHelper;
 import com.example.nioto.emojigame.auth.ProfileActivity;
 import com.example.nioto.emojigame.base.BaseActivity;
+import com.example.nioto.emojigame.dialog_fragment.EmojiCoinsDialogFragment;
 import com.example.nioto.emojigame.dialog_fragment.EmojiLifeDialogFragment;
 import com.example.nioto.emojigame.models.User;
 import com.example.nioto.emojigame.utils.Constants;
@@ -32,6 +33,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -186,9 +189,22 @@ public class MainActivity extends BaseActivity {
         ft.addToBackStack(null);
 
         // Create and show the dialog.
-        String userUid =  getCurrentUser().getUid();
+        String userUid =  Objects.requireNonNull(getCurrentUser()).getUid();
         DialogFragment newFragment = EmojiLifeDialogFragment.newInstance(userUid, this.mEndTime, this.mTimerRunning );
         newFragment.show(ft, Constants.SMILEYS_DIALOG_FRAGMENT_TAG);
+    }
+
+    @OnClick (R.id.main_activity_button_add_coins)
+    public void onClickCoinsButton(){
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(Constants.COINS_DIALOG_FRAGMENT_TAG);
+        if (prev != null) { ft.remove(prev);}
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        String userUid =  Objects.requireNonNull(getCurrentUser()).getUid();
+        DialogFragment newFragment = EmojiCoinsDialogFragment.newInstance(userUid);
+        newFragment.show(ft, Constants.COINS_DIALOG_FRAGMENT_TAG);
     }
 
     // --------------------

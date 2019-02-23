@@ -54,8 +54,7 @@
                     android:src="@drawable/ic_add"
                     android:layout_gravity="center"
                     android:padding="5dp"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"/>
+                    android:focusable="true"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -89,8 +88,7 @@
                     android:src="@drawable/ic_add"
                     android:layout_gravity="center"
                     android:padding="5dp"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"/>
+                    android:focusable="true"/>
             </LinearLayout>
         </LinearLayout>
         <!-- PROFILE IMAGE -->

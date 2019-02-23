@@ -319,7 +319,7 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
     // Rewarded Video Add
     private void loadRewardedVideoAd(){
         if (!mVideoAd.isLoaded()){
-            mVideoAd.loadAd(Constants.ADD_MOBS_VIDEO_TEST_ID,
+            mVideoAd.loadAd(Constants.ADD_MOBS_VIDEO_ID_SMILEYS,
                     new AdRequest.Builder().build());
         }
     }

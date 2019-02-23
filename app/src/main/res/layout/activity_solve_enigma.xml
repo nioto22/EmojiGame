@@ -27,7 +27,7 @@
             android:background="@color/fui_transparent"
             android:src="@drawable/ic_back_arrow"
             android:focusable="true"
-            android:focusableInTouchMode="true"/>
+            />
 
         <TextView
             android:id="@+id/solve_enigma_activity_toolbar_title"
@@ -70,7 +70,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="@dimen/default_small_margin_5dp"
                 android:focusable="true"
-                android:focusableInTouchMode="true"/>
+                />
 
         </LinearLayout>
         <LinearLayout
@@ -101,7 +101,7 @@
                 android:paddingStart="@dimen/default_small_margin_5dp"
                 android:paddingEnd="@dimen/default_small_margin_5dp"
                 android:focusable="true"
-                android:focusableInTouchMode="true"/>
+                />
         </LinearLayout>
 
     </RelativeLayout>
@@ -987,7 +987,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             android:focusable="true"
-            android:focusableInTouchMode="true"/>
+            />
 
         <ImageButton
             android:id="@+id/solve_enigma_activity_bottom_button_hint_two"
@@ -1004,7 +1004,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0"
             android:focusable="true"
-            android:focusableInTouchMode="true"/>
+            />
 
 
         <ImageButton
@@ -1020,7 +1020,7 @@
             app:layout_constraintStart_toEndOf="@+id/solve_enigma_activity_bottom_button_hint_two"
             app:layout_constraintTop_toTopOf="parent"
             android:focusable="true"
-            android:focusableInTouchMode="true" />
+             />
 
     </android.support.constraint.ConstraintLayout>
 

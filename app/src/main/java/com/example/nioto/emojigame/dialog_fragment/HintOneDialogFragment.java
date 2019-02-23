@@ -54,15 +54,15 @@ public class HintOneDialogFragment extends DialogFragment implements RewardedVid
 
 
     public void onCreate(Bundle savedInstanceState) {
+        mVideoAd = MobileAds.getRewardedVideoAdInstance(getActivity());
+        mVideoAd.setRewardedVideoAdListener(this);
+        loadRewardedVideoAd();
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
             enigmaUid = getArguments().getString(Constants.HINT_ONE_DIALOG_ARG_ENIGMA);
         }
 
-        mVideoAd = MobileAds.getRewardedVideoAdInstance(getActivity());   // Possible issue there
-        mVideoAd.setRewardedVideoAdListener(this);
-        loadRewardedVideoAd();
     }
 
     @Override
@@ -108,7 +108,7 @@ public class HintOneDialogFragment extends DialogFragment implements RewardedVid
     // Rewarded Video Add
     private void loadRewardedVideoAd(){
         if (!mVideoAd.isLoaded()){
-            mVideoAd.loadAd(Constants.ADD_MOBS_VIDEO_TEST_ID,
+            mVideoAd.loadAd(Constants.ADD_MOBS_VIDEO_ID_HINT_ONE,
                     new AdRequest.Builder().build());
         }
     }

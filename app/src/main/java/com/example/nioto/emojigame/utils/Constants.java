@@ -5,7 +5,10 @@ public class Constants {
     public static final String APPLICATION_PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=pro.cloudteam.emojinationtest";  // TEST URI
     public static final String ADD_MOBS_APPLICATION_ID = "ca-app-pub-7652009776235513~1976717846";
     public static final String ADD_MOBS_VIDEO_TEST_ID = "ca-app-pub-3940256099942544/5224354917"; // FOR TEST ONLY
-    public static final String ADD_MOBS_VIDEO_ID = "ca-app-pub-7652009776235513/3263370046"; // FOR REAL
+    public static final String ADD_MOBS_VIDEO_ID_SMILEYS = "ca-app-pub-3940256099942544/5224354917"; // FOR REAL TO CHANGE WITH : ca-app-pub-7652009776235513/3263370046
+    public static final String ADD_MOBS_VIDEO_ID_COINS = "ca-app-pub-3940256099942544/5224354917"; // FOR REAL  TO CHANGE WITH : ca-app-pub-7652009776235513/7732908143
+    public static final String ADD_MOBS_VIDEO_ID_HINT_ONE = "ca-app-pub-3940256099942544/5224354917"; // FOR REAL TO CHANGE WITH : ca-app-pub-7652009776235513/7820661768
+    public static final String ADD_MOBS_VIDEO_ID_HINT_TWO = "ca-app-pub-3940256099942544/5224354917"; // FOR REAL TO CHANGE WITH : ca-app-pub-7652009776235513/9680538343
     //PLAY ACTIVITY
     // TOOLBAR TITLES
     public static final String PLAY_ACTIVITY_TITLE = "EmojiGame";
@@ -60,6 +63,7 @@ public class Constants {
     // DIALOG FRAGMENT
     public static final String PODIUM_DIALOG_FRAGMENT_TAG = "podiumDialog";
     public static final String SMILEYS_DIALOG_FRAGMENT_TAG = "smileysDialog";
+    public static final String COINS_DIALOG_FRAGMENT_TAG = "coinsDialog";
     public static final String HINT_ONE_DIALOG_FRAGMENT_TAG = "hintOneDialog";
     public static final String HINT_TWO_DIALOG_FRAGMENT_TAG = "hintTwoDialog";
     public static final String SOLVED_DIALOG_FRAGMENT_TAG = "solvedDialog";
@@ -72,5 +76,6 @@ public class Constants {
     public static final String SOLVED_DIALOG_ARG_ENIGMA = "solvedEnigma";
     public static final String SOLVED_DIALOG_ARG_RESOLVED_TIMES = "numberOfResolvedTimes";
     public static final String SOLVED_DIALOG_ARG_CATEGORY = "enigmaCategory";
+    public static final String COINS_DIALOG_ARG_USER = "userUid";
 
 }
