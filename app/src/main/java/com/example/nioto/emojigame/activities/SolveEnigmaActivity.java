@@ -26,18 +26,28 @@ import com.example.nioto.emojigame.base.BaseActivity;
 import com.example.nioto.emojigame.database.EnigmaPlayed;
 import com.example.nioto.emojigame.database.EnigmaPlayedManager;
 import com.example.nioto.emojigame.dialog_fragment.HintOneDialogFragment;
+import com.example.nioto.emojigame.dialog_fragment.HintTwoDialogFragment;
 import com.example.nioto.emojigame.dialog_fragment.PodiumDialogFragment;
 import com.example.nioto.emojigame.dialog_fragment.SolvedDialogFragment;
 import com.example.nioto.emojigame.models.Enigma;
 import com.example.nioto.emojigame.models.User;
 import com.example.nioto.emojigame.utils.Constants;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.vanniktech.emoji.EmojiTextView;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -69,6 +79,8 @@ public class SolveEnigmaActivity extends BaseActivity{
     private ArrayList<EditText> mEditTextArrayList = new ArrayList<>();
     private ArrayList<EditText> mEnabledEditTextList = new ArrayList<>();
     private ArrayList<Integer> mPositionOfSolutionCharList;
+    private ArrayList<Integer> mPositionOfSolutionCharListOnlyLetter = new ArrayList<>();
+    private ArrayList<Character> mSolutionCharListOnlyLetter = new ArrayList<>();
     ArrayList<Character> charactArray = new ArrayList<>();
 
     // FOR DATA
@@ -80,10 +92,12 @@ public class SolveEnigmaActivity extends BaseActivity{
     private Boolean enigmaHasHintOne;
     private Boolean enigmaHasHintTwo;
     private String enigmaHintPositions;
+    private ArrayList<Integer> enigmaHintPositionsList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         this.createEditTextArrayForHintOne();
         this.getEnigmaUid();
         this.getEnigmaDbData();
@@ -131,7 +145,8 @@ public class SolveEnigmaActivity extends BaseActivity{
         this.tvTitleToolbar = findViewById(R.id.solve_enigma_activity_toolbar_title);
         this.toolbarTitle = Constants.SOLVE_ACTIVITY_TITLE;
         this.toolbarBackButton = findViewById(R.id.solve_enigma_activity_toolbar_return_button);
-
+        this.buttonCoinsToolbar = findViewById(R.id.solve_enigma_activity_toolbar_coins_button);
+        this.buttonSmileysToolbar = findViewById(R.id.solve_enigma_activity_toolbar_smileys_button);
         this.toolbarBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -181,6 +196,16 @@ public class SolveEnigmaActivity extends BaseActivity{
         // is Hint One Activate
         if (enigmaHasHintOne){
             displayHintOneEditText();
+            for (Character ch : mSolutionCharListOnlyLetter ) {
+                Log.d(TAG, "getEnigmaUI: char solution in array " + ch);
+            }
+            for (Character cha : charactArray ) {
+                Log.d(TAG, "getEnigmaUI: charact Array " + cha);
+            }
+            for (Integer i : enigmaHintPositionsList){
+                Log.d(TAG, "getEnigmaUI: positions hint two " + i);
+            }
+
         }
     }
 
@@ -222,11 +247,12 @@ public class SolveEnigmaActivity extends BaseActivity{
 
 
             private void displayEditText(ArrayList<Character> charactArray) {
-
+                Collections.sort(enigmaHintPositionsList);
                 enigmaResponse.setVisibility(View.GONE);
                 linearLayoutHintOneFirst.setVisibility(View.VISIBLE);
                 if (charactArray.size() > 32)linearLayoutHintOneThird.setVisibility(View.VISIBLE);
                 if (charactArray.size() > 16)linearLayoutHintOneSecond.setVisibility(View.VISIBLE);
+                int loopCharListOnlyLetter = 0;
                 for (int i = 0; i < charactArray.size(); i++) {
                     if (charactArray.get(i) == 'Y') {
                         mEditTextArrayList.get(i).setVisibility(View.VISIBLE);
@@ -237,6 +263,11 @@ public class SolveEnigmaActivity extends BaseActivity{
                         mEditTextArrayList.get(i).setEnabled(false);
                     }else if (charactArray.get(i)== 'G') {
                         mEditTextArrayList.get(i).setVisibility(View.GONE);
+                    } else if (charactArray.get(i)  == 'L') {
+                        mEditTextArrayList.get(i).setVisibility(View.VISIBLE);
+                        mEditTextArrayList.get(i).setText(String.valueOf(mSolutionCharListOnlyLetter.get((enigmaHintPositionsList.get(loopCharListOnlyLetter))-1)));
+                        mEditTextArrayList.get(i).setEnabled(false);
+                        loopCharListOnlyLetter++;
                     }else {
                         mEditTextArrayList.get(i).setVisibility(View.VISIBLE);
                         mEditTextArrayList.get(i).setBackground(getDrawable(R.color.fui_transparent));
@@ -249,6 +280,10 @@ public class SolveEnigmaActivity extends BaseActivity{
             private ArrayList<Character> getSolutionInArray(String enigmaSolution){
                 int enigmaLength = enigmaSolution.length();
                 ArrayList<Character> charactArray = new ArrayList<>();
+                mPositionOfSolutionCharList = new ArrayList<>();
+                mPositionOfSolutionCharListOnlyLetter = new ArrayList<>();
+                mSolutionCharListOnlyLetter = new ArrayList<>();
+                int loopHintTwoPositions = 1;
                 for (int i = 0; i < enigmaLength ; i++) {
                     if (enigmaSolution.charAt(i) == ' ') charactArray.add(i, 'N');
                     else if (enigmaSolution.charAt(i) == '-' || enigmaSolution.charAt(i) == '\'') {
@@ -256,7 +291,15 @@ public class SolveEnigmaActivity extends BaseActivity{
                         charactArray.add(i, enigmaSolution.charAt(i));
                     } else {
                         mPositionOfSolutionCharList.add(i);
-                        charactArray.add(i, 'Y');
+                        mPositionOfSolutionCharListOnlyLetter.add(i);
+                        mSolutionCharListOnlyLetter.add(Character.toUpperCase(enigmaSolution.charAt(i)));
+                        if (enigmaHintPositionsList.contains(loopHintTwoPositions)){
+                            charactArray.add(i, 'L');
+                            loopHintTwoPositions++;
+                        } else {
+                            charactArray.add(i, 'Y');
+                            loopHintTwoPositions ++;
+                        }
                     }
                 }
 
@@ -408,9 +451,20 @@ public class SolveEnigmaActivity extends BaseActivity{
         enigmaIsSolved = dbManager.convertIntToBoolean(enigmaDb.getEnigmaIsSolved());
         enigmaHasHintOne = dbManager.convertIntToBoolean(enigmaDb.getEnigmaHasHintOne());
         enigmaHasHintTwo = dbManager.convertIntToBoolean(enigmaDb.getEnigmaHasHintTwo());
-        enigmaHintPositions = enigmaDb.getHintTwoPositions();
+        if (enigmaHasHintTwo){
+            enigmaHintPositionsList = new ArrayList<>();
+            enigmaHintPositions = enigmaDb.getHintTwoPositions();
+            Log.d(TAG, "getEnigmaDbData: string enigmaHintPosition = " + enigmaHintPositions);
+
+            String[] hintPositionsTempList = enigmaHintPositions.split("/");
+            for (String st : hintPositionsTempList) {
+               if (!st.equals("")) enigmaHintPositionsList.add(Integer.parseInt(st));
+            }
+        }
         dbManager.close();
     }
+
+
 
     // --------------------
     //       ACTION
@@ -432,7 +486,14 @@ public class SolveEnigmaActivity extends BaseActivity{
     @OnClick(R.id.solve_enigma_activity_bottom_button_hint_two)
     public void onClickHintTwoButton() {
         if (enigmaHasHintOne){
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            Fragment prev = getSupportFragmentManager().findFragmentByTag(Constants.HINT_TWO_DIALOG_FRAGMENT_TAG);
+            if (prev != null) { ft.remove(prev);}
+            ft.addToBackStack(null);
 
+            // Create and show the dialog.
+            DialogFragment newFragment = HintTwoDialogFragment.newInstance(enigmaUid, mPositionOfSolutionCharListOnlyLetter);
+            newFragment.show(ft, Constants.HINT_TWO_DIALOG_FRAGMENT_TAG);
         } else {
             Toast toast = Toast.makeText(SolveEnigmaActivity.this, getString(R.string.toast_hint_one_mandatory), Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER, 0, 0);

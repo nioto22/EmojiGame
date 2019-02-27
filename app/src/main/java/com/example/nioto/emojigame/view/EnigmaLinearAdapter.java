@@ -163,4 +163,5 @@ public class EnigmaLinearAdapter extends RecyclerView.Adapter<EnigmaLinearAdapte
     public void setOnItemClickListener(OnItemClickListener onItemClickListener){
         this.mListener = onItemClickListener;
     }
+
 }

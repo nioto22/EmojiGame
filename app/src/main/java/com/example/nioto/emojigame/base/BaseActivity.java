@@ -8,9 +8,13 @@ import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,6 +22,8 @@ import android.widget.Toast;
 
 import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.api.UserHelper;
+import com.example.nioto.emojigame.dialog_fragment.EmojiCoinsDialogFragment;
+import com.example.nioto.emojigame.dialog_fragment.EmojiLifeDialogFragment;
 import com.example.nioto.emojigame.models.User;
 import com.example.nioto.emojigame.utils.Constants;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -48,7 +54,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     private static User[] currentUser = new User[1];
     // ToolbarViews
     protected TextView tvCoinsToolbar;
+    protected ImageButton buttonCoinsToolbar;
     protected TextView tvSmileysToolbar;
+    protected ImageButton buttonSmileysToolbar;
     protected TextView tvTitleToolbar;
     protected ImageButton toolbarBackButton;
     protected String toolbarTitle;
@@ -110,7 +118,39 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
         });
 
+        buttonCoinsToolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                Fragment prev = getSupportFragmentManager().findFragmentByTag(Constants.COINS_DIALOG_FRAGMENT_TAG);
+                if (prev != null) { ft.remove(prev);}
+                ft.addToBackStack(null);
+
+                // Create and show the dialog.
+                String userUid =  Objects.requireNonNull(getCurrentUser()).getUid();
+                DialogFragment newFragment = EmojiCoinsDialogFragment.newInstance(userUid);
+                newFragment.show(ft, Constants.COINS_DIALOG_FRAGMENT_TAG);
+            }
+        });
+
+        buttonSmileysToolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                Fragment prev = getSupportFragmentManager().findFragmentByTag(Constants.SMILEYS_DIALOG_FRAGMENT_TAG);
+                if (prev != null) { ft.remove(prev);}
+                ft.addToBackStack(null);
+
+                // Create and show the dialog.
+                String userUid =  Objects.requireNonNull(getCurrentUser()).getUid();
+                DialogFragment newFragment = EmojiLifeDialogFragment.newInstance(userUid, mEndTime, mTimerRunning );
+                newFragment.show(ft, Constants.SMILEYS_DIALOG_FRAGMENT_TAG);
+            }
+        });
+
     }
+
+
 
 
     // --------------------
@@ -260,10 +300,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected FirebaseUser getCurrentUser(){
         return FirebaseAuth.getInstance().getCurrentUser();
     }
-
-
-
-
 
     @Nullable
     protected Boolean isNewUser() {

@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -25,7 +26,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 
-public class EnigmaGridAdapter extends RecyclerView.Adapter<EnigmaGridAdapter.UnsolvedEnigmaViewHolder> {
+public class EnigmaGridAdapter extends RecyclerView.Adapter<EnigmaGridAdapter.UnsolvedEnigmaViewHolder> implements View.OnTouchListener {
 
 
     private static final int STATE_ENIGMA_OWN = 0 ;
@@ -33,10 +34,10 @@ public class EnigmaGridAdapter extends RecyclerView.Adapter<EnigmaGridAdapter.Un
     private static final int STATE_ENIGMA_UNSOLVED = 2 ;
     private static final int STATE_ENIGMA_ONGOING = 3 ;
     private OnItemClickListener mListener;
+    private OnSwipeTouchListener mSwipeTouchListener;
     private ArrayList <Enigma> mEnigmaArrayList;
     private Context context;
     private ArrayList<String> mEnigmaPlayedList = new ArrayList<>();
-
 
     public static class UnsolvedEnigmaViewHolder extends RecyclerView.ViewHolder{
         public TextView tvEnigmaPoints;
@@ -47,21 +48,12 @@ public class EnigmaGridAdapter extends RecyclerView.Adapter<EnigmaGridAdapter.Un
 
         public UnsolvedEnigmaViewHolder(View itemView, final OnItemClickListener listener) {
             super(itemView);
-         /*   tvEnigma = itemView.findViewById(R.id.enigma_item_tv_enigma);
-            tvCategory = itemView.findViewById(R.id.enigma_item_tv_category);
-            tvDifficulty = itemView.findViewById(R.id.enigma_item_tv_difficulty);
-            tvUser = itemView.findViewById(R.id.enigma_item_tv_user);
-            tvState = itemView.findViewById(R.id.enigma_item_tv_resolve_state);
-        */
 
             tvEnigmaPoints = itemView.findViewById(R.id.enigma_grid_item_points_tv);
             tvEnigmaUser = itemView.findViewById(R.id.enigma_grid_item_user_text);
             tvEnigmaCategory = itemView.findViewById(R.id.enigma_grid_item_category_tv);
             ivCategoryImage = itemView.findViewById(R.id.enigma_grid_item_category_image);
             ivEnigmaStateImage = itemView.findViewById(R.id.enigma_grid_item_state_image);
-
-
-
 
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -208,4 +200,13 @@ public class EnigmaGridAdapter extends RecyclerView.Adapter<EnigmaGridAdapter.Un
     public void setOnItemClickListener(OnItemClickListener onItemClickListener){
         this.mListener = onItemClickListener;
     }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        return mSwipeTouchListener.onTouch(view, motionEvent);
+    }
+    public void setOnTouchListener(OnSwipeTouchListener onSwipeTouchListener) {
+        this.mSwipeTouchListener = onSwipeTouchListener;
+    }
+
 }

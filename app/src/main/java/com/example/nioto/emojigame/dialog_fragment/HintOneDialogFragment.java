@@ -70,7 +70,7 @@ public class HintOneDialogFragment extends DialogFragment implements RewardedVid
         View v = inflater.inflate(R.layout.fragment_dialog_hint_one, container, false);
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        rootView = v.findViewById(R.id.fragment_dialog_emoji_lifes_global_constraint_layout);
+        rootView = v.findViewById(R.id.fragment_dialog_hint_one_global_constraint_layout);
         imageButtonRewardedVideo = v.findViewById(R.id.fragment_dialog_hint_one_video_button);
         okButton = v.findViewById(R.id.fragment_dialog_hint_one_button_validate);
 
@@ -171,11 +171,5 @@ public class HintOneDialogFragment extends DialogFragment implements RewardedVid
     public void onResume() {
         mVideoAd.resume(getActivity());
         super.onResume();
-    }
-
-    @Override
-    public void onDestroyView() {
-        mVideoAd.destroy(getActivity());
-        super.onDestroyView();
     }
 }

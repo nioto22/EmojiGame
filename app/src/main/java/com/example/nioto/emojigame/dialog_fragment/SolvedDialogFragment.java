@@ -140,11 +140,4 @@ public class SolvedDialogFragment extends DialogFragment {
         this.dismiss();
     }
 
-  /*  @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        callBackManager.onActivityResult(requestCode, resultCode, data);
-        dismissDialog();
-    }
-    */
 }

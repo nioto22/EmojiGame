@@ -392,10 +392,4 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
         mVideoAd.resume(getActivity());
         super.onResume();
     }
-
-    @Override
-    public void onDestroyView() {
-        mVideoAd.destroy(getActivity());
-        super.onDestroyView();
-    }
 }

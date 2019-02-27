@@ -225,10 +225,4 @@ public class EmojiCoinsDialogFragment extends DialogFragment implements Rewarded
         mVideoAd.resume(getActivity());
         super.onResume();
     }
-
-    @Override
-    public void onDestroyView() {
-        mVideoAd.destroy(getActivity());
-        super.onDestroyView();
-    }
 }

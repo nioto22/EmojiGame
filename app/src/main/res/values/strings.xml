@@ -55,6 +55,7 @@
     <string name="snackbar_message_win_new_life">Félicitation, vous gagnez une vie supplémentaire !!</string>
     <string name="snackbar_message_win_new_coins">Félicitation, vous remportez 50 EmojiCoins !!</string>
     <string name="snackbar_message_activate_hint_one">Félicitation, vous avez activé le coup de pouce \"Nombre de lettre\" !!</string>
+    <string name="snackbar_message_activate_hint_two">Félicitation, vous avez activé le coup de pouce \"Obtenir une lettre\" !!</string>
     <!-- MENTOR_CHAT ACTIVITY -->
     <string name="toolbar_title_mentor_chat_activity">Chats de discussions</string>
     <string name="text_input_title_mentor_chat_activity">Composer votre message</string>
@@ -149,9 +150,12 @@
     <string name="ok">OK</string>
     <string name="sort_filter_button_text_title">Trier par</string>
     <string name="dialog_hint_one_second_title">Coup de pouce 1 :</string>
-    <string name="dialog_hint_one_text">Regardez une vidéo pour obtenir   le nombre de lettres de l\'énigme</string>
+    <string name="dialog_hint_two_second_title">Coup de pouce 2 :</string>
+    <string name="dialog_hint_one_text">Regardez une vidéo pour obtenir le nombre de lettres de l\'énigme</string>
+    <string name="dialog_hint_two_text">Regardez une vidéo pour faire apparaître une lettre de l\'énigme</string>
     <string name="fragment_dialog_solve_activity_solved_tv_congratulation">Réponse correct, félicitations !!</string>
     <string name="fragment_dialog_emoji_coins_text_view_question_text">Besoin de plus d\'EmojiCoins ?</string>
+    <string name="hint_two_no_more_hint_text">Vous avez atteint le nombre maximum de lettres pour ce coup de pouce \n (1/2 du nombre total)</string>
 
 
 </resources>

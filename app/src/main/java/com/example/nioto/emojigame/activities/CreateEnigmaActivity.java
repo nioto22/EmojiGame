@@ -109,7 +109,8 @@ public class CreateEnigmaActivity extends BaseActivity  {
         this.tvTitleToolbar = findViewById(R.id.create_activity_toolbar_title);
         this.toolbarTitle = Constants.CREATE_ACTIVITY_TITLE;
         this.toolbarBackButton = findViewById(R.id.create_activity_toolbar_return_button);
-
+        this.buttonCoinsToolbar = findViewById(R.id.create_activity_toolbar_coins_button);
+        this.buttonSmileysToolbar = findViewById(R.id.create_activity_toolbar_smileys_button);
         this.toolbarBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

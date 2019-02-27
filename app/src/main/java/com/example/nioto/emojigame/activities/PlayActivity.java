@@ -1,12 +1,10 @@
 package com.example.nioto.emojigame.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -16,6 +14,7 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,12 +25,12 @@ import com.example.nioto.emojigame.api.UserHelper;
 import com.example.nioto.emojigame.base.BaseActivity;
 import com.example.nioto.emojigame.database.EnigmaPlayed;
 import com.example.nioto.emojigame.database.EnigmaPlayedManager;
-import com.example.nioto.emojigame.dialog_fragment.EmojiLifeDialogFragment;
 import com.example.nioto.emojigame.models.Enigma;
 import com.example.nioto.emojigame.models.User;
 import com.example.nioto.emojigame.utils.Constants;
 import com.example.nioto.emojigame.view.EnigmaGridAdapter;
 import com.example.nioto.emojigame.view.EnigmaLinearAdapter;
+import com.example.nioto.emojigame.view.OnSwipeTouchListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -64,13 +63,15 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     public static final int TAB_USER_ENIGMA_TAG = 2;
 
     // FOR RECYCLER VIEW
-    private RecyclerView enigmaRecyclerView;
+   // private RecyclerView enigmaRecyclerView;
     private EnigmaGridAdapter mEnigmaGridAdapter;
     private EnigmaLinearAdapter mEnigmaLinearAdapter;
     private RecyclerView.LayoutManager enigmaLayoutManager;
 
     // FOR DESIGN
-    @BindView(R.id.activity_play_enigma_recycler_view) RecyclerView layoutEnigmaRecyclerView;
+    @BindView(R.id.activity_play_enigma_root_view) RelativeLayout rootView;
+    @BindView(R.id.activity_play_enigma_solve_tab_rv_container) LinearLayout recyclerViewContainer;
+    @BindView(R.id.activity_play_enigma_recycler_view) RecyclerView enigmaRecyclerView;
     @BindView(R.id.activity_play_enigma_tv_rv_empty) TextView tvEmptyRecyclerView;
     @BindView(R.id.play_enigma_activity_bottom_stroke_solve_tab) ImageView solveBottomStroke;
     @BindView(R.id.play_enigma_activity_bottom_stroke_history_tab) ImageView historyBottomStroke;
@@ -118,6 +119,8 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
 
 
 
+
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,6 +136,10 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                 setUpRecyclerView();
             }
         });
+
+        setSwipeViewListener(rootView);
+
+
     }
 
     @Override
@@ -147,7 +154,8 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
         this.tvTitleToolbar = findViewById(R.id.play_enigma_activity_toolbar_title);
         this.toolbarTitle = Constants.PLAY_ACTIVITY_TITLE;
         this.toolbarBackButton = findViewById(R.id.play_enigma_activity_toolbar_return_button);
-
+        this.buttonCoinsToolbar = findViewById(R.id.play_enigma_activity_toolbar_coins_button);
+        this.buttonSmileysToolbar = findViewById(R.id.play_enigma_activity_toolbar_smileys_button);
         this.toolbarBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -340,6 +348,34 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     // ------------------
     //      UI
     // ------------------
+
+    public void setSwipeViewListener(View v){
+        v.setOnTouchListener(new OnSwipeTouchListener(PlayActivity.this){
+            @Override
+            public void onSwipeLeft(){
+                Toast.makeText(PlayActivity.this, "Swipe LEFT", Toast.LENGTH_SHORT).show();
+                if (tabTag != 2) {
+                    previousTab = tabTag;
+                    tabTag ++;
+                    displayTabsBottomStroke();
+                    setUpRecyclerView();
+                    previousTab = tabTag;
+                }
+            }
+            @Override
+            public void onSwipeRight(){
+                Toast.makeText(PlayActivity.this, "Swipe RIGHT", Toast.LENGTH_SHORT).show();
+                if (tabTag != 0) {
+                    previousTab = tabTag;
+                    tabTag --;
+                    displayTabsBottomStroke();
+                    setUpRecyclerView();
+                    previousTab = tabTag;
+                }
+            }
+        });
+
+    }
 
     public void displayTabsBottomStroke(){
         solveBottomStroke.setVisibility(View.INVISIBLE);
@@ -568,8 +604,9 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                         }
 
                         // RecyclerView
-                        enigmaRecyclerView = findViewById(R.id.activity_play_enigma_recycler_view);
+                        //enigmaRecyclerView = findViewById(R.id.activity_play_enigma_recycler_view);
                         enigmaRecyclerView.setHasFixedSize(true);
+
                         // AnimationLayout
                         int fromTab = tab - prevTab;
                         int resId;
@@ -625,6 +662,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                                         }
                                     });
                                 }
+
                             });
                         } else {
                             enigmaLayoutManager = new LinearLayoutManager(PlayActivity.this);
@@ -648,12 +686,14 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                                 @Override
                                 public void onItemClick(int position) {
                                     Enigma enigma = enigmaList.get(position);
-                                   // if (tab != 2) insertEnigmaInDataBase(enigma.getUid());
+                                    // if (tab != 2) insertEnigmaInDataBase(enigma.getUid());
                                     Intent solveEnigmaIntent = new Intent(PlayActivity.this, SolveEnigmaActivity.class);
                                     solveEnigmaIntent.putExtra(EXTRA_ENIGMA_PATH, enigma.getUid());
                                     startActivityForResult(solveEnigmaIntent, INTENT_SOLVE_ACTIVITY_KEY);
                                 }
+
                             });
+
                         }
                     }
                 }

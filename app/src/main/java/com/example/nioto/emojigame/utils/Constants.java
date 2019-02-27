@@ -72,6 +72,8 @@ public class Constants {
     public static final String LIFE_DIALOG_ARG_END_TIME = "endTime";
     public static final String LIFE_DIALOG_ARG_TIMER_RUNNING = "timmerRunning";
     public static final String HINT_ONE_DIALOG_ARG_ENIGMA = "enigma";
+    public static final String HINT_TWO_DIALOG_ARG_ENIGMA = "enigma";
+    public static final String HINT_TWO_DIALOG_ARG_POSITION_CHAR_LIST = "positionCharList";
     public static final String SOLVED_DIALOG_ARG_POINTS = "points";
     public static final String SOLVED_DIALOG_ARG_ENIGMA = "solvedEnigma";
     public static final String SOLVED_DIALOG_ARG_RESOLVED_TIMES = "numberOfResolvedTimes";
