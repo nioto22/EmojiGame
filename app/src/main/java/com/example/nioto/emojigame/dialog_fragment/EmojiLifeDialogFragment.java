@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,14 +43,11 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class EmojiLifeDialogFragment extends DialogFragment implements RewardedVideoAdListener {
 
-    private static final String TAG = "EmojiLifeDialogFragment";
-
     // FOR DATA
     private String userUid;
     private long mTimeLeftInMillis;
     private Boolean mTimerRunning;
     private long mEndTime;
-    private Boolean mNeedNewTimer = false;
     private CountDownTimer mCountDownTimer;
     private Boolean mRewardedVideoIsDone = false;
     private Context context;
@@ -107,9 +103,6 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
                 mTimerRunning = getArguments().getBoolean(Constants.LIFE_DIALOG_ARG_TIMER_RUNNING);
                 mEndTime = getArguments().getLong(Constants.LIFE_DIALOG_ARG_END_TIME);
 
-                Log.d(TAG, "onCreate: mEndtime = " + mEndTime);
-                Log.d(TAG, "onCreate: mTimerRunning = " + mTimerRunning);
-
                 if (mTimerRunning) {
                     mTimeLeftInMillis = mEndTime - System.currentTimeMillis();
 
@@ -129,7 +122,7 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_dialog_emoji_lifes, container, false);
-        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Objects.requireNonNull(getDialog().getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         globalConstraintLayout = v.findViewById(R.id.fragment_dialog_emoji_lifes_global_constraint_layout);
 
@@ -149,7 +142,6 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
             @Override
             public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
                 if (e != null) {
-                    Log.w(TAG, "onEvent: Error", e);
                     return;
                 }
                 if (documentSnapshot != null && documentSnapshot.exists()) {
@@ -184,14 +176,12 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
                                 UserHelper.updateUserPoints((user.getPoints() - 50), userUid).addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Log.d(TAG, "onFailure: Fail to Update User Points");
                                     }
                                 });
                                 final int smileys = user.getSmileys() + 1;
                                 UserHelper.updateUserSmileys((smileys), userUid).addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Log.d(TAG, "onFailure: Fail to Update User Smileys");
                                     }
                                 });
                                 if (smileys < 5 ) {
@@ -228,7 +218,6 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
                 dismissDialog();
             }
         });
-
         return v;
     }
 
@@ -238,7 +227,6 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
         editor.putLong(Constants.SHARED_PREF_LIFE_LEFT_TIME, mTimeLeftInMillis);
         editor.putBoolean(Constants.SHARED_PREF_LIFE_IS_TIMER_RUNNING, mTimerRunning);
         editor.putLong(Constants.SHARED_PREF_LIFE_END_TIME, mEndTime);
-
         editor.apply();
 
         if (mCountDownTimer != null) {
@@ -262,8 +250,6 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
     }
 
     private void startTimer(){
-        Log.d(TAG, "startTimer: start");
-
         mEndTime = System.currentTimeMillis() + mTimeLeftInMillis;
 
         if (mCountDownTimer != null) {
@@ -284,15 +270,13 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         User user = documentSnapshot.toObject(User.class);
-                        int smiles = user.getSmileys();
+                        int smiles = Objects.requireNonNull(user).getSmileys();
                         smiles++;
 
-                        Log.d(TAG, "onFinish: Timer finished, new life = " + smiles);
                         if (smiles < 6) {
                             UserHelper.updateUserSmileys(smiles, user.getUid()).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Log.d(TAG, "onFailure: Fail to updateUserSmileys : " + e);
                                 }
                             });
                             if (smiles < 5) {
@@ -320,12 +304,10 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
         startTimer();
     }
 
-
     // Show Snack Bar with a message
     protected void showSnackBar(ConstraintLayout constraintLayout, String message){
         Snackbar.make(constraintLayout, message, Snackbar.LENGTH_SHORT).show();
     }
-
 
     // Rewarded Video Add
     private void loadRewardedVideoAd(){
@@ -356,14 +338,13 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 User user = documentSnapshot.toObject(User.class);
-                int smiles = user.getSmileys();
+                int smiles = Objects.requireNonNull(user).getSmileys();
                 smiles++;
 
                 if (smiles < 6) {
                     UserHelper.updateUserSmileys(smiles, user.getUid()).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Log.d(TAG, "onFailure: Fail to updateUserSmileys : " + e);
                         }
                     });
                     if (smiles < 5) {
@@ -379,17 +360,12 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
 
     }
     @Override
-    public void onRewardedVideoAdLeftApplication() {
-        Log.d(TAG, "onRewardedVideoAdLeftApplication: ");
-    }
+    public void onRewardedVideoAdLeftApplication() {}
     @Override
     public void onRewardedVideoAdFailedToLoad(int i) {
-        Log.d(TAG, "onRewardedVideoAdFailedToLoad: ");
     }
     @Override
-    public void onRewardedVideoCompleted() {
-        Log.d(TAG, "onRewardedVideoCompleted: ");
-    }
+    public void onRewardedVideoCompleted() {}
 
     @Override
     public void onPause() {

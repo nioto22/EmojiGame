@@ -24,9 +24,9 @@ import com.google.android.gms.ads.reward.RewardItem;
 import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 
-public class HintOneDialogFragment extends DialogFragment implements RewardedVideoAdListener {
+import java.util.Objects;
 
-    private static final String TAG = "HintOneDialogFragment";
+public class HintOneDialogFragment extends DialogFragment implements RewardedVideoAdListener {
 
     // FOR DATA
     private String enigmaUid;
@@ -68,7 +68,7 @@ public class HintOneDialogFragment extends DialogFragment implements RewardedVid
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_dialog_hint_one, container, false);
-        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Objects.requireNonNull(getDialog().getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         rootView = v.findViewById(R.id.fragment_dialog_hint_one_global_constraint_layout);
         imageButtonRewardedVideo = v.findViewById(R.id.fragment_dialog_hint_one_video_button);
@@ -115,19 +115,14 @@ public class HintOneDialogFragment extends DialogFragment implements RewardedVid
 
     @Override
     public void onRewardedVideoAdLoaded() {
-        Log.d(TAG, "onRewardedVideoAdLoaded: ");
+
     }
     @Override
-    public void onRewardedVideoAdOpened() {
-        Log.d(TAG, "onRewardedVideoAdOpened: ");
-    }
+    public void onRewardedVideoAdOpened() { }
     @Override
-    public void onRewardedVideoStarted() {
-        Log.d(TAG, "onRewardedVideoStarted: ");
-    }
+    public void onRewardedVideoStarted() {}
     @Override
     public void onRewardedVideoAdClosed() {
-        Log.d(TAG, "onRewardedVideoAdClosed: ");
 
         loadRewardedVideoAd();
         if (videoIsRewarded) {
@@ -135,7 +130,6 @@ public class HintOneDialogFragment extends DialogFragment implements RewardedVid
             dbManager.open();
             dbManager.updateEnigmaHasHintOne(enigmaUid,true);
             EnigmaPlayed ep = dbManager.getEnigmaPlayed(enigmaUid);
-            Log.d(TAG, "onRewarded: " + ep.getEnigmaHasHintOne());
             dbManager.close();
 
             dismissDialog();
@@ -144,22 +138,15 @@ public class HintOneDialogFragment extends DialogFragment implements RewardedVid
 
     @Override
     public void onRewarded(RewardItem rewardItem) {
-        Log.d(TAG, "onRewarded: ");
-
         videoIsRewarded = true;
-
         showSnackBar(rootView, getString(R.string.snackbar_message_activate_hint_one));
-
     }
     @Override
-    public void onRewardedVideoAdLeftApplication() {
-    }
+    public void onRewardedVideoAdLeftApplication() {}
     @Override
-    public void onRewardedVideoAdFailedToLoad(int i) {
-    }
+    public void onRewardedVideoAdFailedToLoad(int i) {}
     @Override
-    public void onRewardedVideoCompleted() {
-    }
+    public void onRewardedVideoCompleted() {}
 
     @Override
     public void onPause() {

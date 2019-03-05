@@ -88,7 +88,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/enigma_item_tv_difficulty"
-                    android:src="@drawable/ic_coin"/>
+                    android:src="@drawable/ic_coin"
+                    android:contentDescription="@string/emoji_coin_content_description" />
             </RelativeLayout>
             <!-- User LAYOUT -->
             <RelativeLayout
@@ -125,6 +126,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/state_enigma_grid_item_background"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/default_margin"/>
+        android:layout_margin="@dimen/default_margin"
+        android:contentDescription="@string/state_image_content_description" />
 </FrameLayout>
 </android.support.v7.widget.CardView>

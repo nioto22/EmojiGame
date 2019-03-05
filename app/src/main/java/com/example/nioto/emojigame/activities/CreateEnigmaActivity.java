@@ -38,17 +38,16 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
 public class CreateEnigmaActivity extends BaseActivity  {
 
-    private static final String TAG = "CreateEnigmaActivity";
-
     // FOR DESIGN
     @BindView(R.id.create_enigma_activity_rl_global) LinearLayout rootView;
-    @BindView(R.id.create_activity_tv_category_choosed) TextView textViewCategoryChoosed;
+    @BindView(R.id.create_activity_tv_category_choosed) TextView textViewCategoryChosen;
     @BindView(R.id.create_activity_et_enigma)   TextInputEditText etEnigma;
     @BindView(R.id.create_activity_et_solution) TextInputEditText etSolution;
     @BindView(R.id.create_activity_et_message) TextInputEditText etMessage;
@@ -124,14 +123,6 @@ public class CreateEnigmaActivity extends BaseActivity  {
     //      UI
     // ------------------
 
- /*   private  void initiateEmojiPopup(){
-        final EmojiPopup emojiPopup = EmojiPopup.Builder.fromRootView(rootView).build(moreEmoji);
-        emojiPopup.toggle(); // Toggles visibility of the Popup.
-        emojiPopup.dismiss(); // Dismisses the Popup.
-        emojiPopup.isShowing(); // Returns true when Popup is showing.
-    }
-    */
-
     private void initiateListView() {
         expandableListView = findViewById(R.id.create_activity_list_category);
         expandableListDetail = ExpandableListDataPump.getData();
@@ -152,10 +143,10 @@ public class CreateEnigmaActivity extends BaseActivity  {
             public boolean onChildClick(ExpandableListView parent, View v,
                                         int groupPosition, int childPosition, long id) {
                 parent.collapseGroup(groupPosition);
-                textViewCategoryChoosed.setText(expandableListDetail.get(
+                textViewCategoryChosen.setText(expandableListDetail.get(
                         expandableListTitle.get(groupPosition)).get(
                         childPosition));
-                if (textViewCategoryChoosed.getText().toString().equals(Constants.FIREBASE_CATEGORY_OTHER_TEXT)){
+                if (textViewCategoryChosen.getText().toString().equals(Constants.FIREBASE_CATEGORY_OTHER_TEXT)){
                     rlOtherLayout.setVisibility(View.VISIBLE);
                 }
                 return false;
@@ -168,22 +159,23 @@ public class CreateEnigmaActivity extends BaseActivity  {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 Enigma enigma = documentSnapshot.toObject(Enigma.class);
+                assert enigma != null;
                 etEnigma.setText(enigma.getEnigma());
                 etSolution.setText(enigma.getSolution());
                 etMessage.setText(enigma.getMessage());
-                textViewCategoryChoosed.setText(enigma.getCategory());
+                textViewCategoryChosen.setText(enigma.getCategory());
             }
         });
     }
 
     private void showSortPopup(final Activity context)
     {
-        hideKeyboardwithoutPopulate(CreateEnigmaActivity.this);
+        hideKeyboardWithoutPopulate(CreateEnigmaActivity.this);
 
         // Inflate the popup_layout.xml
-        LinearLayout viewGroup = (LinearLayout) context.findViewById(R.id.help_popu_create_enigma_activity_rl_global);
+        LinearLayout viewGroup = context.findViewById(R.id.help_popu_create_enigma_activity_rl_global);
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout = layoutInflater.inflate(R.layout.popup_help_create_enigma, viewGroup);
+        View layout = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_help_create_enigma, viewGroup);
 
         // Creating the PopupWindow
         helpPopUpWindow = new PopupWindow(context);
@@ -199,7 +191,7 @@ public class CreateEnigmaActivity extends BaseActivity  {
         helpPopUpWindow.showAtLocation(layout, Gravity.CENTER, 0,0);
 
         // Getting a reference to Close button, and close the popup when clicked.
-        Button close = (Button) layout.findViewById(R.id.help_popup_close);
+        Button close = layout.findViewById(R.id.help_popup_close);
         close.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -224,24 +216,24 @@ public class CreateEnigmaActivity extends BaseActivity  {
     @OnClick (R.id.create_activity_create_button)
     public void onClickCreateButton(){
         if(checkEnigmaCompatibility()) {
-                progressBar.setVisibility(View.VISIBLE);
-                final String uid = generateUniqueUid();
-                final String userUid = this.getCurrentUser().getUid();
-                EnigmaHelper.createEnigma(uid, userUid, mEnigma, mSolution, mCategory, mMessage);
-                UserHelper.getUser(userUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        User currentUser = documentSnapshot.toObject(User.class);
-                        List<String> userEnigmaUidList = currentUser.getUserEnigmaUidList();
-                        userEnigmaUidList.add(uid);
-                        currentUser.addPoints(50);
-                        UserHelper.updateUserEnigmaUidList(userEnigmaUidList, userUid);
-                        UserHelper.updateUserPoints(currentUser.getPoints(), userUid);
-                    }
-                });
-                Intent intent = new Intent();
-                setResult(RESULT_OK, intent);
-                finish();
+            progressBar.setVisibility(View.VISIBLE);
+            final String uid = generateUniqueUid();
+            final String userUid = Objects.requireNonNull(this.getCurrentUser()).getUid();
+            EnigmaHelper.createEnigma(uid, userUid, mEnigma, mSolution, mCategory, mMessage);
+            UserHelper.getUser(userUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    User currentUser = documentSnapshot.toObject(User.class);
+                    List<String> userEnigmaUidList = Objects.requireNonNull(currentUser).getUserEnigmaUidList();
+                    userEnigmaUidList.add(uid);
+                    currentUser.addPoints(50);
+                    UserHelper.updateUserEnigmaUidList(userEnigmaUidList, userUid);
+                    UserHelper.updateUserPoints(currentUser.getPoints(), userUid);
+                }
+            });
+            Intent intent = new Intent();
+            setResult(RESULT_OK, intent);
+            finish();
         }
     }
 
@@ -253,6 +245,7 @@ public class CreateEnigmaActivity extends BaseActivity  {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                     Enigma enigma = documentSnapshot.toObject(Enigma.class);
+                    assert enigma != null;
                     if (!mEnigma.equals(enigma.getEnigma())) EnigmaHelper.updateEnigma(mEnigma, enigmaUid);
                     if (!mSolution.equals(enigma.getSolution())) EnigmaHelper.updateSolution(mSolution, enigmaUid);
                     if (!mCategory.equals(enigma.getCategory())) EnigmaHelper.updateCategory(mCategory, enigmaUid);
@@ -291,8 +284,8 @@ public class CreateEnigmaActivity extends BaseActivity  {
     private Boolean checkEnigmaCompatibility() {
         mEnigma = etEnigma.getText().toString();
         mSolution = etSolution.getText().toString();
-        mCategory = textViewCategoryChoosed.getText().toString() +
-                ((textViewCategoryChoosed.getText().equals(Constants.FIREBASE_CATEGORY_OTHER_TEXT) && etOther != null) ?
+        mCategory = textViewCategoryChosen.getText().toString() +
+                ((textViewCategoryChosen.getText().equals(Constants.FIREBASE_CATEGORY_OTHER_TEXT) && etOther != null) ?
                         " : " + etOther.getText().toString() : "");
         mMessage = etMessage.getText().toString();
 
@@ -322,12 +315,13 @@ public class CreateEnigmaActivity extends BaseActivity  {
         }
     }
 
-    public static void hideKeyboardwithoutPopulate(Activity activity) {
+    public static void hideKeyboardWithoutPopulate(Activity activity) {
         InputMethodManager inputMethodManager =
                 (InputMethodManager) activity.getSystemService(
                         Activity.INPUT_METHOD_SERVICE);
+        assert inputMethodManager != null;
         inputMethodManager.hideSoftInputFromWindow(
-                activity.getCurrentFocus().getWindowToken(), 0);
+                Objects.requireNonNull(activity.getCurrentFocus()).getWindowToken(), 0);
     }
 
 }

@@ -24,7 +24,8 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_hint_title" />
+            android:src="@drawable/ic_hint_title"
+            android:contentDescription="@string/hint_title_image_content_description" />
     </LinearLayout>
 
     <RelativeLayout
@@ -85,7 +86,7 @@
                     android:src="@drawable/view_adv_button"
                     android:background="@color/fui_transparent"
                     android:focusable="true"
-                    />
+                    android:contentDescription="@string/watch_ads_content_description" />
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

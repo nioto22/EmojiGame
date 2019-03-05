@@ -27,7 +27,8 @@
             android:layout_margin="@dimen/default_margin"
             android:background="@color/fui_transparent"
             android:src="@drawable/ic_back_arrow"
-            android:focusable="true" />
+            android:focusable="true"
+            android:contentDescription="@string/back_button_content_description" />
 
         <TextView
             android:id="@+id/play_enigma_activity_toolbar_title"
@@ -67,7 +68,8 @@
                 android:background="@color/fui_transparent"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="@dimen/default_small_margin_5dp"
-                android:focusable="true" />
+                android:focusable="true"
+                android:contentDescription="@string/emoji_coin_content_description" />
 
         </LinearLayout>
         <LinearLayout
@@ -96,7 +98,8 @@
                 android:layout_gravity="center_vertical"
                 android:paddingStart="@dimen/default_small_margin_5dp"
                 android:paddingEnd="@dimen/default_small_margin_5dp"
-                android:focusable="true" />
+                android:focusable="true"
+                android:contentDescription="@string/smiley_image_button_content_description" />
         </LinearLayout>
 
     </RelativeLayout>
@@ -130,7 +133,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@color/colorError"
-                android:visibility="visible"/>
+                android:visibility="visible"
+                android:contentDescription="@string/bottom_stroke_content_description" />
         </LinearLayout>
         <!-- BUTTON HISTORY ENIGMA -->
         <LinearLayout
@@ -152,7 +156,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@color/colorError"
-                android:visibility="invisible"/>
+                android:visibility="invisible"
+                android:contentDescription="@string/bottom_stroke_content_description"/>
         </LinearLayout>
         <!-- BUTTON USER ENIGMA -->
         <LinearLayout
@@ -174,7 +179,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@color/colorError"
-                android:visibility="invisible"/>
+                android:visibility="invisible"
+                android:contentDescription="@string/bottom_stroke_content_description"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -247,24 +253,9 @@
             android:textAlignment="center"
             android:layout_margin="@dimen/default_large_margin"
             android:visibility="gone"/>
-        <FrameLayout
-            android:id="@+id/activity_play_enigma_frame_layout_recycler_container"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/activity_play_enigma_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/activity_play_enigma_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <ImageView
-                android:id="@+id/activity_play_enigma_title_historic"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/enigmes_en_jeu"
-                android:visibility="gone"/>
-        </FrameLayout>
+            android:layout_height="match_parent" />
     </LinearLayout>
-
-
-
 </RelativeLayout>

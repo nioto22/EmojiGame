@@ -1,11 +1,7 @@
 package com.example.nioto.emojigame.utils;
 
-import android.app.Application;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +9,6 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
 import com.example.nioto.emojigame.R;
-import com.example.nioto.emojigame.activities.CreateEnigmaActivity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -48,9 +43,10 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.category_list_item, null);
+            assert layoutInflater != null;
+            convertView = layoutInflater.inflate(R.layout.category_list_item, parent, false);
         }
-        TextView expandedListTextView = (TextView) convertView
+        TextView expandedListTextView = convertView
                 .findViewById(R.id.expandedListItem);
         expandedListTextView.setText(expandedListText);
         return convertView;
@@ -84,9 +80,10 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context.
                     getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.category_list_group, null);
+            assert layoutInflater != null;
+            convertView = layoutInflater.inflate(R.layout.category_list_group,parent, false);
         }
-        TextView listTitleTextView = (TextView) convertView
+        TextView listTitleTextView = convertView
                 .findViewById(R.id.listTitle);
         listTitleTextView.setTypeface(null, Typeface.BOLD);
         listTitleTextView.setText(listTitle);

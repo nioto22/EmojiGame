@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,12 +27,11 @@ import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 
 public class HintTwoDialogFragment extends DialogFragment implements RewardedVideoAdListener {
-
-    private static final String TAG = "HintTwoDialogFragment";
 
     // FOR DATA
     private String enigmaUid;
@@ -86,7 +84,7 @@ public class HintTwoDialogFragment extends DialogFragment implements RewardedVid
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_dialog_hint_two, container, false);
-        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Objects.requireNonNull(getDialog().getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         rootView = v.findViewById(R.id.fragment_dialog_hint_two_global_constraint_layout);
         tvTextNoMoreHint = v.findViewById(R.id.fragment_dialog_hint_two_second_title_no_more);
@@ -97,7 +95,7 @@ public class HintTwoDialogFragment extends DialogFragment implements RewardedVid
 
 
         // IS HINT MAX REACHED
-        EnigmaPlayedManager dbManager = new EnigmaPlayedManager(getActivity().getBaseContext());
+        EnigmaPlayedManager dbManager = new EnigmaPlayedManager(Objects.requireNonNull(getActivity()).getBaseContext());
         dbManager.open();
 
         // Get enigmaPlayed
@@ -171,18 +169,16 @@ public class HintTwoDialogFragment extends DialogFragment implements RewardedVid
             newHintTwoPositions = "1/";
         } else {
             int numberOfLetters = mPositionOfSolutionCharListOnlyLetter.size();
-            Random rng = new Random(); // Ideally just create one instance globally
-            // Note: use LinkedHashSet to maintain insertion order
+            Random rng = new Random();
             Set<Integer> generated = new LinkedHashSet<>(positions);
             while (generated.size() < positions.size() + 1) {
                 Integer next = rng.nextInt(numberOfLetters) + 1;
-                // As we're adding to a set, this will automatically do a containment check
                 generated.add(next);
             }
             newHintTwoPositions = convertSetToString(generated);
         }
 
-        EnigmaPlayedManager bdManager = new EnigmaPlayedManager(getActivity().getBaseContext());
+        EnigmaPlayedManager bdManager = new EnigmaPlayedManager(Objects.requireNonNull(getActivity()).getBaseContext());
         bdManager.open();
         bdManager.updateEnigmaHintTwoPositions(enigmaUid, newHintTwoPositions);
         bdManager.close();
@@ -198,8 +194,6 @@ public class HintTwoDialogFragment extends DialogFragment implements RewardedVid
         return builder.toString();
     }
 
-
-
     // --------------------
     // Rewarded Video Add
     // --------------------
@@ -211,17 +205,11 @@ public class HintTwoDialogFragment extends DialogFragment implements RewardedVid
     }
 
     @Override
-    public void onRewardedVideoAdLoaded() {
-        Log.d(TAG, "onRewardedVideoAdLoaded: ");
-    }
+    public void onRewardedVideoAdLoaded() {}
     @Override
-    public void onRewardedVideoAdOpened() {
-        Log.d(TAG, "onRewardedVideoAdOpened: ");
-    }
+    public void onRewardedVideoAdOpened() {}
     @Override
-    public void onRewardedVideoStarted() {
-        Log.d(TAG, "onRewardedVideoStarted: ");
-    }
+    public void onRewardedVideoStarted() {}
     @Override
     public void onRewardedVideoAdClosed() {
         loadRewardedVideoAd();
@@ -232,21 +220,17 @@ public class HintTwoDialogFragment extends DialogFragment implements RewardedVid
         }
     }
 
-
     @Override
     public void onRewarded(RewardItem rewardItem) {
         videoIsRewarded = true;
     }
 
     @Override
-    public void onRewardedVideoAdLeftApplication() {
-    }
+    public void onRewardedVideoAdLeftApplication() {}
     @Override
-    public void onRewardedVideoAdFailedToLoad(int i) {
-    }
+    public void onRewardedVideoAdFailedToLoad(int i) {}
     @Override
-    public void onRewardedVideoCompleted() {
-    }
+    public void onRewardedVideoCompleted() {}
 
     @Override
     public void onPause() {

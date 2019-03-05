@@ -48,7 +48,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:paddingEnd="@dimen/default_margin"
-                    android:src="@drawable/ic_smiley" />
+                    android:src="@drawable/ic_smiley"
+                    android:contentDescription="@string/smiley_image_button_content_description" />
 
                 <ImageButton
                     android:id="@+id/main_activity_button_add_smileys"
@@ -58,7 +59,8 @@
                     android:background="@drawable/text_view_main_blue_light_color"
                     android:focusable="true"
                     android:padding="5dp"
-                    android:src="@drawable/ic_add" />
+                    android:src="@drawable/ic_add"
+                    android:contentDescription="@string/plus_image_content_description" />
             </LinearLayout>
 
             <LinearLayout
@@ -85,7 +87,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="@dimen/default_margin"
-                    android:src="@drawable/ic_coin" />
+                    android:src="@drawable/ic_coin"
+                    android:contentDescription="@string/emoji_coin_content_description" />
 
                 <ImageButton
                     android:id="@+id/main_activity_button_add_coins"
@@ -95,7 +98,8 @@
                     android:background="@drawable/text_view_main_blue_light_color"
                     android:focusable="true"
                     android:padding="5dp"
-                    android:src="@drawable/ic_add"/>
+                    android:src="@drawable/ic_add"
+                    android:contentDescription="@string/plus_image_content_description" />
             </LinearLayout>
         </LinearLayout>
         <!-- PROFILE IMAGE -->
@@ -114,7 +118,8 @@
                 android:foregroundGravity="center_horizontal"
                 android:paddingStart="15dp"
                 android:paddingEnd="15dp"
-                android:src="@drawable/title_text" />
+                android:src="@drawable/title_text"
+                android:contentDescription="@string/emoji_game_title_image_content_description" />
 
             <ImageView
                 android:id="@+id/main_activity_image_view_profile"
@@ -124,7 +129,8 @@
                 android:layout_weight="55"
                 android:clickable="true"
                 android:focusable="true"
-                app:srcCompat="@drawable/ic_anon_user_48dp" />
+                app:srcCompat="@drawable/ic_anon_user_48dp"
+                android:contentDescription="@string/profile_image_content_description" />
 
             <Button
                 android:id="@+id/main_activity_button_username"
@@ -142,8 +148,6 @@
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
-
-
     <!-- RL BUTTONS -->
     <RelativeLayout
         android:id="@+id/main_activity_rl_buttons"
@@ -151,7 +155,6 @@
         android:layout_height="0dp"
         android:layout_weight="40"
         android:gravity="center">
-
         <Button
             android:id="@+id/main_activity_button_play"
             android:layout_width="match_parent"
@@ -165,7 +168,6 @@
             android:layout_marginStart="@dimen/default_extra_large_margin"
             android:layout_marginEnd="@dimen/default_extra_large_margin"
             android:padding="@dimen/default_large_margin"/>
-
         <Button
             android:id="@+id/main_activity_button_create"
             android:layout_width="match_parent"
@@ -179,7 +181,5 @@
             android:layout_marginStart="@dimen/default_extra_large_margin"
             android:layout_marginEnd="@dimen/default_extra_large_margin"
             android:padding="@dimen/default_large_margin" />
-
     </RelativeLayout>
-
 </LinearLayout>

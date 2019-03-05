@@ -8,17 +8,17 @@ import android.database.sqlite.SQLiteDatabase;
 public class EnigmaPlayedManager {
 
     // Db NAME
-    public static final String TABLE_NAME = "enigma_played";
+    private static final String TABLE_NAME = "enigma_played";
     // COLUMNS NAMES
-    public static final String ENIGMA_ID = "enigma_id";
+    private static final String ENIGMA_ID = "enigma_id";
     public static final String ENIGMA_UID = "enigma_uid";
-    public static final String ENIGMA_IS_SOLVED = "enigma_is_solved";
-    public static final String ENIGMA_HAS_HINT_ONE = "enigma_has_hint_one";
-    public static final String ENIGMA_HAS_HINT_TWO = "enigma_has_hint_two";
-    public static final String ENIGMA_HINT_TWO_POSITIONS = "enigma_hint_two_positions";
+    private static final String ENIGMA_IS_SOLVED = "enigma_is_solved";
+    private static final String ENIGMA_HAS_HINT_ONE = "enigma_has_hint_one";
+    private static final String ENIGMA_HAS_HINT_TWO = "enigma_has_hint_two";
+    private static final String ENIGMA_HINT_TWO_POSITIONS = "enigma_hint_two_positions";
 
     // QUERY TABLE CREATION
-    public static final String CREATE_TABLE_ENIGMA_PLAYED =
+    static final String CREATE_TABLE_ENIGMA_PLAYED =
             "CREATE TABLE "+TABLE_NAME+
                     " (" +
                     " "+ENIGMA_ID+" INTEGER primary key," +
@@ -136,24 +136,18 @@ public class EnigmaPlayedManager {
 
 
     public int deleteEnigmaPlayed(EnigmaPlayed enigmaPlayed) {
-        // suppression d'un enregistrement
-        // valeur de retour : (int) nombre de lignes affectées par la clause WHERE, 0 sinon
-
         String where = ENIGMA_UID+" = ?";
         String[] whereArgs = {enigmaPlayed.getEnigmaUid()+""};
-
         return db.delete(TABLE_NAME, where, whereArgs);
     }
 
     public Boolean isEnigmaExists(String enigmaUid) {
         Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+" where "+ENIGMA_UID+" = \'" +enigmaUid + "\'", null);
+        c.close();
         return c.moveToFirst();
     }
-
 
     public Cursor getAllEnigmasPlayed() {
         return db.rawQuery("SELECT * FROM "+TABLE_NAME, null);
     }
-
-
 }

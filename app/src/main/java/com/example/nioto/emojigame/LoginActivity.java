@@ -11,6 +11,7 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import butterknife.BindView;
 
@@ -20,7 +21,6 @@ public class LoginActivity extends BaseActivity {
     public static final int RC_SIGN_IN = 1234;
 
     //FOR DESIGN
-    // 1 - Get Coordinator Layout
     @BindView(R.id.login_activity_linear_layout) LinearLayout linearLayout;
     @Override
     public void setContext() { this.context = this; }
@@ -83,9 +83,9 @@ public class LoginActivity extends BaseActivity {
             } else { // ERRORS
                 if (response == null) {
                     showSnackBar(this.linearLayout, getString(R.string.error_authentication_canceled));
-                } else if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
+                } else if (Objects.requireNonNull(response.getError()).getErrorCode() == ErrorCodes.NO_NETWORK) {
                     showSnackBar(this.linearLayout, getString(R.string.error_no_internet));
-                } else if (response.getError().getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
+                } else if (ErrorCodes.UNKNOWN_ERROR == response.getError().getErrorCode()) {
                     showSnackBar(this.linearLayout, getString(R.string.error_unknown_error));
                 }
             }
@@ -100,7 +100,7 @@ public class LoginActivity extends BaseActivity {
     private void createUserInFirestore(){
 
         if (isCurrentUserLogged() && isNewUser()){ // && isNewUser
-            String urlPicture = (this.getCurrentUser().getPhotoUrl() != null) ? this.getCurrentUser().getPhotoUrl().toString() : null;
+            String urlPicture = (Objects.requireNonNull(this.getCurrentUser()).getPhotoUrl() != null) ? Objects.requireNonNull(this.getCurrentUser().getPhotoUrl()).toString() : null;
             String username = this.getCurrentUser().getDisplayName();
             String uid = this.getCurrentUser().getUid();
             UserHelper.createUser(uid, username, urlPicture).addOnFailureListener(this.onFailureListener());

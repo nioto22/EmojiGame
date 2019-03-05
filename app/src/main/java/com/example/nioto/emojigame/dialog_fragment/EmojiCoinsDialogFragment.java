@@ -35,6 +35,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.util.Objects;
+
 public class EmojiCoinsDialogFragment extends DialogFragment implements RewardedVideoAdListener {
 
     private static final String TAG = "EmojiCoinsDialog";
@@ -46,13 +48,13 @@ public class EmojiCoinsDialogFragment extends DialogFragment implements Rewarded
     // GLOBAL
     private ConstraintLayout globalConstraintLayout;
     // TITLE
-    private LinearLayout linearLayoutTitle;  //
-    private TextView tvNumberOfCoinsTitle;  // fragment_dialog_emoji_coins_coins_number_title
+    private LinearLayout linearLayoutTitle;
+    private TextView tvNumberOfCoinsTitle;
     // CONTENT
-    private RelativeLayout relativeLayoutContent;  //fragment_dialog_emoji_coins_linear_layout_content
+    private RelativeLayout relativeLayoutContent;
     // MORE COINS
-    private Button buttonCreate;  // fragment_dialog_emoji_coins_button_create
-    private ImageButton imageButtonWatchForCoins;  // fragment_dialog_emoji_coins_button_extra_coins_with_ad
+    private Button buttonCreate;
+    private ImageButton imageButtonWatchForCoins;
     // BUTTON
     private Button okButton;
 
@@ -76,7 +78,7 @@ public class EmojiCoinsDialogFragment extends DialogFragment implements Rewarded
         loadRewardedVideoAd();
         super.onCreate(savedInstanceState);
 
-        userUid = getArguments().getString(Constants.COINS_DIALOG_ARG_USER);
+        userUid = Objects.requireNonNull(getArguments()).getString(Constants.COINS_DIALOG_ARG_USER);
     }
 
 
@@ -84,7 +86,7 @@ public class EmojiCoinsDialogFragment extends DialogFragment implements Rewarded
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_dialog_emoji_coins, container, false);
-        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Objects.requireNonNull(getDialog().getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         globalConstraintLayout = v.findViewById(R.id.fragment_dialog_emoji_coins_global_constraint_layout);
 

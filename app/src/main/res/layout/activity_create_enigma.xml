@@ -23,7 +23,8 @@
             android:layout_margin="@dimen/default_margin"
             android:background="@color/fui_transparent"
             android:src="@drawable/ic_back_arrow"
-            android:focusable="true" />
+            android:focusable="true"
+            android:contentDescription="@string/back_button_content_description" />
 
         <TextView
             android:id="@+id/create_activity_toolbar_title"
@@ -65,7 +66,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="@dimen/default_small_margin_5dp"
                 android:focusable="true"
-                />
+                android:contentDescription="@string/emoji_coin_content_description" />
 
         </LinearLayout>
         <LinearLayout
@@ -96,7 +97,7 @@
                 android:paddingStart="@dimen/default_small_margin_5dp"
                 android:paddingEnd="@dimen/default_small_margin_5dp"
                 android:focusable="true"
-                />
+                android:contentDescription="@string/smiley_image_button_content_description" />
         </LinearLayout>
 
     </RelativeLayout>
@@ -126,7 +127,8 @@
             android:src="@drawable/ic_help_24dp"
             android:background="@color/primaryDarkColor"
             android:layout_gravity="end"
-            android:layout_margin="20dp" />
+            android:layout_margin="20dp"
+            android:contentDescription="@string/question_mark_image_content_description" />
 
     </FrameLayout>
     <!-- Text Inputs Layout  -->
@@ -170,7 +172,8 @@
                 android:background="@color/primaryDarkColor"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="5dp"/>
+                android:layout_marginEnd="5dp"
+                android:contentDescription="@string/question_mark_image_content_description" />
         </RelativeLayout>
         <!-- CATEGORY LAYOUT  -->
         <RelativeLayout
@@ -220,7 +223,8 @@
                 android:src="@drawable/ic_help_24dp"
                 android:background="@color/primaryDarkColor"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="5dp"/>
+                android:layout_marginEnd="5dp"
+                android:contentDescription="@string/question_mark_image_content_description"/>
         </RelativeLayout>
         <!-- OTHER LAYOUT  -->
         <RelativeLayout
@@ -291,7 +295,8 @@
                 android:background="@color/primaryDarkColor"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="5dp"/>
+                android:layout_marginEnd="5dp"
+                android:contentDescription="@string/question_mark_image_content_description"/>
         </RelativeLayout>
         <!-- BUTTON LAYOUT  -->
         <RelativeLayout

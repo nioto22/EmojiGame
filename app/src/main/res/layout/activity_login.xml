@@ -19,7 +19,8 @@
             android:layout_marginTop="@dimen/default_margin"
             android:layout_marginStart="@dimen/default_margin"
             android:layout_marginEnd="@dimen/default_margin"
-            android:layout_alignParentTop="true"/>
+            android:layout_alignParentTop="true"
+            android:contentDescription="@string/emoji_game_title_image_content_description" />
         <RelativeLayout
             android:id="@+id/login_activity_image_view"
             android:layout_width="match_parent"

@@ -4,10 +4,6 @@ import android.content.Context;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
-
-import com.example.nioto.emojigame.activities.PlayActivity;
-import com.example.nioto.emojigame.utils.Constants;
 
 public class OnSwipeTouchListener implements View.OnTouchListener {
 

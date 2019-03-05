@@ -2,7 +2,6 @@ package com.example.nioto.emojigame.view;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,6 +22,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.vanniktech.emoji.EmojiTextView;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class EnigmaLinearAdapter extends RecyclerView.Adapter<EnigmaLinearAdapter.UnsolvedEnigmaViewHolder> {
 
@@ -91,8 +91,8 @@ public class EnigmaLinearAdapter extends RecyclerView.Adapter<EnigmaLinearAdapte
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 User user = documentSnapshot.toObject(User.class);
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                String currentUserUid = currentUser.getUid();
-                holder.tvUser.setText(user.getUsername());
+                String currentUserUid = Objects.requireNonNull(currentUser).getUid();
+                holder.tvUser.setText(Objects.requireNonNull(user).getUsername());
 
                 if (enigma.getUserUid().equals(currentUserUid)) {
                     holder.ivEnigmaStateImage.setImageResource(stateBackground(STATE_ENIGMA_OWN));
@@ -103,7 +103,6 @@ public class EnigmaLinearAdapter extends RecyclerView.Adapter<EnigmaLinearAdapte
                 } else {
                     holder.ivEnigmaStateImage.setImageResource(stateBackground(STATE_ENIGMA_UNSOLVED));
                 }
-
             }
         });
     }
@@ -111,7 +110,6 @@ public class EnigmaLinearAdapter extends RecyclerView.Adapter<EnigmaLinearAdapte
     private void getEnigmasPlayedList(Context context) {
         EnigmaPlayedManager dbManager = new EnigmaPlayedManager(context);
         dbManager.open();
-
         Cursor cursor = dbManager.getAllEnigmasPlayed();
         if (cursor.moveToFirst()) {
             do {
@@ -122,7 +120,6 @@ public class EnigmaLinearAdapter extends RecyclerView.Adapter<EnigmaLinearAdapte
         cursor.close();
         dbManager.close();
     }
-
 
     private int stateBackground(int stateEnigma) {
         int stateDrawable;
@@ -146,19 +143,12 @@ public class EnigmaLinearAdapter extends RecyclerView.Adapter<EnigmaLinearAdapte
         return stateDrawable;
     }
 
-
     @Override
     public int getItemCount() {
         return mEnigmaArrayList.size();
     }
 
-
-
-    public interface OnItemClickListener {
-        void onItemClick(int position);
-    }
-
-
+    public interface OnItemClickListener { void onItemClick(int position);  }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener){
         this.mListener = onItemClickListener;

@@ -23,7 +23,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible"
+        android:contentDescription="@string/podium_title_image_content_description" />
 
     <RelativeLayout
         android:id="@+id/fragment_dialog_solve_activity_podium_linear_layout_content"
@@ -91,7 +92,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/default_margin"
-                android:text=" fois"
+                android:text="@string/fragment_dialog_solve_time_word"
                 android:textColor="@color/primaryTextColor"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -204,7 +205,7 @@
         android:id="@+id/fragment_dialog_solve_activity_podium_button_validate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="OK"
+        android:text="@string/ok"
         android:textStyle="bold"
         android:textColor="@color/primaryTextColor"
         android:background="@drawable/button_fragment_dialog"

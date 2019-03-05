@@ -4,7 +4,6 @@
     <color name="colorPrimaryDark">#008ba3</color>
     <color name="colorAccent">#FFA000</color>
     <color name="colorError">#FF5252</color>
-    <color name="colorTransparent">#80ffffff</color>
     <color name="colorBlackBackground">#000000</color>
     <color name="colorItemBackground">#80ccc4</color>
 
@@ -12,8 +11,6 @@
     //#80ccc4
 
     <color name="primaryColor">#00bcd4</color>
-    <color name="primaryLightColor">#62efff</color>
-    <color name="primaryLightColorTransparent">#8062efff</color>
     <color name="primaryDarkColor">#008ba3</color>
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#000000</color>
@@ -22,20 +19,16 @@
     //
 
     <color name="colorGreen">#6BB18C</color>
-    <color name="colorSandLight">#ECDAAF</color>
     <color name="colorSand">#EBCB94</color>
 
     <color name="colorYellow">#FFF017</color>
-    <color name="blue_point_soft">#1565C0</color>
     <color name="blue_point_dark">#0D47A1</color>
 
     <color name="white">#ffffff</color>
 
     // Button
-    <color name="buttonGreenDark">#00600f</color>
     <color name="buttonGreenDeep">#03f929</color>
     <color name="buttonGreenLight">#6BB18C</color>
-    <color name="buttonOrangeDark">#c63f17</color>
     <color name="buttonOrangeLight">#ffa270</color>
     <color name="colorSandClearLight">#FFFFE8</color>
 

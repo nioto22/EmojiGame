@@ -26,25 +26,29 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/smiles_title"/>
+            android:src="@drawable/smiles_title"
+            android:contentDescription="@string/smiles_title_image_content_description" />
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center">
-        <TextView
-            android:id="@+id/fragment_dialog_emoji_lifes_life_number_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/primaryTextColor"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textStyle="bold"
-            android:paddingEnd="@dimen/default_small_margin_5dp"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_smiley"
-            android:paddingStart="@dimen/default_small_margin_5dp"/>
+            <TextView
+                android:id="@+id/fragment_dialog_emoji_lifes_life_number_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/primaryTextColor"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textStyle="bold"
+                android:paddingStart="@dimen/default_small_margin_5dp"
+                android:paddingEnd="@dimen/default_small_margin_5dp"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_smiley"
+                android:paddingStart="@dimen/default_small_margin_5dp"
+                android:paddingEnd="@dimen/default_small_margin_5dp"
+                android:contentDescription="@string/smiley_image_button_content_description" />
         </LinearLayout>
     </LinearLayout>
 
@@ -83,7 +87,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/default_small_margin"
-                android:text="Prochaine vie dans : "
+                android:text="@string/fragment_dialog_emoji_life_new_life_timer_text"
                 android:textColor="@color/primaryTextColor"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textStyle="bold" />
@@ -92,7 +96,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/default_small_margin"
-                android:text="00:00:00"
+                android:text="@string/fragment_dialog_emoji_life_timer_example"
                 android:textColor="@color/primaryTextColor"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textStyle="bold"/>
@@ -109,19 +113,19 @@
             android:gravity="center"
             android:visibility="gone"
             tools:visibility="visible">
-        <TextView
-            android:id="@+id/fragment_dialog_emoji_lifes_text_view_question_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Envie de jouer plus longtemps ?"
-            android:padding="@dimen/default_small_margin"
-            android:textColor="@color/primaryTextColor"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/fragment_dialog_emoji_lifes_text_view_question_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fragment_dialog_emoji_life_title_content_text"
+                android:padding="@dimen/default_small_margin"
+                android:textColor="@color/primaryTextColor"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textStyle="bold"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Obtenir une vie supplémentaire :"
+                android:text="@string/fragment_dialog_emoji_life_get_more_life_text"
                 android:textColor="@color/primaryTextColor"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
             <LinearLayout
@@ -138,7 +142,8 @@
                     android:padding="@dimen/default_large_margin"
                     android:src="@drawable/pay_life_button"
                     android:background="@color/fui_transparent"
-                    android:focusable="true" />
+                    android:focusable="true"
+                    android:contentDescription="@string/buy_life_image_content_description" />
                 <ImageButton
                     android:id="@+id/fragment_dialog_emoji_lifes_button_extra_life_with_ad"
                     android:layout_width="wrap_content"
@@ -146,7 +151,8 @@
                     android:padding="@dimen/default_large_margin"
                     android:src="@drawable/view_adv_button"
                     android:background="@color/fui_transparent"
-                    android:focusable="true" />
+                    android:focusable="true"
+                    android:contentDescription="@string/watch_ads_content_description" />
             </LinearLayout>
         </LinearLayout>
         <!-- FULL LIFE -->
@@ -156,7 +162,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:padding="@dimen/default_margin"
-            android:text="Vous avez atteint le nombre de vie maximum !!"
+            android:text="@string/fragment_dialog_emoji_life_max_life_reached"
             android:textColor="@color/primaryTextColor"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:gravity="center"
@@ -169,7 +175,7 @@
         android:id="@+id/fragment_dialog_emoji_lifes_button_validate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="OK"
+        android:text="@string/ok"
         android:textStyle="bold"
         android:textColor="@color/primaryTextColor"
         android:background="@drawable/button_fragment_dialog"

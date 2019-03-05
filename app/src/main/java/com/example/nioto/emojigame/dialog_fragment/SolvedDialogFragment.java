@@ -1,6 +1,5 @@
 package com.example.nioto.emojigame.dialog_fragment;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -18,7 +17,6 @@ import android.widget.TextView;
 
 import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.utils.Constants;
-import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareButton;
@@ -29,7 +27,6 @@ import java.util.Objects;
 
 public class SolvedDialogFragment extends DialogFragment {
 
-    private static final String TAG = "SolvedDialogFragment";
     // FOR DESIGN
     private RelativeLayout rlGlobalLayout;
     private ImageView ivTitle;
@@ -45,7 +42,6 @@ public class SolvedDialogFragment extends DialogFragment {
     private String message;
 
     // FOR SHARE DIALOG
-    private CallbackManager callBackManager;
     ShareDialog shareDialog;
 
     public static SolvedDialogFragment newInstance(String stPoints, String stEnigma, int numberOfResolvedTimes, String stCategory){
@@ -62,7 +58,6 @@ public class SolvedDialogFragment extends DialogFragment {
     }
 
     public void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate: OK");
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
@@ -72,7 +67,7 @@ public class SolvedDialogFragment extends DialogFragment {
             numberOfResolvedTimes = getArguments().getInt(Constants.SOLVED_DIALOG_ARG_RESOLVED_TIMES);
         }
 
-        FacebookSdk.sdkInitialize(this.getActivity().getApplicationContext());
+        FacebookSdk.sdkInitialize(Objects.requireNonNull(this.getActivity()).getApplicationContext());
 
     }
 
@@ -112,7 +107,6 @@ public class SolvedDialogFragment extends DialogFragment {
                 .setContentUrl(uri)
                 .build();
         facebookShareButton.setShareContent(content);
-       // callBackManager = CallbackManager.Factory.create();
 
         facebookShareButton.setOnClickListener(new View.OnClickListener() {
             @Override

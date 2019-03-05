@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -39,10 +38,7 @@ import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity {
 
-    private static final String TAG = "MainActivity";
-
     private String photoUrl;
-    private User currentUser;
 
     // FOR DESIGN
     @BindView(R.id.main_activity_main_linear_layout) LinearLayout mainLinearLayout;
@@ -107,18 +103,16 @@ public class MainActivity extends BaseActivity {
             photoUrl = getPhotoUrl();
 
             // Get username from FireBase
-            DocumentReference userListener = UserHelper.getUsersCollection().document(this.getCurrentUser().getUid());
+            DocumentReference userListener = UserHelper.getUsersCollection().document(Objects.requireNonNull(this.getCurrentUser()).getUid());
             userListener.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                 @Override
                 public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                    if( e != null) {
-                        Log.w(TAG, "onEvent: Error", e);
-                        return;
-                    }
+                    if( e != null) { return; }
                     if (documentSnapshot != null && documentSnapshot.exists()) {
                         User currentUser = documentSnapshot.toObject(User.class);
 
                         // Set Username
+                        assert currentUser != null;
                         String username = TextUtils.isEmpty(currentUser.getUsername())
                                 ? getString(R.string.info_no_username_found)
                                 : currentUser.getUsername();

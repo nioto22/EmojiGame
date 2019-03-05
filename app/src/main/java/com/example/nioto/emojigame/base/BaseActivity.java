@@ -1,8 +1,6 @@
 package com.example.nioto.emojigame.base;
 
-import android.app.ActivityManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -14,7 +12,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageButton;
@@ -46,12 +43,9 @@ import java.util.UUID;
 import butterknife.ButterKnife;
 
 public abstract class BaseActivity extends AppCompatActivity {
-    private static final String TAG = "BaseActivity";
-
 
     // DATA
     protected Context context;
-    public static final String SHARED_PREFERENCES_CURRENT_USER_TAG = "SHARED_PREFERENCES_CURRENT_USER_TAG";
     private static User[] currentUser = new User[1];
     // ToolbarViews
     protected TextView tvCoinsToolbar;
@@ -84,8 +78,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
         }
-        ButterKnife.bind(this); //Configure Butterknife
-
+        ButterKnife.bind(this);
 
     }
 
@@ -107,7 +100,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             mTimeLeftInMillis = mEndTime - System.currentTimeMillis();
 
             if (mTimeLeftInMillis < 0) {
-                UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                UserHelper.getUser(Objects.requireNonNull(this.getCurrentUser()).getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         User user = documentSnapshot.toObject(User.class);
@@ -119,7 +112,6 @@ public abstract class BaseActivity extends AppCompatActivity {
                                 UserHelper.updateUserSmileys(smileys, user.getUid()).addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Log.d(TAG, "onFailure: Fail to update user smileys");
                                     }
                                 });
                                 mTimeLeftInMillis += Constants.TIMES_UP_UNTIL_NEW_LIFE;
@@ -150,7 +142,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-
     // --------------------
     // UI
     // --------------------
@@ -159,12 +150,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         this.getToolbarViews();
         tvTitleToolbar.setText(toolbarTitle);
         // Get username from FireBase
-        DocumentReference userListener = UserHelper.getUsersCollection().document(this.getCurrentUser().getUid());
+        DocumentReference userListener = UserHelper.getUsersCollection().document(Objects.requireNonNull(this.getCurrentUser()).getUid());
         userListener.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
                 if( e != null) {
-                    Log.w(TAG, "onEvent: Error", e);
                     return;
                 }
                 if (documentSnapshot != null && documentSnapshot.exists()){
@@ -220,7 +210,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     // COUNTDOWNTIMER
 
     protected void startTimer(){
-        Log.d(TAG, "startTimer: start");
         mEndTime = System.currentTimeMillis() + mTimeLeftInMillis;
 
         if (mCountDownTimer != null) {
@@ -237,12 +226,10 @@ public abstract class BaseActivity extends AppCompatActivity {
                 mTimeLeftInMillis = Constants.TIMES_UP_UNTIL_NEW_LIFE;
                 smiles++;
 
-                Log.d(TAG, "onFinish: Timer finished, new life = " + smiles);
                 if (smiles < 6) {
-                    UserHelper.updateUserSmileys(smiles, getCurrentUser().getUid()).addOnFailureListener(new OnFailureListener() {
+                    UserHelper.updateUserSmileys(smiles, Objects.requireNonNull(getCurrentUser()).getUid()).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Log.d(TAG, "onFailure: Fail to updateUserSmileys : " + e);
                         }
                     });
                     if (smiles < 5) {
@@ -301,13 +288,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected Boolean isNewUser() {
         boolean result;
         FirebaseUserMetadata metadata = Objects.requireNonNull(this.getCurrentUser()).getMetadata();
-        if (metadata != null && metadata.getCreationTimestamp() == metadata.getLastSignInTimestamp()) {
-            // It's a new user
-            result = true;
-        } else {
-            result = false;
-        }
-        // result = UserHelper.getUsersCollection().document(this.getCurrentUser().getUid()).getId().equals(this.getCurrentUser().getUid());
+        // It's a new user
+        result = metadata != null && metadata.getCreationTimestamp() == metadata.getLastSignInTimestamp();
         return result;
     }
 
@@ -316,8 +298,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected User getCurrentUserFromFirestore(){
-        Log.d(TAG, "getCurrentUserFromFirestore: " + this.getCurrentUser().getUid());
-        UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        UserHelper.getUser(Objects.requireNonNull(this.getCurrentUser()).getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 currentUser[0] = documentSnapshot.toObject(User.class);
@@ -329,17 +310,21 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected String getPhotoUrl(){
         // Some issue with blurred with facebook or Google photo
         String photoUrl = null;
-        String provider = this.getCurrentUser().getProviders().get(0);
-        if (provider.equals("facebook.com")) {
-            photoUrl = this.getCurrentUser().getPhotoUrl() + "?height=500";
-        } else if(provider.equals("google.com")) {
-            photoUrl = this.getCurrentUser().getPhotoUrl().toString();
-            //Remove thumbnail url and replace the original part of the Url with the new part
-            photoUrl = photoUrl.substring(0, photoUrl.length() - 15) + "s400-c/photo.jpg";
-        } else {
-            if (this.getCurrentUser().getPhotoUrl() != null) {
-                photoUrl = this.getCurrentUser().getPhotoUrl().toString();
-            }
+        String provider = Objects.requireNonNull(Objects.requireNonNull(this.getCurrentUser()).getProviders()).get(0);
+        switch (provider) {
+            case "facebook.com":
+                photoUrl = this.getCurrentUser().getPhotoUrl() + "?height=500";
+                break;
+            case "google.com":
+                photoUrl = Objects.requireNonNull(this.getCurrentUser().getPhotoUrl()).toString();
+                //Remove thumbnail url and replace the original part of the Url with the new part
+                photoUrl = photoUrl.substring(0, photoUrl.length() - 15) + "s400-c/photo.jpg";
+                break;
+            default:
+                if (this.getCurrentUser().getPhotoUrl() != null) {
+                    photoUrl = this.getCurrentUser().getPhotoUrl().toString();
+                }
+                break;
         }
         return photoUrl;
     }

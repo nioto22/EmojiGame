@@ -18,7 +18,7 @@ public class Enigma {
     private String enigma;
     private String solution;
     private String category;
-    @Nullable private String message;
+    private String message;
     private List<String> resolvedUserUid;
     private int numbersOfResolvedUserUid;
     private int dificulty;

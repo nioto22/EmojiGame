@@ -15,8 +15,6 @@
         android:id="@+id/profile_activity_toolbar_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:background="@color/primaryColor">
 
         <ImageButton
@@ -29,7 +27,7 @@
             android:background="@color/fui_transparent"
             android:src="@drawable/ic_back_arrow"
             android:focusable="true"
-             />
+            android:contentDescription="@string/back_button_content_description" />
 
         <TextView
             android:id="@+id/profile_activity_toolbar_title"
@@ -72,7 +70,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="@dimen/default_small_margin_5dp"
                 android:focusable="true"
-                />
+                android:contentDescription="@string/emoji_coin_content_description" />
 
         </LinearLayout>
         <LinearLayout
@@ -103,7 +101,7 @@
                 android:paddingStart="@dimen/default_small_margin_5dp"
                 android:paddingEnd="@dimen/default_small_margin_5dp"
                 android:focusable="true"
-                />
+                android:contentDescription="@string/smiley_image_button_content_description" />
         </LinearLayout>
 
     </RelativeLayout>

@@ -24,11 +24,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.List;
+import java.util.Objects;
 
 
 public class PodiumDialogFragment extends DialogFragment {
 
-    private static final String TAG = "PodiumDialogFragment";
     // FOR DESIGN
     private RelativeLayout rlGlobalLayout;
     private ImageView ivTitle;
@@ -65,7 +65,7 @@ public class PodiumDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_dialog_solve_activity_podium, container, false);
-        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Objects.requireNonNull(getDialog().getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         rlGlobalLayout = v.findViewById(R.id.fragment_dialog_solve_activity_podium_linear_layout_content);
         ivTitle = v.findViewById(R.id.fragment_dialog_solve_activity_podium_title);
@@ -86,6 +86,7 @@ public class PodiumDialogFragment extends DialogFragment {
                 if (enigma != null) {
                     userPodiumList = enigma.getResolvedUserUid();
                 }
+                assert userPodiumList != null;
                 if (userPodiumList.size() == 0){
                     tvPodiumNobody.setVisibility(View.VISIBLE);
                     layoutPodiumDifficulty.setVisibility(View.GONE);
@@ -108,6 +109,7 @@ public class PodiumDialogFragment extends DialogFragment {
                             @Override
                             public void onSuccess(DocumentSnapshot documentSnapshot) {
                                 User user1 = documentSnapshot.toObject(User.class);
+                                assert user1 != null;
                                 userOne.setText(user1.getUsername());
                             }
                         });
@@ -117,6 +119,7 @@ public class PodiumDialogFragment extends DialogFragment {
                             @Override
                             public void onSuccess(DocumentSnapshot documentSnapshot) {
                                 User user2 = documentSnapshot.toObject(User.class);
+                                assert user2 != null;
                                 userTwo.setText(user2.getUsername());
                             }
                         });
@@ -126,6 +129,7 @@ public class PodiumDialogFragment extends DialogFragment {
                             @Override
                             public void onSuccess(DocumentSnapshot documentSnapshot) {
                                 User user3 = documentSnapshot.toObject(User.class);
+                                assert user3 != null;
                                 userThree.setText(user3.getUsername());
                             }
                         });

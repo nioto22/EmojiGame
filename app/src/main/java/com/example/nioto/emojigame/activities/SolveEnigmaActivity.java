@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -18,7 +17,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.api.EnigmaHelper;
 import com.example.nioto.emojigame.api.UserHelper;
@@ -32,29 +30,17 @@ import com.example.nioto.emojigame.dialog_fragment.SolvedDialogFragment;
 import com.example.nioto.emojigame.models.Enigma;
 import com.example.nioto.emojigame.models.User;
 import com.example.nioto.emojigame.utils.Constants;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.vanniktech.emoji.EmojiTextView;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 
 public class SolveEnigmaActivity extends BaseActivity{
-
-    private static final String TAG = "SolveEnigmaActivity";
 
     // FOR DESIGN
     // ENIGMA UI
@@ -78,10 +64,11 @@ public class SolveEnigmaActivity extends BaseActivity{
     // FOR UI
     private ArrayList<EditText> mEditTextArrayList = new ArrayList<>();
     private ArrayList<EditText> mEnabledEditTextList = new ArrayList<>();
+    private ArrayList<EditText> mDisabledEditTextList = new ArrayList<>();
     private ArrayList<Integer> mPositionOfSolutionCharList;
     private ArrayList<Integer> mPositionOfSolutionCharListOnlyLetter = new ArrayList<>();
     private ArrayList<Character> mSolutionCharListOnlyLetter = new ArrayList<>();
-    ArrayList<Character> charactArray = new ArrayList<>();
+    private ArrayList<Character> characterArray = new ArrayList<>();
 
     // FOR DATA
     private String enigmaUid;
@@ -166,7 +153,7 @@ public class SolveEnigmaActivity extends BaseActivity{
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 User user = documentSnapshot.toObject(User.class);
-                if (user.getUserEnigmaUidList().contains(enigmaUid)){
+                if (Objects.requireNonNull(user).getUserEnigmaUidList().contains(enigmaUid)){
                     enigmaResponseTitle.setText(getString(R.string.solve_activity_enigma_response_title));
                     enigmaResponse.setVisibility(View.GONE);
                     enigmaEditResponse.setVisibility(View.VISIBLE);
@@ -178,6 +165,7 @@ public class SolveEnigmaActivity extends BaseActivity{
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         Enigma enigma = documentSnapshot.toObject(Enigma.class);
 
+                        assert enigma != null;
                         enigmaCategory.setText(enigma.getCategory());
                         enigmaEnigma.setText(enigma.getEnigma());
                         enigmaDifficulty.setText(String.valueOf(enigma.getDificulty()));
@@ -186,6 +174,7 @@ public class SolveEnigmaActivity extends BaseActivity{
                             @Override
                             public void onSuccess(DocumentSnapshot documentSnapshot) {
                                 User user = documentSnapshot.toObject(User.class);
+                                assert user != null;
                                 enigmaUser.setText(user.getUsername());
                             }
                         });
@@ -210,17 +199,15 @@ public class SolveEnigmaActivity extends BaseActivity{
                 assert enigma != null;
                 String enigmaSolution = enigma.getSolution();
 
-                charactArray = getSolutionInArray(enigmaSolution);
-                charactArray = configurePositionOfSolutionCharForNoWordCut(charactArray, enigmaSolution);
-                displayEditText(charactArray);
+                characterArray = getSolutionInArray(enigmaSolution);
+                characterArray = configurePositionOfSolutionCharForNoWordCut(characterArray, enigmaSolution);
+                displayEditText(characterArray);
                 int pos = 0;
                 editTextGetFocusable(pos);
             }
 
             private void editTextGetFocusable(final int position) {
                 if (position >= mEnabledEditTextList.size()) return;
-                Log.d(TAG, "editTextGetFocusable: position " + position);
-                Log.d(TAG, "editTextGetFocusable: size " + mEnabledEditTextList.size());
                 mEnabledEditTextList.get(position).requestFocus();
                 mEnabledEditTextList.get(position).setFilters(new InputFilter[]{new InputFilter.AllCaps()});
                 mEnabledEditTextList.get(position).addTextChangedListener(new TextWatcher() {
@@ -239,26 +226,27 @@ public class SolveEnigmaActivity extends BaseActivity{
             }
 
 
-            private void displayEditText(ArrayList<Character> charactArray) {
+            private void displayEditText(ArrayList<Character> characterArray) {
                 Collections.sort(enigmaHintPositionsList);
                 mEnabledEditTextList = new ArrayList<>();
+                mDisabledEditTextList = new ArrayList<>();
                 enigmaResponse.setVisibility(View.GONE);
                 linearLayoutHintOneFirst.setVisibility(View.VISIBLE);
-                if (charactArray.size() > 32)linearLayoutHintOneThird.setVisibility(View.VISIBLE);
-                if (charactArray.size() > 16)linearLayoutHintOneSecond.setVisibility(View.VISIBLE);
+                if (characterArray.size() > 32)linearLayoutHintOneThird.setVisibility(View.VISIBLE);
+                if (characterArray.size() > 16)linearLayoutHintOneSecond.setVisibility(View.VISIBLE);
                 int loopCharListOnlyLetter = 0;
-                for (int i = 0; i < charactArray.size(); i++) {
-                    if (charactArray.get(i) == 'Y') {
+                for (int i = 0; i < characterArray.size(); i++) {
+                    if (characterArray.get(i) == 'Y') {
                         mEditTextArrayList.get(i).setVisibility(View.VISIBLE);
                         mEnabledEditTextList.add(mEditTextArrayList.get(i));
-                    }else if (charactArray.get(i) == 'N') {
+                    }else if (characterArray.get(i) == 'N') {
                         mEditTextArrayList.get(i).setVisibility(View.VISIBLE);
                         mEditTextArrayList.get(i).setBackground(getDrawable(R.color.fui_transparent));
                         mEditTextArrayList.get(i).setEnabled(false);
-                    }else if (charactArray.get(i)== 'G') {
+                    }else if (characterArray.get(i)== 'G') {
                         mEditTextArrayList.get(i).setVisibility(View.GONE);
-                    } else if (charactArray.get(i)  == 'L') {
-                        mEnabledEditTextList.add(mEditTextArrayList.get(i));
+                    } else if (characterArray.get(i)  == 'L') {
+                        mDisabledEditTextList.add(mEditTextArrayList.get(i));
                         mEditTextArrayList.get(i).setVisibility(View.VISIBLE);
                         mEditTextArrayList.get(i).setText(String.valueOf(mSolutionCharListOnlyLetter.get((enigmaHintPositionsList.get(loopCharListOnlyLetter))-1)));
                         mEditTextArrayList.get(i).setEnabled(false);
@@ -266,7 +254,7 @@ public class SolveEnigmaActivity extends BaseActivity{
                     }else {
                         mEditTextArrayList.get(i).setVisibility(View.VISIBLE);
                         mEditTextArrayList.get(i).setBackground(getDrawable(R.color.fui_transparent));
-                        mEditTextArrayList.get(i).setText(String.valueOf(charactArray.get(i)));
+                        mEditTextArrayList.get(i).setText(String.valueOf(characterArray.get(i)));
                         mEditTextArrayList.get(i).setEnabled(false);
                     }
                 }
@@ -274,43 +262,43 @@ public class SolveEnigmaActivity extends BaseActivity{
 
             private ArrayList<Character> getSolutionInArray(String enigmaSolution){
                 int enigmaLength = enigmaSolution.length();
-                ArrayList<Character> charactArray = new ArrayList<>();
+                ArrayList<Character> characterArray = new ArrayList<>();
                 mPositionOfSolutionCharList = new ArrayList<>();
                 mPositionOfSolutionCharListOnlyLetter = new ArrayList<>();
                 mSolutionCharListOnlyLetter = new ArrayList<>();
                 int loopHintTwoPositions = 1;
                 for (int i = 0; i < enigmaLength ; i++) {
-                    if (enigmaSolution.charAt(i) == ' ') charactArray.add(i, 'N');
+                    if (enigmaSolution.charAt(i) == ' ') characterArray.add(i, 'N');
                     else if (enigmaSolution.charAt(i) == '-' || enigmaSolution.charAt(i) == '\'') {
                         mPositionOfSolutionCharList.add(i);
-                        charactArray.add(i, enigmaSolution.charAt(i));
+                        characterArray.add(i, enigmaSolution.charAt(i));
                     } else {
                         mPositionOfSolutionCharList.add(i);
                         mPositionOfSolutionCharListOnlyLetter.add(i);
                         mSolutionCharListOnlyLetter.add(Character.toUpperCase(enigmaSolution.charAt(i)));
                         if (enigmaHintPositionsList.contains(loopHintTwoPositions)){
-                            charactArray.add(i, 'L');
+                            characterArray.add(i, 'L');
                             loopHintTwoPositions++;
                         } else {
-                            charactArray.add(i, 'Y');
+                            characterArray.add(i, 'Y');
                             loopHintTwoPositions ++;
                         }
                     }
                 }
 
-                return charactArray;
+                return characterArray;
 
 
             }
 
-            private ArrayList<Character> configurePositionOfSolutionCharForNoWordCut(ArrayList<Character> charactArray, String enigmaSolution) {
+            private ArrayList<Character> configurePositionOfSolutionCharForNoWordCut(ArrayList<Character> characterArray, String enigmaSolution) {
                 int nbPositionJump = 0;
                 int nbPositionJumpOne = 0;
                 int nbPositionJumpTwo = 0;
                 int enigmaLength = enigmaSolution.length();
 
                 // To update the ArrayList after treatment
-                ArrayList<Character> newCharactArray = new ArrayList<>();
+                ArrayList<Character> newCharacterArray = new ArrayList<>();
                 ArrayList<Integer> newPositionOfSolutionCharList = new ArrayList<>();
 
                 if (mPositionOfSolutionCharList.contains(16) && mPositionOfSolutionCharList.contains(17)) {  // No space between Layout 1 and 2
@@ -327,52 +315,52 @@ public class SolveEnigmaActivity extends BaseActivity{
 
                     if (enigmaLength + nbPositionJump < 47 && nbPositionJumpOne < 16) {
                         int positionEndLastWord = positionOfLastCharInLlOne - nbPositionJumpOne;
-                        int positionCharEndLastWord = mPositionOfSolutionCharList.get(positionEndLastWord)-1; // position End Last Word Layout One in charactArray
+                        int positionCharEndLastWord = mPositionOfSolutionCharList.get(positionEndLastWord)-1; // position End Last Word Layout One in characterArray
 
 
 
-                        // Get back first line charactArray
+                        // Get back first line characterArray
                         for (int i = 0; i < positionCharEndLastWord ; i++) {
-                            newCharactArray.add(i, charactArray.get(i));
+                            newCharacterArray.add(i, characterArray.get(i));
                             newPositionOfSolutionCharList.add(i, mPositionOfSolutionCharList.get(i));
                         }
 
                         // Put blank to finish the line
                         for (int i = positionCharEndLastWord ; i < 17; i++) {
-                            //newCharactArray[i] = 'G';  // G for visibility Gone
-                            newCharactArray.add(i, 'G');
+                            //newCharacterArray[i] = 'G';  // G for visibility Gone
+                            newCharacterArray.add(i, 'G');
                         }
-                        // Get back end of charactArray
+                        // Get back end of characterArray
                         int i = 17;
-                        for (int j = positionCharEndLastWord; j < charactArray.size(); j++) {
-                            newCharactArray.add(i, charactArray.get(j));
+                        for (int j = positionCharEndLastWord; j < characterArray.size(); j++) {
+                            newCharacterArray.add(i, characterArray.get(j));
                             newPositionOfSolutionCharList.add(j , i);
                             i++;
                         }
                     } else {
-                        // Get back first line charactArray
+                        // Get back first line characterArray
                         for (int i = 0; i < 16; i++) {
-                            newCharactArray.add(i, charactArray.get(i));
+                            newCharacterArray.add(i, characterArray.get(i));
                             newPositionOfSolutionCharList.add(i, mPositionOfSolutionCharList.get(i));
                         }
-                        newCharactArray.add(16, '~');
+                        newCharacterArray.add(16, '~');
                         newPositionOfSolutionCharList.add(16, 16);
-                        for (int i = 16; i < charactArray.size(); i++) {
-                            newCharactArray.add(i + 1, charactArray.get(i));
+                        for (int i = 16; i < characterArray.size(); i++) {
+                            newCharacterArray.add(i + 1, characterArray.get(i));
                             newPositionOfSolutionCharList.add(i +1, mPositionOfSolutionCharList.get(i));
                         }
                     }
                 } else {
-                    for (int i = 0; i < charactArray.size(); i++) {
-                        newCharactArray.add(i, charactArray.get(i));
+                    for (int i = 0; i < characterArray.size(); i++) {
+                        newCharacterArray.add(i, characterArray.get(i));
                     }
                 }
-                charactArray = newCharactArray;
+                characterArray = newCharacterArray;
                 mPositionOfSolutionCharList = newPositionOfSolutionCharList;
 
                 // END OF CONFIGURATION FIRST LINE
 
-                newCharactArray = new ArrayList<>();
+                newCharacterArray = new ArrayList<>();
                 if (mPositionOfSolutionCharList.contains(32) && mPositionOfSolutionCharList.contains(33)){  // No space between Layout 2 and 3
                     int positionOfLastCharInLlTwo = mPositionOfSolutionCharList.indexOf(32) + nbPositionJumpOne;
                     for (int i = positionOfLastCharInLlTwo ; i > 0  ; i--) {
@@ -385,38 +373,38 @@ public class SolveEnigmaActivity extends BaseActivity{
                     nbPositionJump += nbPositionJumpTwo;
                     if (enigmaLength + nbPositionJump < 47 && nbPositionJumpTwo < 16) {
                         int positionEndLastWord = positionOfLastCharInLlTwo - nbPositionJumpTwo;
-                        int positionCharEndLastWord = mPositionOfSolutionCharList.get(positionEndLastWord) - 1; // position End Last Word Layout One in charactArray
-                        // Get back first line charactArray
+                        int positionCharEndLastWord = mPositionOfSolutionCharList.get(positionEndLastWord) - 1; // position End Last Word Layout One in characterArray
+                        // Get back first line characterArray
                         for (int i = 0; i < positionCharEndLastWord ; i++) {
-                            newCharactArray.add(i, charactArray.get(i));
+                            newCharacterArray.add(i, characterArray.get(i));
                         }
                         // Put blank to finish the line
                         for (int i = positionCharEndLastWord ; i < 33 ; i++ ){
-                            newCharactArray.add(i, 'G'); // G for visibility Gone
+                            newCharacterArray.add(i, 'G'); // G for visibility Gone
                         }
-                        // Get back end of charactArray
+                        // Get back end of characterArray
                         int i = 33;
-                        for (int j = positionCharEndLastWord; j < charactArray.size(); j++) {
-                            newCharactArray.add(i, charactArray.get(j));
+                        for (int j = positionCharEndLastWord; j < characterArray.size(); j++) {
+                            newCharacterArray.add(i, characterArray.get(j));
                             i++;
                         }
                     } else {
-                        // Get back first line charactArray
+                        // Get back first line characterArray
                         for (int i = 0; i < 32; i++) {
-                            newCharactArray.add(i, charactArray.get(i));
+                            newCharacterArray.add(i, characterArray.get(i));
                         }
-                        newCharactArray.add(32, '~');
-                        for (int j = 32; j < charactArray.size()  ; j++) {
-                            newCharactArray.add(j+1 , charactArray.get(j));
+                        newCharacterArray.add(32, '~');
+                        for (int j = 32; j < characterArray.size()  ; j++) {
+                            newCharacterArray.add(j+1 , characterArray.get(j));
                         }
                     }
                 } else {
-                    newCharactArray = charactArray;
+                    newCharacterArray = characterArray;
                 }
-                charactArray = newCharactArray;
+                characterArray = newCharacterArray;
 
 
-                return  charactArray;
+                return  characterArray;
             }
         });
     }
@@ -428,7 +416,7 @@ public class SolveEnigmaActivity extends BaseActivity{
 
 
 // --------------------
-//       DATAS
+//       DATA
 // --------------------
 
     private void getEnigmaUid() {
@@ -450,7 +438,6 @@ public class SolveEnigmaActivity extends BaseActivity{
         if (enigmaHasHintTwo){
             enigmaHintPositionsList = new ArrayList<>();
             enigmaHintPositions = enigmaDb.getHintTwoPositions();
-            Log.d(TAG, "getEnigmaDbData: string enigmaHintPosition = " + enigmaHintPositions);
 
             String[] hintPositionsTempList = enigmaHintPositions.split("/");
             for (String st : hintPositionsTempList) {
@@ -546,6 +533,7 @@ public class SolveEnigmaActivity extends BaseActivity{
                         @Override
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                             final Enigma enigma = documentSnapshot.toObject(Enigma.class);
+                            assert enigma != null;
                             if (enigma.getSolution() != null) {
                                 if (enigma.getSolution().equalsIgnoreCase(response)) {
                                     // Change enigmaPlayed isSolved state in internal db
@@ -563,6 +551,7 @@ public class SolveEnigmaActivity extends BaseActivity{
                                         @Override
                                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                                             User currentUser = documentSnapshot.toObject(User.class);
+                                            assert currentUser != null;
                                             List<String> userResolvedEnigmaList = currentUser.getUserResolvedEnigmaUidList();
                                             userResolvedEnigmaList.add(enigmaUid);
                                             UserHelper.updateUserResolvedEnigmaUidList(userResolvedEnigmaList, currentUserUid).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -612,12 +601,17 @@ public class SolveEnigmaActivity extends BaseActivity{
 
             private String getAnswerFromAllEditText() {
                 StringBuilder allCharToString = new StringBuilder();
-                int j = 0;
-                for (int i = 0; i < charactArray.size() ; i++) {
-                    switch (charactArray.get(i)){
+                int loopPositionEnableEditText = 0;
+                int loopPositionDisableEditText = 0;
+                for (int i = 0; i < characterArray.size() ; i++) {
+                    switch (characterArray.get(i)){
                         case 'Y' :
-                            if (!mEnabledEditTextList.get(j).getText().toString().equals("")) allCharToString.append(mEnabledEditTextList.get(j).getText().toString());
-                            j++;
+                            if (!mEnabledEditTextList.get(loopPositionEnableEditText).getText().toString().equals("")) allCharToString.append(mEnabledEditTextList.get(loopPositionEnableEditText).getText().toString());
+                            loopPositionEnableEditText++;
+                            break;
+                        case 'L' :
+                            if (!mDisabledEditTextList.get(loopPositionDisableEditText).getText().toString().equals("")) allCharToString.append(mDisabledEditTextList.get(loopPositionDisableEditText).getText().toString());
+                            loopPositionDisableEditText++;
                             break;
                         case 'N' :
                             allCharToString.append(" ");
@@ -627,28 +621,25 @@ public class SolveEnigmaActivity extends BaseActivity{
                         case '~' :
                             break;
                         default:
-                            allCharToString.append(charactArray.get(i).toString());
+                            allCharToString.append(characterArray.get(i).toString());
                             break;
                     }
                 }
-                Log.d(TAG, "getAnswerFromAllEditText: reponse = " + allCharToString.toString());
                 return allCharToString.toString();
             }
         });
     }
 
-
     // --------------------
-// REST REQUESTS
-// --------------------
-// 4 - Get Current User from Firestore
+    // REST REQUESTS
+    // --------------------
+
     private void getFirestoreUser(){
-        UserHelper.getUser(getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        UserHelper.getUser(Objects.requireNonNull(getCurrentUser()).getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 currentUser = documentSnapshot.toObject(User.class);
             }
         });
     }
-
 }

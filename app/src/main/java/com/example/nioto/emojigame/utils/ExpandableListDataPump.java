@@ -8,9 +8,9 @@ public class ExpandableListDataPump {
     private static String title = "";
 
     public static HashMap<String, List<String>> getData() {
-        HashMap<String, List<String>> expandableListDetail = new HashMap<String, List<String>>();
+        HashMap<String, List<String>> expandableListDetail = new HashMap<>();
 
-        List<String> categories = new ArrayList<String>();
+        List<String> categories = new ArrayList<>();
         categories.add("Personnage");
         categories.add("Cinéma");
         categories.add("Musique");

@@ -53,8 +53,6 @@ import butterknife.OnClick;
 
 public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemClickListener  {
 
-    private static final String TAG = "PlayActivity";
-
     public static final String EXTRA_ENIGMA_PATH = "EXTRA_ENIGMA_PATH";
     public static final int INTENT_SOLVE_ACTIVITY_KEY = 12;
     public static final int GRID_LAYOUT_NUMBER_OF_ROWS = 3;
@@ -75,7 +73,6 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     @BindView(R.id.play_enigma_activity_bottom_stroke_solve_tab) ImageView solveBottomStroke;
     @BindView(R.id.play_enigma_activity_bottom_stroke_history_tab) ImageView historyBottomStroke;
     @BindView(R.id.play_enigma_activity_bottom_stroke_player_tab) ImageView playerBottomStroke;
-    @BindView(R.id.activity_play_enigma_title_historic) ImageView titleHistoric;
 
 
     // PopupMenus
@@ -91,8 +88,8 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     MenuItem itemObject ;
     MenuItem itemWord ;
     MenuItem itemOther;
-    MenuItem itemEnigmaDificultyAsc;
-    MenuItem itemEnigmaDificultyDesc;
+    MenuItem itemEnigmaDifficultyAsc;
+    MenuItem itemEnigmaDifficultyDesc;
     MenuItem itemEnigmaDateAsc;
     MenuItem itemEnigmaDateDesc;
     MenuItem itemEnigmaPlayerAsc;
@@ -120,7 +117,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     // For User History
     private ArrayList<String> userEnigmaHistoryList = new ArrayList<>();
 
-    // FOR DATAS
+    // FOR DATA
     private Query query = EnigmaHelper.getAllEnigma(filterCategory);
 
 
@@ -301,13 +298,13 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                 setUpFilterChecked(FILTER_POPUP_MENU_SELECTED);
                 setUpRecyclerView();
                 break;
-            case R.id.menu_filter_dificulty_asc :
+            case R.id.menu_filter_difficulty_asc :
                 sortType = Constants.SORT_DIFICULTY_ASC;
                 setUpButtonsTitle(SORT_POPUP_MENU_SELECTED);
                 setUpFilterChecked(SORT_POPUP_MENU_SELECTED);
                 setUpRecyclerView();
                 break;
-            case R.id.menu_filter_dificulty_desc :
+            case R.id.menu_filter_difficulty_desc :
                 sortType = Constants.SORT_DIFICULTY_DESC;
                 setUpButtonsTitle(SORT_POPUP_MENU_SELECTED);
                 setUpFilterChecked(SORT_POPUP_MENU_SELECTED);
@@ -365,14 +362,9 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
         return false;
     }
 
-
-
     // ------------------
     //      UI
     // ------------------
-
-
-
 
     public void setSwipeViewListener(View v){
         v.setOnTouchListener(new OnSwipeTouchListener(PlayActivity.this){
@@ -503,8 +495,8 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     private void setUpCategoryMenus(PopupMenu popupMenu, int popupMenuSelected){
         switch (popupMenuSelected){
             case SORT_POPUP_MENU_SELECTED :
-                itemEnigmaDificultyAsc = popupMenu.getMenu().findItem(R.id.menu_filter_dificulty_asc);
-                itemEnigmaDificultyDesc = popupMenu.getMenu().findItem(R.id.menu_filter_dificulty_desc);
+                itemEnigmaDifficultyAsc = popupMenu.getMenu().findItem(R.id.menu_filter_difficulty_asc);
+                itemEnigmaDifficultyDesc = popupMenu.getMenu().findItem(R.id.menu_filter_difficulty_desc);
                 itemEnigmaDateAsc = popupMenu.getMenu().findItem(R.id.menu_filter_date_asc);
                 itemEnigmaDateDesc = popupMenu.getMenu().findItem(R.id.menu_filter_date_desc);
                 itemEnigmaPlayerAsc = popupMenu.getMenu().findItem(R.id.menu_filter_player_asc);
@@ -582,10 +574,10 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                 uncheckAllItem(SORT_POPUP_MENU_SELECTED);
                 switch (sortType) {
                     case Constants.SORT_DIFICULTY_ASC:
-                        itemEnigmaDificultyAsc.setChecked(true);
+                        itemEnigmaDifficultyAsc.setChecked(true);
                         break;
                     case Constants.SORT_DIFICULTY_DESC:
-                        itemEnigmaDificultyDesc.setChecked(true);
+                        itemEnigmaDifficultyDesc.setChecked(true);
                         break;
                     case Constants.SORT_DATE_ASC:
                         itemEnigmaDateAsc.setChecked(true);
@@ -640,8 +632,8 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                 itemOther.setChecked(true);
                 break;
             case SORT_POPUP_MENU_SELECTED :
-                itemEnigmaDificultyAsc.setChecked(false);
-                itemEnigmaDificultyDesc.setChecked(false);
+                itemEnigmaDifficultyAsc.setChecked(false);
+                itemEnigmaDifficultyDesc.setChecked(false);
                 itemEnigmaDateAsc.setChecked(false);
                 itemEnigmaDateDesc.setChecked(false);
                 itemEnigmaPlayerAsc.setChecked(false);
@@ -656,7 +648,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
         final int tab = tabTag;
         final int prevTab = previousTab;
         final String sort = sortType;
-        final String filterEnigm = filterEnigma;
+        final String filter = filterEnigma;
 
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -699,11 +691,11 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                                     final Enigma enigma = enigmaList.get(position);
                                     insertEnigmaInDataBase(enigma.getUid());
                                     // Get CurrentUser
-                                    UserHelper.getUser(getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    UserHelper.getUser(Objects.requireNonNull(getCurrentUser()).getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                         @Override
                                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                                             final User currentUser = documentSnapshot.toObject(User.class);
-                                            if (currentUser.getSmileys() > 0 && !userEnigmaHistoryList.contains(enigma.getUid())) {
+                                            if (Objects.requireNonNull(currentUser).getSmileys() > 0 && !userEnigmaHistoryList.contains(enigma.getUid())) {
                                                 // Start Solve Activity and increase life
                                                 startTimerNewOne();
                                                 UserHelper.updateUserSmileys((currentUser.getSmileys() - 1), currentUser.getUid()).addOnFailureListener(new OnFailureListener() {
@@ -782,7 +774,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
 
             private Boolean addThisEnigmaFunctionOfFilterEnigma(Enigma enigma) {
                 boolean result;
-                switch (filterEnigm) {
+                switch (filter) {
                     case Constants.FILTER_ENIGMA_NEW_ONE :
                         result = userEnigmaHistoryList != null && !userEnigmaHistoryList.contains(enigma.getUid());
                         break;
@@ -824,9 +816,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
         });
         previousTab = tabTag;
     }
-
-
-
+    
 }
 
 

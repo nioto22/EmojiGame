@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/menu_filter_dificulty_asc"
-        android:title="@string/menu_filter_dificulty_asc"
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_filter_difficulty_asc"
+        android:title="@string/menu_filter_difficulty_asc"
         android:checkable="true"/>
-    <item android:id="@+id/menu_filter_dificulty_desc"
-        android:title="@string/menu_filter_dificulty_desc"
+    <item android:id="@+id/menu_filter_difficulty_desc"
+        android:title="@string/menu_filter_difficulty_desc"
         android:checkable="true" />
     <item android:id="@+id/menu_filter_date_asc"
         android:title="@string/menu_filter_date_asc"
