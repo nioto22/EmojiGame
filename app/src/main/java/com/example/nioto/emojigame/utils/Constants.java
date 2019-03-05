@@ -30,6 +30,11 @@ public class Constants {
     public static final String SORT_DATE_DESC = "Date Desc.";
     public static final String SORT_PLAYER_ASC = "Joueur A-Z";
     public static final String SORT_PlAYER_DESC = "Joueur Z-A";
+    public static final String FILTER_ENIGMA_ALL = "Toutes";
+    public static final String FILTER_ENIGMA_NEW_ONE = "Nouvelles";
+    public static final String FILTER_ENIGMA_ON_GOING = "En cours";
+    public static final String FILTER_ENIGMA_RESOLVED = "Résolues";
+    public static final String FILTER_ENIGMA_OWN = "Crées par vous";
     // BUTTON NAMES
     public static final String FIREBASE_CATEGORY_PERSONAGE_TEXT = "Personnage";
     public static final String FIREBASE_CATEGORY_CINEMA_TEXT = "Cinéma";
@@ -38,6 +43,9 @@ public class Constants {
     public static final String FIREBASE_CATEGORY_OBJECT_TEXT = "Objet";
     public static final String FIREBASE_CATEGORY_WORD_TEXT = "Nom Commun";
     public static final String FIREBASE_CATEGORY_OTHER_TEXT = "Autres";
+    // SWIPE LISTENER
+    public static final int SWIPE_DIRECTION_LEFT = 4;
+    public static final int SWIPE_DIRECTION_RIGHT = 8;
 
     // SOLVE ACTIVITY
     public static final String SOLVE_ACTIVITY_TITLE = "Résoudre l\'énigme";
@@ -55,6 +63,7 @@ public class Constants {
     public static final String SHARED_PREF_LIFE_LEFT_TIME = "SHARED_PREF_LIFE_LEFT_TIME";
     public static final String SHARED_PREF_LIFE_END_TIME = "SHARED_PREF_LIFE_END_TIME";
     public static final String SHARED_PREF_LIFE_IS_TIMER_RUNNING = "SHARED_PREF_LIFE_IS_TIMER_RUNNING";
+    public static final String SHARED_PREF_MUSIC_PREFERENCE = "SHARED_PREF_MUSIC_PREFERENCE";
 
     //TIMER
     public static final long TIMES_UP_UNTIL_NEW_LIFE = 10800000;

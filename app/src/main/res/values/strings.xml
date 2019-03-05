@@ -41,13 +41,15 @@
     <string name="solve_activity_toast_no_answer">Merci d\'entrer une réponse !!</string>
 
     <!-- TOAST MESSAGES -->
-    <string name="toast_new_enigma_creation">Nouvelle énigme enregistrée, bravo, vous gagnez 10 points !</string>
+    <string name="toast_new_enigma_creation">Nouvelle énigme enregistrée, bravo, vous gagnez 50 points !</string>
     <string name="toast_new_enigma_creation_short">Nouvelle énigme enregistrée!</string>
     <string name="toast_cancel_enigma_creation">Enigme non sauvegardée !</string>
     <string name="toast_missing_enigma_info">"Veuillez remplir tous les champs !!"</string>
+    <string name="toast_too_long_enigma_solution">"Désolé mais la solution de l'énigme ne doit pas dépasser 45 caractères"</string>
     <string name="toast_wrong_explanation">"Veuillez expliquer votre énigme en décrivant chaque partie séparé par un \"_\" svp !"</string>
     <string name="toast_no_more_life">"Vous n\'avez plus de vie !!"</string>
     <string name="toast_hint_one_mandatory">"Vous devez activer le coup de pouce \" Nombre de lettre\" avant de pouvoir obtenir une lettre coup de pouce"</string>
+    <string name="toast_not_allow_in_this_tab">"Pas applicable dans cet onglet"</string>
 
     <!-- SNACKBAR MESSAGES -->
     <string name="snackbar_message_no_enough_coins">Vous n\'avez pas assez d\'EmojiCoins pour acheter une vie !!</string>
@@ -156,6 +158,26 @@
     <string name="fragment_dialog_solve_activity_solved_tv_congratulation">Réponse correct, félicitations !!</string>
     <string name="fragment_dialog_emoji_coins_text_view_question_text">Besoin de plus d\'EmojiCoins ?</string>
     <string name="hint_two_no_more_hint_text">Vous avez atteint le nombre maximum de lettres pour ce coup de pouce \n (1/2 du nombre total)</string>
+
+    // FILTERS MENUS
+    <string name="enigma_menu_all">Toutes</string>
+    <string name="enigma_menu_new">Nouvelles</string>
+    <string name="enigma_menu_on_going">En cours</string>
+    <string name="enigma_menu_resolved">Résolues</string>
+    <string name="menu_filter_dificulty_asc">Dificulty Asc.</string>
+    <string name="menu_filter_dificulty_desc">Difficulté Desc.</string>
+    <string name="menu_filter_date_asc">Date Asc.</string>
+    <string name="menu_filter_date_desc">Date Desc.</string>
+    <string name="menu_filter_player_asc">Joueur Asc.</string>
+    <string name="menu_filter_player_desc">Joueur Desc.</string>
+    <string name="category_menu_all">Toutes</string>
+    <string name="category_menu_personage">Personnage</string>
+    <string name="category_menu_cinema">Cinéma</string>
+    <string name="category_menu_music">Musique</string>
+    <string name="category_menu_expressions">Expressions</string>
+    <string name="category_menu_object">Objet</string>
+    <string name="category_menu_word">Nom Commun</string>
+    <string name="category_menu_others">Autres</string>
 
 
 </resources>

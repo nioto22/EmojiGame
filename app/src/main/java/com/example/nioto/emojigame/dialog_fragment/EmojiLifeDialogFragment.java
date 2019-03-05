@@ -1,5 +1,6 @@
 package com.example.nioto.emojigame.dialog_fragment;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -50,8 +51,10 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
     private long mTimeLeftInMillis;
     private Boolean mTimerRunning;
     private long mEndTime;
+    private Boolean mNeedNewTimer = false;
     private CountDownTimer mCountDownTimer;
     private Boolean mRewardedVideoIsDone = false;
+    private Context context;
 
     // FOR DESIGN
     // GLOBAL
@@ -89,13 +92,14 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
 
 
     public void onCreate(Bundle savedInstanceState) {
-        mVideoAd = MobileAds.getRewardedVideoAdInstance(getActivity());   // Possible issue there
+        super.onCreate(savedInstanceState);
+        context = getActivity();
+
+        mVideoAd = MobileAds.getRewardedVideoAdInstance(getActivity());
         mVideoAd.setRewardedVideoAdListener(this);
         loadRewardedVideoAd();
-        super.onCreate(savedInstanceState);
 
-
-        userUid = getArguments().getString(Constants.LIFE_DIALOG_ARG_USER);
+        if (getArguments() != null) userUid = getArguments().getString(Constants.LIFE_DIALOG_ARG_USER);
         if (mRewardedVideoIsDone) {
             mRewardedVideoIsDone = false;
         } else {
@@ -110,7 +114,7 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
                     mTimeLeftInMillis = mEndTime - System.currentTimeMillis();
 
                     if (mTimeLeftInMillis < 0) {
-                        // mTimeLeftInMillis = 0;
+                        mTimeLeftInMillis = Constants.TIMES_UP_UNTIL_NEW_LIFE;
                         mTimerRunning = false;
                     } else {
                         startTimer();
@@ -118,8 +122,6 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
                 }
             }
         }
-
-
     }
 
 
@@ -173,7 +175,6 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
                         tvFullLife.setVisibility(View.GONE);
                         linearLayoutTimer.setVisibility(View.VISIBLE);
                         linearLayoutMoreLife.setVisibility(View.VISIBLE);
-
                     }
 
                     imageButtonBuyLife.setOnClickListener(new View.OnClickListener() {
@@ -196,8 +197,10 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
                                 if (smileys < 5 ) {
                                     mTimeLeftInMillis = Constants.TIMES_UP_UNTIL_NEW_LIFE;
                                     startTimer();
-                                } else mTimeLeftInMillis = 0;
-
+                                } else {
+                                    mTimeLeftInMillis = Constants.TIMES_UP_UNTIL_NEW_LIFE;
+                                    mTimerRunning = false;
+                                }
                             } else {
                                 showSnackBar(globalConstraintLayout, getString(R.string.snackbar_message_no_enough_coins));
                             }
@@ -230,7 +233,7 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
     }
 
     public void dismissDialog(){
-        SharedPreferences prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(Constants.SHARED_PREF_NAME, MODE_PRIVATE);
+        SharedPreferences prefs = context.getSharedPreferences(Constants.SHARED_PREF_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putLong(Constants.SHARED_PREF_LIFE_LEFT_TIME, mTimeLeftInMillis);
         editor.putBoolean(Constants.SHARED_PREF_LIFE_IS_TIMER_RUNNING, mTimerRunning);
@@ -263,6 +266,10 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
 
         mEndTime = System.currentTimeMillis() + mTimeLeftInMillis;
 
+        if (mCountDownTimer != null) {
+            mCountDownTimer.cancel();
+        }
+
         mCountDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -289,10 +296,7 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
                                 }
                             });
                             if (smiles < 5) {
-                                if (mCountDownTimer != null) {
-                                    mCountDownTimer.cancel();
-                                }
-                                startTimer();
+                                startTimerNewOne();
                             } else {
                                 mTimerRunning = false;
                                 if (mCountDownTimer != null) {
@@ -307,7 +311,14 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
         mTimerRunning = true;
     }
 
-
+    protected void startTimerNewOne(){
+        if (mCountDownTimer != null) {
+            mCountDownTimer.cancel();
+        }
+        mTimeLeftInMillis = Constants.TIMES_UP_UNTIL_NEW_LIFE;
+        mTimerRunning = false;
+        startTimer();
+    }
 
 
     // Show Snack Bar with a message
@@ -348,7 +359,6 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
                 int smiles = user.getSmileys();
                 smiles++;
 
-                Log.d(TAG, "onFinish: Timer finished, new life = " + smiles);
                 if (smiles < 6) {
                     UserHelper.updateUserSmileys(smiles, user.getUid()).addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -383,8 +393,30 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
 
     @Override
     public void onPause() {
-        mVideoAd.pause(getActivity());
+        mVideoAd.pause(context);
         super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        saveTimerInfoInPrefs();
+
+        if (mCountDownTimer != null) {
+            mCountDownTimer.cancel();
+        }
+    }
+
+    private void saveTimerInfoInPrefs() {
+        SharedPreferences prefs = context.getSharedPreferences(Constants.SHARED_PREF_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putLong(Constants.SHARED_PREF_LIFE_LEFT_TIME, mTimeLeftInMillis);
+        editor.putBoolean(Constants.SHARED_PREF_LIFE_IS_TIMER_RUNNING, mTimerRunning);
+        editor.putLong(Constants.SHARED_PREF_LIFE_END_TIME, mEndTime);
+
+        editor.apply();
+
     }
 
     @Override

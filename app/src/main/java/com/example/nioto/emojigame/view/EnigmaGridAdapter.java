@@ -26,7 +26,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 
-public class EnigmaGridAdapter extends RecyclerView.Adapter<EnigmaGridAdapter.UnsolvedEnigmaViewHolder> implements View.OnTouchListener {
+public class EnigmaGridAdapter extends RecyclerView.Adapter<EnigmaGridAdapter.UnsolvedEnigmaViewHolder>  {
 
 
     private static final int STATE_ENIGMA_OWN = 0 ;
@@ -34,10 +34,10 @@ public class EnigmaGridAdapter extends RecyclerView.Adapter<EnigmaGridAdapter.Un
     private static final int STATE_ENIGMA_UNSOLVED = 2 ;
     private static final int STATE_ENIGMA_ONGOING = 3 ;
     private OnItemClickListener mListener;
-    private OnSwipeTouchListener mSwipeTouchListener;
     private ArrayList <Enigma> mEnigmaArrayList;
     private Context context;
     private ArrayList<String> mEnigmaPlayedList = new ArrayList<>();
+
 
     public static class UnsolvedEnigmaViewHolder extends RecyclerView.ViewHolder{
         public TextView tvEnigmaPoints;
@@ -111,6 +111,7 @@ public class EnigmaGridAdapter extends RecyclerView.Adapter<EnigmaGridAdapter.Un
                 }
             }
         });
+
     }
 
     private void getEnigmasPlayedList(Context context) {
@@ -189,24 +190,12 @@ public class EnigmaGridAdapter extends RecyclerView.Adapter<EnigmaGridAdapter.Un
         return mEnigmaArrayList.size();
     }
 
-
-
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
 
-
-
     public void setOnItemClickListener(OnItemClickListener onItemClickListener){
         this.mListener = onItemClickListener;
-    }
-
-    @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
-        return mSwipeTouchListener.onTouch(view, motionEvent);
-    }
-    public void setOnTouchListener(OnSwipeTouchListener onSwipeTouchListener) {
-        this.mSwipeTouchListener = onSwipeTouchListener;
     }
 
 }

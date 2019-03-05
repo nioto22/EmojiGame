@@ -1,6 +1,8 @@
 package com.example.nioto.emojigame.base;
 
+import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -29,27 +31,26 @@ import com.example.nioto.emojigame.utils.Constants;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthSettings;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseUserMetadata;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.vanniktech.emoji.EmojiManager;
 import com.vanniktech.emoji.google.GoogleEmojiProvider;
 
 import java.util.Objects;
 import java.util.UUID;
+
 import butterknife.ButterKnife;
 
 public abstract class BaseActivity extends AppCompatActivity {
     private static final String TAG = "BaseActivity";
 
 
-
+    // DATA
+    protected Context context;
     public static final String SHARED_PREFERENCES_CURRENT_USER_TAG = "SHARED_PREFERENCES_CURRENT_USER_TAG";
     private static User[] currentUser = new User[1];
     // ToolbarViews
@@ -66,6 +67,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected Boolean mTimerRunning;
     protected long mEndTime;
     protected CountDownTimer mCountDownTimer;
+    protected int smiles;
 
     // --------------------
     // LIFE CYCLE
@@ -75,6 +77,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         EmojiManager.install(new GoogleEmojiProvider());
         super.onCreate(savedInstanceState);
+        this.setContext();
         this.setContentView(this.getFragmentLayout());
         if (!isNetworkConnected()) {
             Toast toast = Toast.makeText(this, getString(R.string.error_no_internet), Toast.LENGTH_SHORT);
@@ -83,10 +86,70 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         ButterKnife.bind(this); //Configure Butterknife
 
+
     }
 
+    public abstract void setContext();
     public abstract int getFragmentLayout();
     public abstract void getToolbarViews();
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        SharedPreferences mSharedPreferences = getSharedPreferences(Constants.SHARED_PREF_NAME, MODE_PRIVATE);
+
+
+        mTimeLeftInMillis = mSharedPreferences.getLong(Constants.SHARED_PREF_LIFE_LEFT_TIME, Constants.TIMES_UP_UNTIL_NEW_LIFE);
+        mTimerRunning = mSharedPreferences.getBoolean(Constants.SHARED_PREF_LIFE_IS_TIMER_RUNNING, false);
+
+        if (mTimerRunning) {
+            mEndTime = mSharedPreferences.getLong(Constants.SHARED_PREF_LIFE_END_TIME, 0);
+            mTimeLeftInMillis = mEndTime - System.currentTimeMillis();
+
+            if (mTimeLeftInMillis < 0) {
+                UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        User user = documentSnapshot.toObject(User.class);
+                        assert user != null;
+                        int smileys = user.getSmileys();
+                        while (mTimeLeftInMillis < 0 && mTimerRunning) {
+                            smileys++;
+                            if (smileys < 6) {
+                                UserHelper.updateUserSmileys(smileys, user.getUid()).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d(TAG, "onFailure: Fail to update user smileys");
+                                    }
+                                });
+                                mTimeLeftInMillis += Constants.TIMES_UP_UNTIL_NEW_LIFE;
+                            } else {
+                                mTimeLeftInMillis = Constants.TIMES_UP_UNTIL_NEW_LIFE;
+                                mTimerRunning = false;
+                            }
+                        }
+                        mEndTime = System.currentTimeMillis() + mTimeLeftInMillis;
+                        saveTimerInfoInPrefs();
+                        smiles = smileys;
+                    }
+                });
+            }
+        } else {
+            startTimer();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        saveTimerInfoInPrefs();
+        if (mCountDownTimer != null) {
+            mCountDownTimer.cancel();
+        }
+
+    }
+
+
 
     // --------------------
     // UI
@@ -150,9 +213,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     }
 
-
-
-
     // --------------------
     // UTILS
     // --------------------
@@ -161,9 +221,11 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected void startTimer(){
         Log.d(TAG, "startTimer: start");
-
         mEndTime = System.currentTimeMillis() + mTimeLeftInMillis;
 
+        if (mCountDownTimer != null) {
+            mCountDownTimer.cancel();
+        }
         mCountDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -173,122 +235,56 @@ public abstract class BaseActivity extends AppCompatActivity {
             @Override
             public void onFinish() {
                 mTimeLeftInMillis = Constants.TIMES_UP_UNTIL_NEW_LIFE;
-                UserHelper.getUser(getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        User user = documentSnapshot.toObject(User.class);
-                        int smiles = user.getSmileys();
-                        smiles++;
+                smiles++;
 
-                        Log.d(TAG, "onFinish: Timer finished, new life = " + smiles);
-                        if (smiles < 6) {
-                            UserHelper.updateUserSmileys(smiles, user.getUid()).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.d(TAG, "onFailure: Fail to updateUserSmileys : " + e);
-                                }
-                            });
-                            if (smiles < 5) {
-                                if (mCountDownTimer != null) {
-                                    mCountDownTimer.cancel();
-                                }
-                                startTimer();
-                            } else {
-                                mTimerRunning = false;
-                                if (mCountDownTimer != null) {
-                                    mCountDownTimer.cancel();
-                                }
-                            }
+                Log.d(TAG, "onFinish: Timer finished, new life = " + smiles);
+                if (smiles < 6) {
+                    UserHelper.updateUserSmileys(smiles, getCurrentUser().getUid()).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d(TAG, "onFailure: Fail to updateUserSmileys : " + e);
                         }
+                    });
+                    if (smiles < 5) {
+                        startTimer();
+                    } else {
+                        mTimerRunning = false;
                     }
-                });
+                }
             }
         }.start();
         mTimerRunning = true;
     }
 
     protected void startTimerNewOne(){
-        mTimeLeftInMillis = Constants.TIMES_UP_UNTIL_NEW_LIFE;
-        mTimerRunning = false;
         if (mCountDownTimer != null) {
             mCountDownTimer.cancel();
         }
+        mTimeLeftInMillis = Constants.TIMES_UP_UNTIL_NEW_LIFE;
+        mTimerRunning = false;
         startTimer();
+
+        saveTimerInfoInPrefs();
     }
 
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        SharedPreferences mSharedPreferences = getSharedPreferences(Constants.SHARED_PREF_NAME, MODE_PRIVATE);
-
-
-        mTimeLeftInMillis = mSharedPreferences.getLong(Constants.SHARED_PREF_LIFE_LEFT_TIME, Constants.TIMES_UP_UNTIL_NEW_LIFE);
-
-        Log.d(TAG, "onStart: timeLeft = " +  "Timer est à : " + mTimeLeftInMillis);
-        mTimerRunning = mSharedPreferences.getBoolean(Constants.SHARED_PREF_LIFE_IS_TIMER_RUNNING, false);
-
-        if (mTimerRunning) {
-            mEndTime = mSharedPreferences.getLong(Constants.SHARED_PREF_LIFE_END_TIME, 0);
-            mTimeLeftInMillis = mEndTime - System.currentTimeMillis();
-
-            if (mTimeLeftInMillis < 0) {
-                DocumentReference userListener = UserHelper.getUsersCollection().document(this.getCurrentUser().getUid());
-                userListener.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                    @Override
-                    public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w(TAG, "onEvent: Error", e);
-                            return;
-                        }
-                        if (documentSnapshot != null && documentSnapshot.exists()) {
-                            User currentUser = documentSnapshot.toObject(User.class);
-                            int smileys = currentUser.getSmileys();
-                            while (mTimeLeftInMillis < 0 && mTimerRunning){
-                                smileys ++;
-                                if (smileys < 6) {
-                                    UserHelper.updateUserSmileys(smileys, currentUser.getUid()).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.d(TAG, "onFailure: Fail to update user smileys");
-                                        }
-                                    });
-                                    mTimeLeftInMillis += Constants.TIMES_UP_UNTIL_NEW_LIFE;
-                                } else {
-                                    mTimeLeftInMillis = Constants.TIMES_UP_UNTIL_NEW_LIFE;
-                                    mTimerRunning = false;
-                                }
-
-                            }
-                        }
-                    }
-                });
-            } else {
-                startTimer();
-            }
-        }
+    private void pauseTimer() {
+        mCountDownTimer.cancel();
+        mTimerRunning = false;
     }
 
 
 
-    @Override
-    protected void onStop() {
-        super.onStop();
+
+    private void saveTimerInfoInPrefs(){
         SharedPreferences mSharedPreferences = getSharedPreferences(Constants.SHARED_PREF_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = mSharedPreferences.edit();
-        Log.d(TAG, "onStart: timeLeft = " +  "Timer est à : " + mTimeLeftInMillis + "EndTimer est à : " + mEndTime + "boolean running est à " + mTimerRunning);
+
         editor.putLong(Constants.SHARED_PREF_LIFE_LEFT_TIME, mTimeLeftInMillis);
         editor.putBoolean(Constants.SHARED_PREF_LIFE_IS_TIMER_RUNNING, mTimerRunning);
         editor.putLong(Constants.SHARED_PREF_LIFE_END_TIME, mEndTime);
 
         editor.apply();
-
-        if (mCountDownTimer != null) {
-            mCountDownTimer.cancel();
-        }
     }
-
-
 
 
     // Show Snack Bar with a message
@@ -303,17 +299,15 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Nullable
     protected Boolean isNewUser() {
-      final Boolean result;
-      /*  FirebaseUserMetadata metadata = Objects.requireNonNull(this.getCurrentUser()).getMetadata();
+        boolean result;
+        FirebaseUserMetadata metadata = Objects.requireNonNull(this.getCurrentUser()).getMetadata();
         if (metadata != null && metadata.getCreationTimestamp() == metadata.getLastSignInTimestamp()) {
             // It's a new user
             result = true;
         } else {
             result = false;
         }
-        */
-        result = UserHelper.getUsersCollection().document(this.getCurrentUser().getUid()).getId().equals(this.getCurrentUser().getUid());
-
+        // result = UserHelper.getUsersCollection().document(this.getCurrentUser().getUid()).getId().equals(this.getCurrentUser().getUid());
         return result;
     }
 

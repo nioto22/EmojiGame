@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
 
 android {
     compileSdkVersion 27
@@ -41,8 +43,8 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
     //FIREBASE
-    implementation "com.google.firebase:firebase-core:11.8.0"
-    // implementation "com.google.firebase:firebase-firestore:16.0.0"
+    //implementation "com.google.firebase:firebase-core:11.8.0"
+     implementation "com.google.firebase:firebase-firestore:16.0.7"
     //implementation 'com.google.firebase:firebase-messaging:11.8.0'
 
     // FirebaseUI
@@ -77,5 +79,9 @@ dependencies {
 
     // EMOJI COMPAT
     implementation 'com.vanniktech:emoji-google:0.5.1'
+
+    // CRASHLYTICS
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
+
 }
 apply plugin: 'com.google.gms.google-services'

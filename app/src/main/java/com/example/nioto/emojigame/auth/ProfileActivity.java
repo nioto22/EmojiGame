@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.crashlytics.android.Crashlytics;
 import com.example.nioto.emojigame.LoginActivity;
 import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.api.UserHelper;
@@ -77,7 +78,8 @@ public class ProfileActivity extends BaseActivity {
         this.setUpToolbar();
         this.updateUIWhenCreating();
     }
-
+    @Override
+    public void setContext() { this.context = this; }
     @Override
     public int getFragmentLayout() { return (R.layout.activity_profile);}
 

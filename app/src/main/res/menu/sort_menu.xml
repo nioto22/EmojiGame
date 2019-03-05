@@ -2,24 +2,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/menu_filter_dificulty_asc"
-        android:title="Dificulty Asc."
-        android:checkable="true"
-        />
+        android:title="@string/menu_filter_dificulty_asc"
+        android:checkable="true"/>
     <item android:id="@+id/menu_filter_dificulty_desc"
-        android:title="Difficulté Desc."
-        android:checkable="true"
-        />
+        android:title="@string/menu_filter_dificulty_desc"
+        android:checkable="true" />
     <item android:id="@+id/menu_filter_date_asc"
-        android:title="Date Asc."
+        android:title="@string/menu_filter_date_asc"
         android:checkable="true"/>
     <item android:id="@+id/menu_filter_date_desc"
-        android:title="Date Desc."
+        android:title="@string/menu_filter_date_desc"
         android:checkable="true"/>
     <item android:id="@+id/menu_filter_player_asc"
-        android:title="Joueur Asc."
+        android:title="@string/menu_filter_player_asc"
         android:checkable="true"/>
     <item android:id="@+id/menu_filter_player_desc"
-        android:title="Joueur Desc."
+        android:title="@string/menu_filter_player_desc"
         android:checkable="true"/>
 
 </menu>

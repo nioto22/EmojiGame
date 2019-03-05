@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/menu_enigma_all"
+        android:title="@string/enigma_menu_all"
+        android:checkable="true"/>
+    <item android:id="@+id/menu_enigma_new"
+        android:title="@string/enigma_menu_new"
+        android:checked="false"
+        android:checkable="true"
+        android:icon="@drawable/ic_state_new"/>
+    <item android:id="@+id/menu_enigma_on_going"
+        android:title="@string/enigma_menu_on_going"
+        android:checkable="true"
+        android:icon="@drawable/ic_state_ongoing"/>
+    <item android:id="@+id/menu_enigma_resolved"
+        android:title="@string/enigma_menu_resolved"
+        android:checkable="true"
+        android:icon="@drawable/ic_state_resolve"/>
+</menu>

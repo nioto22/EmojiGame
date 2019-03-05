@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/emojigame_icone"
@@ -23,6 +24,8 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_application_id"  />
+        <!-- Background Music -->
+
         <activity
             android:name="com.example.nioto.emojigame.MainActivity"
             android:theme="@style/AppTheme.NoTitle"

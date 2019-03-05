@@ -96,7 +96,8 @@ public class CreateEnigmaActivity extends BaseActivity  {
             }
         }
     }
-
+    @Override
+    public void setContext() { this.context = this; }
     @Override
     public int getFragmentLayout() {
         return R.layout.activity_create_enigma;
@@ -222,25 +223,25 @@ public class CreateEnigmaActivity extends BaseActivity  {
 
     @OnClick (R.id.create_activity_create_button)
     public void onClickCreateButton(){
-        if(checkEnigmaCompatibility()){
-            progressBar.setVisibility(View.VISIBLE);
-            final String uid = generateUniqueUid();
-            final String userUid = this.getCurrentUser().getUid();
-            EnigmaHelper.createEnigma(uid, userUid, mEnigma,mSolution, mCategory, mMessage);
-            UserHelper.getUser(userUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    User currentUser = documentSnapshot.toObject(User.class);
-                    List<String> userEnigmaUidList = currentUser.getUserEnigmaUidList();
-                    userEnigmaUidList.add(uid);
-                    currentUser.addPoints(50);
-                    UserHelper.updateUserEnigmaUidList(userEnigmaUidList,userUid);
-                    UserHelper.updateUserPoints(currentUser.getPoints(), userUid);
-                }
-            });
-            Intent intent = new Intent();
-            setResult(RESULT_OK, intent);
-            finish();
+        if(checkEnigmaCompatibility()) {
+                progressBar.setVisibility(View.VISIBLE);
+                final String uid = generateUniqueUid();
+                final String userUid = this.getCurrentUser().getUid();
+                EnigmaHelper.createEnigma(uid, userUid, mEnigma, mSolution, mCategory, mMessage);
+                UserHelper.getUser(userUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        User currentUser = documentSnapshot.toObject(User.class);
+                        List<String> userEnigmaUidList = currentUser.getUserEnigmaUidList();
+                        userEnigmaUidList.add(uid);
+                        currentUser.addPoints(50);
+                        UserHelper.updateUserEnigmaUidList(userEnigmaUidList, userUid);
+                        UserHelper.updateUserPoints(currentUser.getPoints(), userUid);
+                    }
+                });
+                Intent intent = new Intent();
+                setResult(RESULT_OK, intent);
+                finish();
         }
     }
 
@@ -252,10 +253,10 @@ public class CreateEnigmaActivity extends BaseActivity  {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                     Enigma enigma = documentSnapshot.toObject(Enigma.class);
-                    if (mEnigma != enigma.getEnigma()) EnigmaHelper.updateEnigma(mEnigma, enigmaUid);
-                    if (mSolution != enigma.getSolution()) EnigmaHelper.updateSolution(mSolution, enigmaUid);
-                    if (mCategory != enigma.getCategory()) EnigmaHelper.updateCategory(mCategory, enigmaUid);
-                    if (mMessage != enigma.getMessage()) EnigmaHelper.updateMessage(mMessage, enigmaUid);
+                    if (!mEnigma.equals(enigma.getEnigma())) EnigmaHelper.updateEnigma(mEnigma, enigmaUid);
+                    if (!mSolution.equals(enigma.getSolution())) EnigmaHelper.updateSolution(mSolution, enigmaUid);
+                    if (!mCategory.equals(enigma.getCategory())) EnigmaHelper.updateCategory(mCategory, enigmaUid);
+                    if (!mMessage.equals(enigma.getMessage())) EnigmaHelper.updateMessage(mMessage, enigmaUid);
                 }
             });
             Intent intent = new Intent();
@@ -301,7 +302,13 @@ public class CreateEnigmaActivity extends BaseActivity  {
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
             return false;
+        } else if (mSolution.length() > 45) {
+            Toast toast = Toast.makeText(this, getString(R.string.toast_too_long_enigma_solution), Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+            return false;
         } else return explanationIsCorrect(mMessage);
+        // TO DO CHECK IF ENIGMA SOLUTION ALREADY EXISTS
     }
 
     private Boolean explanationIsCorrect(String mMessage){

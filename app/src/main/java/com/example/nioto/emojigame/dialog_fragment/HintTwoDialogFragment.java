@@ -185,7 +185,6 @@ public class HintTwoDialogFragment extends DialogFragment implements RewardedVid
         EnigmaPlayedManager bdManager = new EnigmaPlayedManager(getActivity().getBaseContext());
         bdManager.open();
         bdManager.updateEnigmaHintTwoPositions(enigmaUid, newHintTwoPositions);
-        Log.d(TAG, "enigmaHintTwoUpdate: Updating OK : " + newHintTwoPositions);
         bdManager.close();
 
     }
@@ -196,7 +195,6 @@ public class HintTwoDialogFragment extends DialogFragment implements RewardedVid
             builder.append(i);
             builder.append('/');
         }
-        Log.d(TAG, "convertSetToString: result = " + builder.toString());
         return builder.toString();
     }
 
@@ -226,7 +224,6 @@ public class HintTwoDialogFragment extends DialogFragment implements RewardedVid
     }
     @Override
     public void onRewardedVideoAdClosed() {
-        Log.d(TAG, "onRewardedVideoAdClosed: ");
         loadRewardedVideoAd();
         if (videoIsRewarded) {
             showSnackBar(rootView, getString(R.string.snackbar_message_activate_hint_two));
@@ -238,9 +235,9 @@ public class HintTwoDialogFragment extends DialogFragment implements RewardedVid
 
     @Override
     public void onRewarded(RewardItem rewardItem) {
-        Log.d(TAG, "onRewarded: ");
         videoIsRewarded = true;
     }
+
     @Override
     public void onRewardedVideoAdLeftApplication() {
     }
@@ -261,5 +258,11 @@ public class HintTwoDialogFragment extends DialogFragment implements RewardedVid
     public void onResume() {
         mVideoAd.resume(getActivity());
         super.onResume();
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismissDialog();
+            }
+        });
     }
 }

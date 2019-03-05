@@ -1,9 +1,7 @@
 package com.example.nioto.emojigame;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -11,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,7 +27,6 @@ import com.example.nioto.emojigame.dialog_fragment.EmojiLifeDialogFragment;
 import com.example.nioto.emojigame.models.User;
 import com.example.nioto.emojigame.utils.Constants;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -59,19 +57,18 @@ public class MainActivity extends BaseActivity {
     public static final int INTENT_CREATE_ACTIVITY_KEY = 10;
     public static final int INTENT_PLAY_ACTIVITY_KEY = 11;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (this.getCurrentUser() == null) startLoginActivity();
         MobileAds.initialize(this, Constants.ADD_MOBS_APPLICATION_ID);
         this.updateUIWhenCreating();
-
-
     }
 
-
-
+    @Override
+    public void setContext() {
+        this.context = this;
+    }
 
     @Override
     public int getFragmentLayout() {
@@ -207,6 +204,7 @@ public class MainActivity extends BaseActivity {
         newFragment.show(ft, Constants.COINS_DIALOG_FRAGMENT_TAG);
     }
 
+
     // --------------------
     //      NAVIGATION
     // --------------------
@@ -217,8 +215,6 @@ public class MainActivity extends BaseActivity {
     // ------------------
     //     UTILS
     // ------------------
-
-
 
 
 }

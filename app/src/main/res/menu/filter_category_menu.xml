@@ -1,32 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/category_all"
-        android:title="Toutes"
+        android:title="@string/category_menu_all"
         android:checkable="true"/>
     <item android:id="@+id/category_personnage"
-        android:title="Personnage"
+        android:title="@string/category_menu_personage"
         android:checkable="true"/>
     <item android:id="@+id/category_cinéma"
-        android:title="Cinéma"
+        android:title="@string/category_menu_cinema"
         android:checkable="true"/>
     <item android:id="@+id/category_musique"
-        android:title="Musique"
+        android:title="@string/category_menu_music"
         android:checkable="true"/>
     <item android:id="@+id/category_expressions"
-        android:title="Expressions"
+        android:title="@string/category_menu_expressions"
         android:checkable="true"/>
     <item android:id="@+id/category_objet"
-        android:title="Objet"
+        android:title="@string/category_menu_object"
         android:checkable="true"/>
     <item android:id="@+id/category_mot"
-        android:title="Nom Commun"
+        android:title="@string/category_menu_word"
         android:checkable="true"/>
     <item android:id="@+id/category_autres"
-        android:title="Autres"
+        android:title="@string/category_menu_others"
         android:checkable="true"/>
-
-
-
-
-
 </menu>

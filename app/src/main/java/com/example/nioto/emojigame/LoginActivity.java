@@ -9,11 +9,8 @@ import com.example.nioto.emojigame.base.BaseActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.Arrays;
-import java.util.List;
 
 import butterknife.BindView;
 
@@ -25,7 +22,8 @@ public class LoginActivity extends BaseActivity {
     //FOR DESIGN
     // 1 - Get Coordinator Layout
     @BindView(R.id.login_activity_linear_layout) LinearLayout linearLayout;
-
+    @Override
+    public void setContext() { this.context = this; }
     @Override
     public int getFragmentLayout() { return R.layout.activity_login; }
 
@@ -101,7 +99,7 @@ public class LoginActivity extends BaseActivity {
     // 1 - Http request that create user in firestore
     private void createUserInFirestore(){
 
-        if (this.getCurrentUser() != null ){ // && isNewUser
+        if (isCurrentUserLogged() && isNewUser()){ // && isNewUser
             String urlPicture = (this.getCurrentUser().getPhotoUrl() != null) ? this.getCurrentUser().getPhotoUrl().toString() : null;
             String username = this.getCurrentUser().getDisplayName();
             String uid = this.getCurrentUser().getUid();

@@ -132,7 +132,8 @@ public class SolveEnigmaActivity extends BaseActivity{
         }
 
     }
-
+    @Override
+    public void setContext() { this.context = this; }
     @Override
     public int getFragmentLayout() {
         return R.layout.activity_solve_enigma;
@@ -196,16 +197,6 @@ public class SolveEnigmaActivity extends BaseActivity{
         // is Hint One Activate
         if (enigmaHasHintOne){
             displayHintOneEditText();
-            for (Character ch : mSolutionCharListOnlyLetter ) {
-                Log.d(TAG, "getEnigmaUI: char solution in array " + ch);
-            }
-            for (Character cha : charactArray ) {
-                Log.d(TAG, "getEnigmaUI: charact Array " + cha);
-            }
-            for (Integer i : enigmaHintPositionsList){
-                Log.d(TAG, "getEnigmaUI: positions hint two " + i);
-            }
-
         }
     }
 
@@ -228,6 +219,8 @@ public class SolveEnigmaActivity extends BaseActivity{
 
             private void editTextGetFocusable(final int position) {
                 if (position >= mEnabledEditTextList.size()) return;
+                Log.d(TAG, "editTextGetFocusable: position " + position);
+                Log.d(TAG, "editTextGetFocusable: size " + mEnabledEditTextList.size());
                 mEnabledEditTextList.get(position).requestFocus();
                 mEnabledEditTextList.get(position).setFilters(new InputFilter[]{new InputFilter.AllCaps()});
                 mEnabledEditTextList.get(position).addTextChangedListener(new TextWatcher() {
@@ -248,6 +241,7 @@ public class SolveEnigmaActivity extends BaseActivity{
 
             private void displayEditText(ArrayList<Character> charactArray) {
                 Collections.sort(enigmaHintPositionsList);
+                mEnabledEditTextList = new ArrayList<>();
                 enigmaResponse.setVisibility(View.GONE);
                 linearLayoutHintOneFirst.setVisibility(View.VISIBLE);
                 if (charactArray.size() > 32)linearLayoutHintOneThird.setVisibility(View.VISIBLE);
@@ -264,6 +258,7 @@ public class SolveEnigmaActivity extends BaseActivity{
                     }else if (charactArray.get(i)== 'G') {
                         mEditTextArrayList.get(i).setVisibility(View.GONE);
                     } else if (charactArray.get(i)  == 'L') {
+                        mEnabledEditTextList.add(mEditTextArrayList.get(i));
                         mEditTextArrayList.get(i).setVisibility(View.VISIBLE);
                         mEditTextArrayList.get(i).setText(String.valueOf(mSolutionCharListOnlyLetter.get((enigmaHintPositionsList.get(loopCharListOnlyLetter))-1)));
                         mEditTextArrayList.get(i).setEnabled(false);
@@ -428,6 +423,7 @@ public class SolveEnigmaActivity extends BaseActivity{
 
     private void createEditTextArrayForHintOne() {
         mEditTextArrayList.add(editText_1_1);mEditTextArrayList.add(editText_1_2);mEditTextArrayList.add(editText_1_3);mEditTextArrayList.add(editText_1_4);mEditTextArrayList.add(editText_1_5);mEditTextArrayList.add(editText_1_6);mEditTextArrayList.add(editText_1_7);mEditTextArrayList.add(editText_1_8);mEditTextArrayList.add(editText_1_9);mEditTextArrayList.add(editText_1_10);mEditTextArrayList.add(editText_1_11);mEditTextArrayList.add(editText_1_12);mEditTextArrayList.add(editText_1_13);mEditTextArrayList.add(editText_1_14);mEditTextArrayList.add(editText_1_15);mEditTextArrayList.add(editText_1_16);mEditTextArrayList.add(editText_2_1);mEditTextArrayList.add(editText_2_2);mEditTextArrayList.add(editText_2_3);mEditTextArrayList.add(editText_2_4);mEditTextArrayList.add(editText_2_5);mEditTextArrayList.add(editText_2_6);mEditTextArrayList.add(editText_2_7);mEditTextArrayList.add(editText_2_8);mEditTextArrayList.add(editText_2_9);mEditTextArrayList.add(editText_2_10);mEditTextArrayList.add(editText_2_11);mEditTextArrayList.add(editText_2_12);mEditTextArrayList.add(editText_2_13);mEditTextArrayList.add(editText_2_14);mEditTextArrayList.add(editText_2_15);mEditTextArrayList.add(editText_2_16);mEditTextArrayList.add(editText_3_1);mEditTextArrayList.add(editText_3_2);mEditTextArrayList.add(editText_3_3);mEditTextArrayList.add(editText_3_4);mEditTextArrayList.add(editText_3_5);mEditTextArrayList.add(editText_3_6);mEditTextArrayList.add(editText_3_7);mEditTextArrayList.add(editText_3_8);mEditTextArrayList.add(editText_3_9);mEditTextArrayList.add(editText_3_10);mEditTextArrayList.add(editText_3_11);mEditTextArrayList.add(editText_3_12);mEditTextArrayList.add(editText_3_13);mEditTextArrayList.add(editText_3_14);mEditTextArrayList.add(editText_3_15);mEditTextArrayList.add(editText_3_16);
+
     }
 
 
