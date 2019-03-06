@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:layout_centerInParent="true">
 
-
     <ImageView
         android:id="@+id/fragment_dialog_solve_activity_solved_title"
         android:layout_width="wrap_content"

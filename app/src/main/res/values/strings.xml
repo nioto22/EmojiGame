@@ -4,13 +4,30 @@
 
 
     <!-- APPLICATION  -->
-    <!--  ADDMOBS -->
+
+    <!-- FACEBOOK PURPOSE -->
+    <string name="facebook_application_id" translatable="false">205811963639659</string>
+    <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb205811963639659</string>
+
     <!-- MAIN ACTIVITY -->
     <string name="error_not_connected">Vous devez vous connecter !</string>
     <string name="error_authentication_canceled">Authentification annulée&#8230;</string>
     <string name="error_no_internet">Aucune connexion internet !</string>
     <string name="error_unknown_error">Une erreur inconnue s\'est produite&#8230;</string>
     <string name="connection_succeed">Authentification réussie !</string>
+    <string name="main_activity_points_text">0</string>
+    <string name="main_activity_username_text">Username</string>
+    <string name="main_activity_play_button_text">JOUER</string>
+    <string name="main_activity_create_button_text">CREER</string>
+
+    <!-- PROFILE ACTIVITY -->
+    <string name="profile_activity_username_hint">Username</string>
+    <string name="profile_activity_number_enigma_created_text">Enigme créées</string>
+    <string name="profile_activity_number_enigma_solved_text">Enigme résolues</string>
+    <string name="profile_activity_user_picture_image_content_description">user picture</string>
+    <string name="popup_title_permission_files_access">Cette application a besoin de permission pour fonctionner.</string>
+    <string name="toast_title_no_image_chosen">Aucune image choisie&#8230;</string>
+
 
     <!-- LOGIN ACTIVITY -->
     <string name="toolbar_title_profile_activity">Votre Profil</string>
@@ -30,6 +47,43 @@
     <string name="solve_activity_enigma_solved_fourth_place">Vous avez résolu l\'énigme, vous remportez </string>
     <string name="solve_activity_toast_wrong_answer">Désolé mais cette réponse n\'est pas exacte !! </string>
     <string name="solve_activity_toast_no_answer">Merci d\'entrer une réponse !!</string>
+    <string name="enigma_already_solved">Vous avez déjà répondu à cette énigme</string>
+    <string name="solve_activity_category_title">Catégorie</string>
+    <string name="solve_activity_create_by_title">Créé par :</string>
+    <string name="solve_activity_number_enigma_solved_title">Enigme rapporte :</string>
+    <string name="solve_activity_your_answer_title_text">Votre réponse :</string>
+    <string name="solve_activity_answer_hint">Entrer votre réponse ici</string>
+    <string name="solve_activity_already_solved_answer_title_text">Réponse</string>
+    <string name="solve_activity_send_button">ENVOYER</string>
+    <string name="solve_activity_edit_button_text">EDITER</string>
+    <string name="solve_activity_podium_no_solve_text">Persone n\'a résolu cet énigme pour l\'instant !   A vous de jouer …</string>
+    <string name="solve_activity_podium_number_enigma_solved">Cet énigme a été résolue :</string>
+    <string name="solve_activity_podium_first_place_text">Première place :</string>
+    <string name="solve_activity_podium_second_place_text">Seconde place :</string>
+    <string name="solve_activity_nothing_text">_</string>
+    <string name="solve_activity_podium_third_place_text">Troisième place :</string>
+
+    <!-- PLAY ACTIVITY -->
+    <string name="no_enigma_filter">Il n\'y a pour le moment aucune énigme correspondante</string>
+    <string name="no_enigma_already_played">Retrouvez ici les énigmes déjà jouées. Il n\'y a pour le moment aucune énigme</string>
+    <string name="no_enigma_created">Retrouvez ici les énigmes que vous avez créées. Il n\'y a pour le moment aucune énigme</string>
+
+    <!-- CREATE ACTIVITY -->
+    <string name="button_update_photo">Mettre à jour la photo</string>
+    <string name="toolbar_title_create_enigma_activity">Créer une Enigme</string>
+    <string name="create_button">CREER</string>
+    <string name="tv_category_choosed">Choisissez une catégorie</string>
+    <string name="login_text_game">Bienvenue \nVenez défier vos amis dans ce jeu de rébus d\'un nouveau genre</string>
+    <string name="login_text_connexion">Pour commencer à vous amuser, connectez vous : </string>
+    <string name="create_activity_update_button">MODIFIER</string>
+    <string name="enigma_hint">CREER VOTRE ENIGME ICI \n sous forme d\'EMOJIS</string>
+    <string name="create_activity_solution_title_text">Solution :</string>
+    <string name="create_activity_solution_hint">Entrez ici la solution</string>
+    <string name="create_activity_category_title_text">Category :</string>
+    <string name="create_activity_other_title_text">Autre :</string>
+    <string name="create_activity_other_detail_hint">Précisez votre catégorie</string>
+    <string name="create_activity_explanation_title_text">Explication :</string>
+    <string name="create_activity_explanation_hint">Expliquez chaque partie et séparez les avec un \"\_\".</string>
 
     <!-- TOAST MESSAGES -->
     <string name="toast_new_enigma_creation_short">Nouvelle énigme enregistrée!</string>
@@ -48,21 +102,6 @@
     <string name="snackbar_message_win_new_coins">Félicitation, vous remportez 50 EmojiCoins !!</string>
     <string name="snackbar_message_activate_hint_one">Félicitation, vous avez activé le coup de pouce \"Nombre de lettre\" !!</string>
     <string name="snackbar_message_activate_hint_two">Félicitation, vous avez activé le coup de pouce \"Obtenir une lettre\" !!</string>
-    <!-- MENTOR_CHAT ACTIVITY -->
-    <string name="popup_title_permission_files_access">Cette application a besoin de permission pour fonctionner.</string>
-    <string name="toast_title_no_image_chosen">Aucune image choisie&#8230;</string>
-
-    <!-- FACEBOOK PURPOSE -->
-    <string name="facebook_application_id" translatable="false">205811963639659</string>
-    <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb205811963639659</string>
-
-    <!-- CREATE ACTIVITY -->
-    <string name="button_update_photo">Mettre à jour la photo</string>
-    <string name="toolbar_title_create_enigma_activity">Créer une Enigme</string>
-    <string name="create_button">CREER</string>
-    <string name="tv_category_choosed">Choisissez une catégorie</string>
-    <string name="login_text_game">Bienvenue \nVenez défier vos amis dans ce jeu de rébus d\'un nouveau genre</string>
-    <string name="login_text_connexion">Pour commencer à vous amuser, connectez vous : </string>
 
     <!--  FRAGMENT DIALOG -->
     <string name="fragment_dialog_emoji_coins_create_enigma_text">Créez une énigme</string>
@@ -75,50 +114,18 @@
     <string name="fragment_dialog_solve_time_word">fois</string>
     <string name="fragment_dialog_emoji_life_bar">_</string>
     <string name="fragment_dialog_enigma_created_text">Nouvelle énigme enregistrée, bravo, vous gagnez 50 points !</string>
+    <string name="fragment_dialog_emoji_coins_get_coins_text">Pour obtenir des EmojiCoins :</string>
+    <string name="dialog_hint_one_second_title">Coup de pouce 1 :</string>
+    <string name="dialog_hint_two_second_title">Coup de pouce 2 :</string>
+    <string name="dialog_hint_one_text">Regardez une vidéo pour obtenir le nombre de lettres de l\'énigme</string>
+    <string name="dialog_hint_two_text">Regardez une vidéo pour faire apparaître une lettre de l\'énigme</string>
+    <string name="fragment_dialog_solve_activity_solved_tv_congratulation">Réponse correct, félicitations !!</string>
+    <string name="fragment_dialog_emoji_coins_text_view_question_text">Besoin de plus d\'EmojiCoins ?</string>
+    <string name="hint_two_no_more_hint_text"><![CDATA[Vous avez atteint le nombre maximum de lettres pour ce coup de pouce \n (&#189; du nombre total)]]></string>
 
-    <!-- OTHER STRING RESOURCES -->
-    <string name="enigma_already_solved">Vous avez déjà répondu à cette énigme</string>
-    <string name="no_enigma_filter">Il n\'y a pour le moment aucune énigme correspondante</string>
-    <string name="no_enigma_already_played">Retrouvez ici les énigmes déjà jouées. Il n\'y a pour le moment aucune énigme</string>
-    <string name="no_enigma_created">Retrouvez ici les énigmes que vous avez créées. Il n\'y a pour le moment aucune énigme</string>
-    <string name="create_activity_update_button">MODIFIER</string>
-    <string name="enigma_hint">CREER VOTRE ENIGME ICI \n sous forme d\'EMOJIS</string>
-    <string name="create_activity_solution_title_text">Solution :</string>
-    <string name="create_activity_solution_hint">Entrez ici la solution</string>
-    <string name="create_activity_category_title_text">Category :</string>
-    <string name="create_activity_other_title_text">Autre :</string>
-    <string name="create_activity_other_detail_hint">Précisez votre catégorie</string>
-    <string name="create_activity_explanation_title_text">Explication :</string>
-    <string name="create_activity_explanation_hint">Expliquez chaque partie et séparez les avec un \"\_\".</string>
-    <string name="main_activity_points_text">0</string>
-    <string name="main_activity_username_text">Username</string>
-    <string name="main_activity_play_button_text">JOUER</string>
-    <string name="main_activity_create_button_text">CREER</string>
-    <string name="profile_activity_username_hint">Username</string>
-    <string name="profile_activity_number_enigma_created_text">Enigme créées</string>
-    <string name="profile_activity_number_enigma_solved_text">Enigme résolues</string>
-    <string name="profile_activity_user_picture_image_content_description">user picture</string>
-    <string name="solve_activity_category_title">Catégorie</string>
+    <!-- OTHER LAYOUT -->
     <string name="download_text">Chargement …</string>
-    <string name="solve_activity_create_by_title">Créé par :</string>
-    <string name="solve_activity_number_enigma_solved_title">Enigme rapporte :</string>
-    <string name="resolve_button_image_content_description">resolve button</string>
-    <string name="solve_activity_your_answer_title_text">Votre réponse :</string>
-    <string name="solve_activity_answer_hint">Entrer votre réponse ici</string>
-    <string name="solve_activity_already_solved_answer_title_text">Réponse</string>
-    <string name="solve_activity_send_button">ENVOYER</string>
-    <string name="solve_activity_edit_button_text">EDITER</string>
-    <string name="solve_activity_podium_no_solve_text">Persone n\'a résolu cet énigme pour l\'instant !   A vous de jouer …</string>
-    <string name="solve_activity_podium_number_enigma_solved">Cet énigme a été résolue :</string>
     <string name="download_lower_case_text">chargement …</string>
-    <string name="solve_activity_podium_first_place_text">Première place :</string>
-    <string name="solve_activity_podium_second_place_text">Seconde place :</string>
-    <string name="solve_activity_nothing_text">_</string>
-    <string name="solve_activity_podium_third_place_text">Troisième place :</string>
-    <string name="by_category_button_filter_by_text">Filtrer par</string>
-    <string name="by_category_button_category_text">CATEGORIE</string>
-    <string name="by_enigma_button_filter_title_text">Enigmes</string>
-    <string name="by_enigma_button_detail_text">TOUTES</string>
     <string name="enigma_item_enigma_text">ENIGMA</string>
     <string name="enigma_item_category_title">Catégorie :</string>
     <string name="enigma_item_enigma_solved_title_text">Enigme rapporte :</string>
@@ -134,21 +141,9 @@
     <string name="popup_help_explanation_title">Explication :</string>
     <string name="popup_help_explanation_text">Porte_Feuille</string>
     <string name="popup_help_explanation_help">Entrez ici la signification de chaque Emoji séparée par un _</string>
-    <string name="image_example_content_description">Image Example</string>
-    <string name="user_enigma_image_content_description">user enigma</string>
-    <string name="history_enigma_image_content_description">history button</string>
     <string name="ok">OK</string>
-    <string name="sort_filter_button_text_title">Trier par</string>
-    <string name="dialog_hint_one_second_title">Coup de pouce 1 :</string>
-    <string name="dialog_hint_two_second_title">Coup de pouce 2 :</string>
-    <string name="dialog_hint_one_text">Regardez une vidéo pour obtenir le nombre de lettres de l\'énigme</string>
-    <string name="dialog_hint_two_text">Regardez une vidéo pour faire apparaître une lettre de l\'énigme</string>
-    <string name="fragment_dialog_solve_activity_solved_tv_congratulation">Réponse correct, félicitations !!</string>
-    <string name="fragment_dialog_emoji_coins_text_view_question_text">Besoin de plus d\'EmojiCoins ?</string>
-    <string name="hint_two_no_more_hint_text"><![CDATA[Vous avez atteint le nombre maximum de lettres pour ce coup de pouce \n (&#189; du nombre total)]]></string>
     <string name="enigma_grid_item_points_example">25</string>
     <string name="enigma_grid_item_user_title">Créé par :</string>
-    <string name="fragment_dialog_emoji_coins_get_coins_text">Pour obtenir des EmojiCoins :</string>
 
     <!--  FILTERS MENUS  -->
     <string name="enigma_menu_all">Toutes</string>
@@ -169,9 +164,13 @@
     <string name="category_menu_object">Objet</string>
     <string name="category_menu_word">Nom Commun</string>
     <string name="category_menu_others">Autres</string>
+    <string name="by_category_button_filter_by_text">Filtrer par</string>
+    <string name="by_category_button_category_text">CATEGORIE</string>
+    <string name="by_enigma_button_filter_title_text">Enigmes</string>
+    <string name="by_enigma_button_detail_text">TOUTES</string>
+    <string name="sort_filter_button_text_title">Trier par</string>
 
-
-    // IMAGE CONTENT DESCRIPTION
+    <!-- IMAGE CONTENT DESCRIPTION  -->
     <string name="emoji_coin_content_description">emoji_coin</string>
     <string name="back_button_content_description">back_button</string>
     <string name="smiley_image_button_content_description">smiley_image_button</string>
@@ -190,6 +189,10 @@
     <string name="stroke_image_content_description">stroke_image</string>
     <string name="category_image_content_description">category_image</string>
     <string name="smiles_title_image_content_description">smiles_title_image</string>
+    <string name="resolve_button_image_content_description">resolve button</string>
+    <string name="image_example_content_description">Image Example</string>
+    <string name="user_enigma_image_content_description">user enigma</string>
+    <string name="history_enigma_image_content_description">history button</string>
 
 
 </resources>

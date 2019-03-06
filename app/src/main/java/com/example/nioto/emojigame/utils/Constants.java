@@ -5,6 +5,7 @@ public class Constants {
     public static final String APPLICATION_PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=pro.cloudteam.emojinationtest";  // TEST URI
     public static final String ADD_MOBS_APPLICATION_ID = "ca-app-pub-7652009776235513~1976717846";
     public static final String ADD_MOBS_VIDEO_TEST_ID = "ca-app-pub-3940256099942544/5224354917"; // FOR TEST ONLY
+    public static final String ADD_MOBS_INTERSTITIAL_TEST_ID = "ca-app-pub-3940256099942544/1033173712"; // FOR TEST ONLY
     public static final String ADD_MOBS_VIDEO_ID_SMILEYS = "ca-app-pub-3940256099942544/5224354917"; // FOR REAL TO CHANGE WITH : ca-app-pub-7652009776235513/3263370046
     public static final String ADD_MOBS_VIDEO_ID_COINS = "ca-app-pub-3940256099942544/5224354917"; // FOR REAL  TO CHANGE WITH : ca-app-pub-7652009776235513/7732908143
     public static final String ADD_MOBS_VIDEO_ID_HINT_ONE = "ca-app-pub-3940256099942544/5224354917"; // FOR REAL TO CHANGE WITH : ca-app-pub-7652009776235513/7820661768
@@ -44,9 +45,6 @@ public class Constants {
     public static final String FIREBASE_CATEGORY_OBJECT_TEXT = "Objet";
     public static final String FIREBASE_CATEGORY_WORD_TEXT = "Nom Commun";
     public static final String FIREBASE_CATEGORY_OTHER_TEXT = "Autres";
-    // SWIPE LISTENER
-    public static final int SWIPE_DIRECTION_LEFT = 4;
-    public static final int SWIPE_DIRECTION_RIGHT = 8;
 
     // SOLVE ACTIVITY
     public static final String SOLVE_ACTIVITY_TITLE = "Résoudre l\'énigme";
@@ -66,11 +64,9 @@ public class Constants {
     public static final String SHARED_PREF_LIFE_LEFT_TIME = "SHARED_PREF_LIFE_LEFT_TIME";
     public static final String SHARED_PREF_LIFE_END_TIME = "SHARED_PREF_LIFE_END_TIME";
     public static final String SHARED_PREF_LIFE_IS_TIMER_RUNNING = "SHARED_PREF_LIFE_IS_TIMER_RUNNING";
-    public static final String SHARED_PREF_MUSIC_PREFERENCE = "SHARED_PREF_MUSIC_PREFERENCE";
 
     //TIMER
     public static final long TIMES_UP_UNTIL_NEW_LIFE = 10800000;
-    public static final long TIMES_UP_FOR_FIVE_NEW_LIFE = 54000000;
 
     // DIALOG FRAGMENT
     public static final String PODIUM_DIALOG_FRAGMENT_TAG = "podiumDialog";

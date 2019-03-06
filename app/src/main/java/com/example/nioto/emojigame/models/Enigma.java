@@ -25,10 +25,6 @@ public class Enigma {
 
     public Enigma() {}
 
-    public Enigma(String uid, String userUid, String enigma, String solution, String category) {
-        this (uid, userUid, enigma, solution, category, null);
-    }
-
     public Enigma(String uid, String userUid, String enigma, String solution, String category, String message) {
         this.uid = uid;
         this.userUid = userUid;
