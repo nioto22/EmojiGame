@@ -32,6 +32,10 @@ import com.example.nioto.emojigame.models.User;
 import com.example.nioto.emojigame.utils.Constants;
 import com.example.nioto.emojigame.utils.CustomExpandableListAdapter;
 import com.example.nioto.emojigame.utils.ExpandableListDataPump;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -73,11 +77,17 @@ public class CreateEnigmaActivity extends BaseActivity  {
     private String mCategory;
     private String mMessage;
     private String enigmaUid;
+    public static final int RESULT_OK_UPDATED = 118;
+
+    // FOR INTERSTITIAL ADS
+    private InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        // Initialise Interstitial ADS
+        MobileAds.initialize(this, Constants.ADD_MOBS_APPLICATION_ID);
+        loadInterstitialAd();
         // initiateEmojiPopup();
         setUpToolbar();
         // Hide the keyboard.
@@ -95,6 +105,12 @@ public class CreateEnigmaActivity extends BaseActivity  {
             }
         }
     }
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        loadInterstitialAd();
+    }
+
     @Override
     public void setContext() { this.context = this; }
     @Override
@@ -231,9 +247,7 @@ public class CreateEnigmaActivity extends BaseActivity  {
                     UserHelper.updateUserPoints(currentUser.getPoints(), userUid);
                 }
             });
-            Intent intent = new Intent();
-            setResult(RESULT_OK, intent);
-            finish();
+            showInterstitialAd(mEnigma, mCategory);
         }
     }
 
@@ -253,7 +267,7 @@ public class CreateEnigmaActivity extends BaseActivity  {
                 }
             });
             Intent intent = new Intent();
-            setResult(RESULT_OK, intent);
+            setResult(RESULT_OK_UPDATED, intent);
             finish();
         }
     }
@@ -322,6 +336,50 @@ public class CreateEnigmaActivity extends BaseActivity  {
         assert inputMethodManager != null;
         inputMethodManager.hideSoftInputFromWindow(
                 Objects.requireNonNull(activity.getCurrentFocus()).getWindowToken(), 0);
+    }
+
+    private void loadInterstitialAd(){
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(Constants.ADD_MOBS_INTERSTITIAL_ENIGMA_CREATED);
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+    }
+
+    private void showInterstitialAd(final String enigma, final String category) {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        }
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                // Code to be executed when an ad request fails.
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when the ad is displayed.
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when the interstitial ad is closed.
+                Intent intent = new Intent();
+                intent.putExtra(Constants.EXTRA_BUNDLE_ENIGMA_CREATED_ENIGMA, mEnigma);
+                intent.putExtra(Constants.EXTRA_BUNDLE_ENIGMA_CREATED_CATEGORY, mCategory);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        });
     }
 
 }

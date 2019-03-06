@@ -32,9 +32,9 @@
     <string name="solve_activity_toast_no_answer">Merci d\'entrer une réponse !!</string>
 
     <!-- TOAST MESSAGES -->
-    <string name="toast_new_enigma_creation">Nouvelle énigme enregistrée, bravo, vous gagnez 50 points !</string>
     <string name="toast_new_enigma_creation_short">Nouvelle énigme enregistrée!</string>
     <string name="toast_cancel_enigma_creation">Enigme non sauvegardée !</string>
+    <string name="toast_cancel_enigma_updated">Enigme mise à jour !</string>
     <string name="toast_missing_enigma_info">"Veuillez remplir tous les champs !!"</string>
     <string name="toast_too_long_enigma_solution">"Désolé mais la solution de l'énigme ne doit pas dépasser 45 caractères"</string>
     <string name="toast_wrong_explanation">"Veuillez expliquer votre énigme en décrivant chaque partie séparé par un \"_\" svp !"</string>
@@ -74,6 +74,7 @@
     <string name="fragment_dialog_emoji_life_max_life_reached">Vous avez atteint le nombre de vie maximum !!</string>
     <string name="fragment_dialog_solve_time_word">fois</string>
     <string name="fragment_dialog_emoji_life_bar">_</string>
+    <string name="fragment_dialog_enigma_created_text">Nouvelle énigme enregistrée, bravo, vous gagnez 50 points !</string>
 
     <!-- OTHER STRING RESOURCES -->
     <string name="enigma_already_solved">Vous avez déjà répondu à cette énigme</string>

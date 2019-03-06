@@ -40,6 +40,8 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.example.nioto.emojigame.activities.CreateEnigmaActivity.RESULT_OK_UPDATED;
+
 public class SolveEnigmaActivity extends BaseActivity{
 
     // FOR DESIGN
@@ -105,8 +107,8 @@ public class SolveEnigmaActivity extends BaseActivity{
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.INTENT_UPDATE_ACTIVITY_KEY){
-            if (resultCode == RESULT_OK){
-                Toast toastOk = Toast.makeText(this, getString(R.string.toast_new_enigma_creation_short), Toast.LENGTH_SHORT);
+            if (resultCode == RESULT_OK_UPDATED){
+                Toast toastOk = Toast.makeText(this, getString(R.string.toast_cancel_enigma_updated), Toast.LENGTH_SHORT);
                 toastOk.setGravity(Gravity.CENTER, 0, 0);
                 toastOk.show();
                 getEnigmaUI();

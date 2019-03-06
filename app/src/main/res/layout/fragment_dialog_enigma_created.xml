@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerInParent="true">
+
+    <RelativeLayout
+        android:id="@+id/fragment_dialog_enigma_created_linear_layout_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_fragment_dialog"
+        android:orientation="vertical"
+        android:padding="@dimen/default_large_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/fragment_dialog_enigma_created_tv_congratulation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/default_large_margin"
+            android:text="@string/fragment_dialog_enigma_created_text"
+            android:textAlignment="center"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+            android:textColor="@color/primaryTextColor" />
+
+        <com.facebook.share.widget.ShareButton
+            android:id="@+id/fragment_dialog_enigma_created_facebook_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/fragment_dialog_enigma_created_tv_congratulation"
+            android:layout_centerHorizontal="true"
+            android:gravity="center" />
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/fragment_dialog_enigma_created_button_validate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_fragment_dialog"
+        android:text="@string/ok"
+        android:textColor="@color/primaryTextColor"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_dialog_enigma_created_linear_layout_content" />
+</android.support.constraint.ConstraintLayout>

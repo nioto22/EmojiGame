@@ -9,6 +9,7 @@ public class Constants {
     public static final String ADD_MOBS_VIDEO_ID_COINS = "ca-app-pub-3940256099942544/5224354917"; // FOR REAL  TO CHANGE WITH : ca-app-pub-7652009776235513/7732908143
     public static final String ADD_MOBS_VIDEO_ID_HINT_ONE = "ca-app-pub-3940256099942544/5224354917"; // FOR REAL TO CHANGE WITH : ca-app-pub-7652009776235513/7820661768
     public static final String ADD_MOBS_VIDEO_ID_HINT_TWO = "ca-app-pub-3940256099942544/5224354917"; // FOR REAL TO CHANGE WITH : ca-app-pub-7652009776235513/9680538343
+    public static final String ADD_MOBS_INTERSTITIAL_ENIGMA_CREATED = "ca-app-pub-3940256099942544/1033173712"; // FOR REAL TO CHANGE WITH : ca-app-pub-7652009776235513/8369429866
     //PLAY ACTIVITY
     // TOOLBAR TITLES
     public static final String PLAY_ACTIVITY_TITLE = "EmojiGame";
@@ -55,6 +56,8 @@ public class Constants {
 
     // CREATE ACTIVITY
     public static final String CREATE_ACTIVITY_TITLE = "Créer votre énigme";
+    public static final String EXTRA_BUNDLE_ENIGMA_CREATED_ENIGMA = "EXTRA_BUNDLE_ENIGMA_CREATED_ENIGMA";
+    public static final String EXTRA_BUNDLE_ENIGMA_CREATED_CATEGORY = "EXTRA_BUNDLE_ENIGMA_CREATED_CATEGORY";
     // PROFILE ACTIVITY
     public static final String PROFILE_ACTIVITY_TITLE = "Votre Profil";
 
@@ -76,6 +79,7 @@ public class Constants {
     public static final String HINT_ONE_DIALOG_FRAGMENT_TAG = "hintOneDialog";
     public static final String HINT_TWO_DIALOG_FRAGMENT_TAG = "hintTwoDialog";
     public static final String SOLVED_DIALOG_FRAGMENT_TAG = "solvedDialog";
+    public static final String ENIGMA_CREATED_DIALOG_FRAGMENT_TAG = "enigmaCreatedDialog";
     public static final String PODIUM_DIALOG_ARG_ENIGMA = "enigma";
     public static final String LIFE_DIALOG_ARG_USER = "user";
     public static final String LIFE_DIALOG_ARG_END_TIME = "endTime";
@@ -88,5 +92,7 @@ public class Constants {
     public static final String SOLVED_DIALOG_ARG_RESOLVED_TIMES = "numberOfResolvedTimes";
     public static final String SOLVED_DIALOG_ARG_CATEGORY = "enigmaCategory";
     public static final String COINS_DIALOG_ARG_USER = "userUid";
+    public static final String ENIGMA_CREATED_DIALOG_ARG_ENIGMA = "enigmaCreatedEnigma";
+    public static final String ENIGMA_CREATED_DIALOG_ARG_CATEGORY = "enigmaCreatedCategory";
 
 }
