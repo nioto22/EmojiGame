@@ -247,7 +247,7 @@ public class CreateEnigmaActivity extends BaseActivity  {
                     UserHelper.updateUserPoints(currentUser.getPoints(), userUid);
                 }
             });
-            showInterstitialAd(mEnigma, mCategory);
+            showInterstitialAd();
         }
     }
 
@@ -344,7 +344,7 @@ public class CreateEnigmaActivity extends BaseActivity  {
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
     }
 
-    private void showInterstitialAd(final String enigma, final String category) {
+    private void showInterstitialAd() {
         if (mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
         }
