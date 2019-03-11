@@ -1,6 +1,7 @@
 package com.example.nioto.emojigame.activities;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +19,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.api.EnigmaHelper;
 import com.example.nioto.emojigame.api.UserHelper;
@@ -30,19 +33,24 @@ import com.example.nioto.emojigame.dialog_fragment.SolvedDialogFragment;
 import com.example.nioto.emojigame.models.Enigma;
 import com.example.nioto.emojigame.models.User;
 import com.example.nioto.emojigame.utils.Constants;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.vanniktech.emoji.EmojiTextView;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
 import static com.example.nioto.emojigame.activities.CreateEnigmaActivity.RESULT_OK_UPDATED;
 
-public class SolveEnigmaActivity extends BaseActivity{
+public class SolveEnigmaActivity extends BaseActivity implements DialogInterface.OnDismissListener {
 
     // FOR DESIGN
     // ENIGMA UI
@@ -64,13 +72,16 @@ public class SolveEnigmaActivity extends BaseActivity{
     @BindView(R.id.hint_one_1_1) EditText editText_1_1; @BindView(R.id.hint_one_1_2) EditText editText_1_2; @BindView(R.id.hint_one_1_3) EditText editText_1_3; @BindView(R.id.hint_one_1_4) EditText editText_1_4;@BindView(R.id.hint_one_1_5) EditText editText_1_5;@BindView(R.id.hint_one_1_6) EditText editText_1_6;@BindView(R.id.hint_one_1_7) EditText editText_1_7;@BindView(R.id.hint_one_1_8) EditText editText_1_8;@BindView(R.id.hint_one_1_9) EditText editText_1_9;@BindView(R.id.hint_one_1_10) EditText editText_1_10;@BindView(R.id.hint_one_1_11) EditText editText_1_11;@BindView(R.id.hint_one_1_12) EditText editText_1_12;@BindView(R.id.hint_one_1_13) EditText editText_1_13;@BindView(R.id.hint_one_1_14) EditText editText_1_14;@BindView(R.id.hint_one_1_15) EditText editText_1_15;@BindView(R.id.hint_one_1_16) EditText editText_1_16;@BindView(R.id.hint_one_2_1) EditText editText_2_1; @BindView(R.id.hint_one_2_2) EditText editText_2_2;@BindView(R.id.hint_one_2_3) EditText editText_2_3;@BindView(R.id.hint_one_2_4) EditText editText_2_4;@BindView(R.id.hint_one_2_5) EditText editText_2_5;@BindView(R.id.hint_one_2_6) EditText editText_2_6;@BindView(R.id.hint_one_2_7) EditText editText_2_7;@BindView(R.id.hint_one_2_8) EditText editText_2_8;@BindView(R.id.hint_one_2_9) EditText editText_2_9;@BindView(R.id.hint_one_2_10) EditText editText_2_10;@BindView(R.id.hint_one_2_11) EditText editText_2_11;@BindView(R.id.hint_one_2_12) EditText editText_2_12;@BindView(R.id.hint_one_2_13) EditText editText_2_13;@BindView(R.id.hint_one_2_14) EditText editText_2_14;@BindView(R.id.hint_one_2_15) EditText editText_2_15;@BindView(R.id.hint_one_2_16) EditText editText_2_16;    @BindView(R.id.hint_one_3_1) EditText editText_3_1;    @BindView(R.id.hint_one_3_2) EditText editText_3_2;    @BindView(R.id.hint_one_3_3) EditText editText_3_3;@BindView(R.id.hint_one_3_4) EditText editText_3_4;@BindView(R.id.hint_one_3_5) EditText editText_3_5;@BindView(R.id.hint_one_3_6) EditText editText_3_6;@BindView(R.id.hint_one_3_7) EditText editText_3_7;@BindView(R.id.hint_one_3_8) EditText editText_3_8;@BindView(R.id.hint_one_3_9) EditText editText_3_9;@BindView(R.id.hint_one_3_10) EditText editText_3_10;@BindView(R.id.hint_one_3_11) EditText editText_3_11;@BindView(R.id.hint_one_3_12) EditText editText_3_12;@BindView(R.id.hint_one_3_13) EditText editText_3_13;@BindView(R.id.hint_one_3_14) EditText editText_3_14;@BindView(R.id.hint_one_3_15) EditText editText_3_15;@BindView(R.id.hint_one_3_16) EditText editText_3_16;
 
     // FOR UI
-    private ArrayList<EditText> mEditTextArrayList = new ArrayList<>();
-    private ArrayList<EditText> mEnabledEditTextList = new ArrayList<>();
-    private ArrayList<EditText> mDisabledEditTextList = new ArrayList<>();
-    private ArrayList<Integer> mPositionOfSolutionCharList;
-    private ArrayList<Integer> mPositionOfSolutionCharListOnlyLetter = new ArrayList<>();
-    private ArrayList<Character> mSolutionCharListOnlyLetter = new ArrayList<>();
-    private ArrayList<Character> characterArray = new ArrayList<>();
+    private ArrayList<Character> solutionInCharArray;
+    private ArrayList<Character> solutionInTypeArray;
+    private ArrayList<EditText> mEditTextArrayList;
+    private static final char ALPHA_OR_NUM = 'A', HINT_LETTER = 'B', SPACE ='C', OTHER_CHAR = 'D', OFFSET = 'E', SPECIAL_OFFSET = 'F';
+    private static final char SPECIAL_CHAR = '~';
+    private static final int LINE_ONE_LENGTH = 16, LINE_TWO_LENGTH = 32, NUMBER_MAX_OF_CHAR = 48, LIMIT_OF_OFFSET = 13;
+    private int offsetMax;
+    private int offsetCountOne;
+    private int offsetCountTwo;
+
 
     // FOR DATA
     private String enigmaUid;
@@ -81,12 +92,16 @@ public class SolveEnigmaActivity extends BaseActivity{
     private Boolean enigmaHasHintOne;
     private Boolean enigmaHasHintTwo;
     private String enigmaHintPositions;
-    private ArrayList<Integer> enigmaHintPositionsList = new ArrayList<>();
+
+    // FOR INTERSTITIAL ADS
+    private InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        MobileAds.initialize(this, Constants.ADD_MOBS_APPLICATION_ID);
+        loadInterstitialAd();
         this.createEditTextArrayForHintOne();
         this.getEnigmaUid();
         this.getEnigmaDbData();
@@ -96,8 +111,8 @@ public class SolveEnigmaActivity extends BaseActivity{
     }
 
     @Override
-    protected void onPostResume() {
-        super.onPostResume();
+    protected void onResume() {
+        super.onResume();
         this.getEnigmaUid();
         this.getEnigmaDbData();
         getEnigmaUI();
@@ -192,229 +207,290 @@ public class SolveEnigmaActivity extends BaseActivity{
     }
 
     private void displayHintOneEditText() {
+        enigmaResponse.setVisibility(View.GONE);
+        linearLayoutHintOneFirst.setVisibility(View.VISIBLE);
 
-        mPositionOfSolutionCharList = new ArrayList<>();
+        solutionInCharArray = new ArrayList<>();
+        solutionInTypeArray = new ArrayList<>();
         EnigmaHelper.getEnigma(enigmaUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 Enigma enigma = documentSnapshot.toObject(Enigma.class);
                 assert enigma != null;
-                String enigmaSolution = enigma.getSolution();
+                final String enigmaSolution = enigma.getSolution();
 
-                characterArray = getSolutionInArray(enigmaSolution);
-                characterArray = configurePositionOfSolutionCharForNoWordCut(characterArray, enigmaSolution);
-                displayEditText(characterArray);
-                int pos = 0;
-                editTextGetFocusable(pos);
-            }
+                solutionInCharArray = putSolutionInCharArray(enigmaSolution);
 
-            private void editTextGetFocusable(final int position) {
-                if (position >= mEnabledEditTextList.size()) return;
-                mEnabledEditTextList.get(position).requestFocus();
-                mEnabledEditTextList.get(position).setFilters(new InputFilter[]{new InputFilter.AllCaps()});
-                mEnabledEditTextList.get(position).addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        if (mEnabledEditTextList.get(position).getText() != null && mEnabledEditTextList.get(position).getText().toString().length() > 0) {
-                            editTextGetFocusable(position +1);
-                        }
-                    }
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-
-                    @Override
-                    public void afterTextChanged(Editable editable) {}
-                });
-            }
-
-
-            private void displayEditText(ArrayList<Character> characterArray) {
-                Collections.sort(enigmaHintPositionsList);
-                mEnabledEditTextList = new ArrayList<>();
-                mDisabledEditTextList = new ArrayList<>();
-                enigmaResponse.setVisibility(View.GONE);
-                linearLayoutHintOneFirst.setVisibility(View.VISIBLE);
-                if (characterArray.size() > 32)linearLayoutHintOneThird.setVisibility(View.VISIBLE);
-                if (characterArray.size() > 16)linearLayoutHintOneSecond.setVisibility(View.VISIBLE);
-                int loopCharListOnlyLetter = 0;
-                for (int i = 0; i < characterArray.size(); i++) {
-                    if (characterArray.get(i) == 'Y') {
-                        mEditTextArrayList.get(i).setVisibility(View.VISIBLE);
-                        mEnabledEditTextList.add(mEditTextArrayList.get(i));
-                    }else if (characterArray.get(i) == 'N') {
-                        mEditTextArrayList.get(i).setVisibility(View.VISIBLE);
-                        mEditTextArrayList.get(i).setBackground(getDrawable(R.color.fui_transparent));
-                        mEditTextArrayList.get(i).setEnabled(false);
-                    }else if (characterArray.get(i)== 'G') {
-                        mEditTextArrayList.get(i).setVisibility(View.GONE);
-                    } else if (characterArray.get(i)  == 'L') {
-                        mDisabledEditTextList.add(mEditTextArrayList.get(i));
-                        mEditTextArrayList.get(i).setVisibility(View.VISIBLE);
-                        mEditTextArrayList.get(i).setText(String.valueOf(mSolutionCharListOnlyLetter.get((enigmaHintPositionsList.get(loopCharListOnlyLetter))-1)));
-                        mEditTextArrayList.get(i).setEnabled(false);
-                        loopCharListOnlyLetter++;
-                    }else {
-                        mEditTextArrayList.get(i).setVisibility(View.VISIBLE);
-                        mEditTextArrayList.get(i).setBackground(getDrawable(R.color.fui_transparent));
-                        mEditTextArrayList.get(i).setText(String.valueOf(characterArray.get(i)));
-                        mEditTextArrayList.get(i).setEnabled(false);
-                    }
-                }
-            }
-
-            private ArrayList<Character> getSolutionInArray(String enigmaSolution){
-                int enigmaLength = enigmaSolution.length();
-                ArrayList<Character> characterArray = new ArrayList<>();
-                mPositionOfSolutionCharList = new ArrayList<>();
-                mPositionOfSolutionCharListOnlyLetter = new ArrayList<>();
-                mSolutionCharListOnlyLetter = new ArrayList<>();
-                int loopHintTwoPositions = 1;
-                for (int i = 0; i < enigmaLength ; i++) {
-                    if (enigmaSolution.charAt(i) == ' ') characterArray.add(i, 'N');
-                    else if (enigmaSolution.charAt(i) == '-' || enigmaSolution.charAt(i) == '\'') {
-                        mPositionOfSolutionCharList.add(i);
-                        characterArray.add(i, enigmaSolution.charAt(i));
-                    } else {
-                        mPositionOfSolutionCharList.add(i);
-                        mPositionOfSolutionCharListOnlyLetter.add(i);
-                        mSolutionCharListOnlyLetter.add(Character.toUpperCase(enigmaSolution.charAt(i)));
-                        if (enigmaHintPositionsList.contains(loopHintTwoPositions)){
-                            characterArray.add(i, 'L');
-                            loopHintTwoPositions++;
-                        } else {
-                            characterArray.add(i, 'Y');
-                            loopHintTwoPositions ++;
-                        }
-                    }
-                }
-
-                return characterArray;
-
-
-            }
-
-            private ArrayList<Character> configurePositionOfSolutionCharForNoWordCut(ArrayList<Character> characterArray, String enigmaSolution) {
-                int nbPositionJump = 0;
-                int nbPositionJumpOne = 0;
-                int nbPositionJumpTwo = 0;
-                int enigmaLength = enigmaSolution.length();
-
-                // To update the ArrayList after treatment
-                ArrayList<Character> newCharacterArray = new ArrayList<>();
-                ArrayList<Integer> newPositionOfSolutionCharList = new ArrayList<>();
-
-                if (mPositionOfSolutionCharList.contains(16) && mPositionOfSolutionCharList.contains(17)) {  // No space between Layout 1 and 2
-                    // How many letters to jump to next line
-                    int positionOfLastCharInLlOne = mPositionOfSolutionCharList.indexOf(16);
-                    for (int i = positionOfLastCharInLlOne; i > 0; i--) {
-                        if (mPositionOfSolutionCharList.get(i) - mPositionOfSolutionCharList.get((i - 1)) > 1) {
-                            break;
-                        } else {
-                            nbPositionJumpOne++;
-                        }
-                    }
-                    nbPositionJump += nbPositionJumpOne;
-
-                    if (enigmaLength + nbPositionJump < 47 && nbPositionJumpOne < 16) {
-                        int positionEndLastWord = positionOfLastCharInLlOne - nbPositionJumpOne;
-                        int positionCharEndLastWord = mPositionOfSolutionCharList.get(positionEndLastWord)-1; // position End Last Word Layout One in characterArray
-
-
-
-                        // Get back first line characterArray
-                        for (int i = 0; i < positionCharEndLastWord ; i++) {
-                            newCharacterArray.add(i, characterArray.get(i));
-                            newPositionOfSolutionCharList.add(i, mPositionOfSolutionCharList.get(i));
-                        }
-
-                        // Put blank to finish the line
-                        for (int i = positionCharEndLastWord ; i < 17; i++) {
-                            //newCharacterArray[i] = 'G';  // G for visibility Gone
-                            newCharacterArray.add(i, 'G');
-                        }
-                        // Get back end of characterArray
-                        int i = 17;
-                        for (int j = positionCharEndLastWord; j < characterArray.size(); j++) {
-                            newCharacterArray.add(i, characterArray.get(j));
-                            newPositionOfSolutionCharList.add(j , i);
-                            i++;
-                        }
-                    } else {
-                        // Get back first line characterArray
-                        for (int i = 0; i < 16; i++) {
-                            newCharacterArray.add(i, characterArray.get(i));
-                            newPositionOfSolutionCharList.add(i, mPositionOfSolutionCharList.get(i));
-                        }
-                        newCharacterArray.add(16, '~');
-                        newPositionOfSolutionCharList.add(16, 16);
-                        for (int i = 16; i < characterArray.size(); i++) {
-                            newCharacterArray.add(i + 1, characterArray.get(i));
-                            newPositionOfSolutionCharList.add(i +1, mPositionOfSolutionCharList.get(i));
-                        }
-                    }
+                if (enigmaHasHintTwo) {
+                    solutionInTypeArray = convertHintTwoStringToSolutionTypeArray();
                 } else {
-                    for (int i = 0; i < characterArray.size(); i++) {
-                        newCharacterArray.add(i, characterArray.get(i));
-                    }
+                    solutionInTypeArray = putSolutionInTypeArray(enigmaSolution);
+                    enigmaHintPositions = convertSolutionTypeArrayToHintTwoString(solutionInTypeArray);
                 }
-                characterArray = newCharacterArray;
-                mPositionOfSolutionCharList = newPositionOfSolutionCharList;
-
-                // END OF CONFIGURATION FIRST LINE
-
-                newCharacterArray = new ArrayList<>();
-                if (mPositionOfSolutionCharList.contains(32) && mPositionOfSolutionCharList.contains(33)){  // No space between Layout 2 and 3
-                    int positionOfLastCharInLlTwo = mPositionOfSolutionCharList.indexOf(32) + nbPositionJumpOne;
-                    for (int i = positionOfLastCharInLlTwo ; i > 0  ; i--) {
-                        if (mPositionOfSolutionCharList.get(i)- mPositionOfSolutionCharList.get((i - 1)) > 1){
-                            break;
-                        } else {
-                            nbPositionJumpTwo ++;
-                        }
-                    }
-                    nbPositionJump += nbPositionJumpTwo;
-                    if (enigmaLength + nbPositionJump < 47 && nbPositionJumpTwo < 16) {
-                        int positionEndLastWord = positionOfLastCharInLlTwo - nbPositionJumpTwo;
-                        int positionCharEndLastWord = mPositionOfSolutionCharList.get(positionEndLastWord) - 1; // position End Last Word Layout One in characterArray
-                        // Get back first line characterArray
-                        for (int i = 0; i < positionCharEndLastWord ; i++) {
-                            newCharacterArray.add(i, characterArray.get(i));
-                        }
-                        // Put blank to finish the line
-                        for (int i = positionCharEndLastWord ; i < 33 ; i++ ){
-                            newCharacterArray.add(i, 'G'); // G for visibility Gone
-                        }
-                        // Get back end of characterArray
-                        int i = 33;
-                        for (int j = positionCharEndLastWord; j < characterArray.size(); j++) {
-                            newCharacterArray.add(i, characterArray.get(j));
-                            i++;
-                        }
-                    } else {
-                        // Get back first line characterArray
-                        for (int i = 0; i < 32; i++) {
-                            newCharacterArray.add(i, characterArray.get(i));
-                        }
-                        newCharacterArray.add(32, '~');
-                        for (int j = 32; j < characterArray.size()  ; j++) {
-                            newCharacterArray.add(j+1 , characterArray.get(j));
-                        }
-                    }
-                } else {
-                    newCharacterArray = characterArray;
-                }
-                characterArray = newCharacterArray;
 
 
-                return  characterArray;
+                offsetMax = determineOffsetMax();
+                int lineTwoStart = 0;
+                int lineThreeStart = 0;
+                if (solutionInCharArray.size() > LINE_ONE_LENGTH) lineTwoStart = testWhenLineTwoStart();
+                if (solutionInCharArray.size() + offsetCountOne > LINE_TWO_LENGTH) lineThreeStart = testWhenLineThreeStart();
+                configureEditText(lineTwoStart, lineThreeStart);
+
+                int position = getFirstAlphaNum();
+                editTextGetFocusable(position);
+
             }
         });
     }
 
-    private void createEditTextArrayForHintOne() {
-        mEditTextArrayList.add(editText_1_1);mEditTextArrayList.add(editText_1_2);mEditTextArrayList.add(editText_1_3);mEditTextArrayList.add(editText_1_4);mEditTextArrayList.add(editText_1_5);mEditTextArrayList.add(editText_1_6);mEditTextArrayList.add(editText_1_7);mEditTextArrayList.add(editText_1_8);mEditTextArrayList.add(editText_1_9);mEditTextArrayList.add(editText_1_10);mEditTextArrayList.add(editText_1_11);mEditTextArrayList.add(editText_1_12);mEditTextArrayList.add(editText_1_13);mEditTextArrayList.add(editText_1_14);mEditTextArrayList.add(editText_1_15);mEditTextArrayList.add(editText_1_16);mEditTextArrayList.add(editText_2_1);mEditTextArrayList.add(editText_2_2);mEditTextArrayList.add(editText_2_3);mEditTextArrayList.add(editText_2_4);mEditTextArrayList.add(editText_2_5);mEditTextArrayList.add(editText_2_6);mEditTextArrayList.add(editText_2_7);mEditTextArrayList.add(editText_2_8);mEditTextArrayList.add(editText_2_9);mEditTextArrayList.add(editText_2_10);mEditTextArrayList.add(editText_2_11);mEditTextArrayList.add(editText_2_12);mEditTextArrayList.add(editText_2_13);mEditTextArrayList.add(editText_2_14);mEditTextArrayList.add(editText_2_15);mEditTextArrayList.add(editText_2_16);mEditTextArrayList.add(editText_3_1);mEditTextArrayList.add(editText_3_2);mEditTextArrayList.add(editText_3_3);mEditTextArrayList.add(editText_3_4);mEditTextArrayList.add(editText_3_5);mEditTextArrayList.add(editText_3_6);mEditTextArrayList.add(editText_3_7);mEditTextArrayList.add(editText_3_8);mEditTextArrayList.add(editText_3_9);mEditTextArrayList.add(editText_3_10);mEditTextArrayList.add(editText_3_11);mEditTextArrayList.add(editText_3_12);mEditTextArrayList.add(editText_3_13);mEditTextArrayList.add(editText_3_14);mEditTextArrayList.add(editText_3_15);mEditTextArrayList.add(editText_3_16);
+    // ------------------------------------
+    //  DISPLAY HINT ONE AND TWO EDIT TEXT
+    // ------------------------------------
+
+    public ArrayList<Character> putSolutionInCharArray(String enigmaSolution) {
+        ArrayList<Character> result = new ArrayList<>();
+        for (int i = 0; i < enigmaSolution.length(); i ++){
+            result.add(enigmaSolution.charAt(i));
+        }
+        return result;
+    }
+
+    public ArrayList<Character> putSolutionInTypeArray(String enigmaSolution){
+        ArrayList<Character> result = new ArrayList<>();
+        for (int i = 0; i < enigmaSolution.length(); i ++){
+            if (solutionInCharArray.get(i).equals(' ')){
+                result.add(i, SPACE);
+            } else if (Character.isLetterOrDigit(solutionInCharArray.get(i))){
+                result.add(i, ALPHA_OR_NUM);
+            } else {
+                result.add(i, OTHER_CHAR);
+            }
+        }
+        return result;
+    }
+
+    public void setUpEditText(EditText editText, char charType, int position){
+        switch (charType){
+            case ALPHA_OR_NUM :
+                editText.setVisibility(View.VISIBLE);
+                editText.setEnabled(true);
+                break;
+            case HINT_LETTER :
+                editText.setVisibility(View.VISIBLE);
+                editText.setText(solutionInCharArray.get(position).toString().toUpperCase());
+                editText.setEnabled(false);
+                break;
+            case SPACE :
+                editText.setVisibility(View.VISIBLE);
+                editText.setText(" ");
+                editText.setBackground(getDrawable(R.color.fui_transparent));
+                editText.setEnabled(false);
+                break;
+            case OTHER_CHAR :
+                editText.setVisibility(View.VISIBLE);
+                editText.setText(solutionInCharArray.get(position).toString());
+                editText.setBackground(getDrawable(R.color.fui_transparent));
+                editText.setEnabled(false);
+                break;
+            case OFFSET :
+                editText.setVisibility(View.GONE);
+                break;
+            case SPECIAL_OFFSET :
+                editText.setVisibility(View.VISIBLE);
+                editText.setText(SPECIAL_CHAR);
+                editText.setBackground(getDrawable(R.color.fui_transparent));
+                editText.setEnabled(false);
+                break;
+        }
+    }
+
+    public int determineOffsetMax(){
+        return NUMBER_MAX_OF_CHAR - solutionInCharArray.size();
+    }
+
+    public int testWhenLineTwoStart(){
+        int lineTwoStart = 0;
+        offsetCountOne = 0;
+        if (solutionInTypeArray.get(LINE_ONE_LENGTH-1) != SPACE && solutionInTypeArray.get(LINE_ONE_LENGTH) != SPACE){
+            int i = LINE_ONE_LENGTH - 1 ;
+            while ( solutionInTypeArray.get(i) != SPACE){
+                offsetCountOne ++ ;
+                i--;
+            }
+            lineTwoStart = (offsetCountOne >offsetMax || offsetCountOne > LIMIT_OF_OFFSET) ? -1 :  i+1 ;
+        }
+        return lineTwoStart;
+    }
+
+
+    public int testWhenLineThreeStart(){
+        int lineThreeStart = 0;
+        offsetCountTwo = 0;
+        if (solutionInTypeArray.get(LINE_TWO_LENGTH - 1 + offsetCountOne) != SPACE && solutionInTypeArray.get(32 + offsetCountOne) != SPACE ){
+            int i = LINE_TWO_LENGTH - 1 + offsetCountOne ;
+            while (solutionInTypeArray.get(i) != SPACE){
+                offsetCountTwo ++ ;
+                i -- ;
+            }
+            lineThreeStart = (offsetCountOne + offsetCountTwo > offsetMax || offsetCountTwo > LIMIT_OF_OFFSET) ? -1 : i+1;
+        }
+        return lineThreeStart;
+    }
+
+    public void configureEditText(int lineTwoStart, int lineThreeStart){
+        int numberOfChar = (solutionInCharArray.size() + offsetCountOne + offsetCountTwo);
+        int numberOfLine = (numberOfChar > LINE_TWO_LENGTH ) ? 3 : (numberOfChar > LINE_ONE_LENGTH) ? 2 : 1;
+
+        //Log.d(TAG, "configureEditText: number of line = " + numberOfLine);
+        if (numberOfLine > 1 ) {
+            linearLayoutHintOneSecond.setVisibility(View.VISIBLE);
+            if (numberOfLine > 2 ) linearLayoutHintOneThird.setVisibility(View.VISIBLE);
+        }
+
+        configureEditTextLines(numberOfLine, lineTwoStart, lineThreeStart);
 
     }
+
+    private void configureEditTextLines(int numberOfLine, int lineTwoStart, int lineThreeStart){
+        if (lineTwoStart > 0){
+            // LINE ONE
+            for (int i = 0; i < lineTwoStart ; i++) {
+                setUpEditText(mEditTextArrayList.get(i), solutionInTypeArray.get(i), i);
+            }
+            for (int i = lineTwoStart; i < LINE_ONE_LENGTH; i++){
+                setUpEditText(mEditTextArrayList.get(i), OFFSET, 0);
+            }
+            // LINE TWO
+            if (numberOfLine > 1) configureEditTextLineTwoAndThree(numberOfLine, lineTwoStart, lineThreeStart);
+
+        } else if (lineTwoStart < 0){
+            // LINE ONE
+            for (int i = 0; i < LINE_ONE_LENGTH - 1; i++){
+                setUpEditText(mEditTextArrayList.get(i), solutionInTypeArray.get(i), i);
+            }
+            setUpEditText(mEditTextArrayList.get(LINE_ONE_LENGTH - 1), SPECIAL_OFFSET, 0);
+            // LINE TWO
+            if (numberOfLine > 1) configureEditTextLineTwoAndThree(numberOfLine, LINE_ONE_LENGTH, lineThreeStart);
+        } else {
+            // LINE ONE
+            if (numberOfLine > 1) {
+                for (int i = 0; i < LINE_ONE_LENGTH; i++) {
+                    setUpEditText(mEditTextArrayList.get(i), solutionInTypeArray.get(i), i);
+                }
+                // LINE TWO
+                configureEditTextLineTwoAndThree(numberOfLine, LINE_ONE_LENGTH, lineThreeStart);
+            } else {
+                for (int i = 0; i < solutionInTypeArray.size(); i++) {
+                    setUpEditText(mEditTextArrayList.get(i), solutionInTypeArray.get(i), i);
+                }
+            }
+        }
+    }
+
+    private void configureEditTextLineTwoAndThree(int numberOfLine, int solutionCursor, int lineThreeStart) {
+        if (lineThreeStart > 0){
+            // LINE TWO
+            for(int i = LINE_ONE_LENGTH; i < lineThreeStart; i++){
+                setUpEditText(mEditTextArrayList.get(i), solutionInTypeArray.get(solutionCursor), solutionCursor);
+                solutionCursor ++;
+            }
+            for(int i = lineThreeStart; i < LINE_TWO_LENGTH; i++){
+                setUpEditText(mEditTextArrayList.get(i), OFFSET, 0);
+
+            }
+            // LINE THREE
+            if (numberOfLine > 2) configureEditTextLineThree(lineThreeStart);
+
+        } else if (lineThreeStart < 0){
+            // LINE TWO
+            for (int i = LINE_ONE_LENGTH; i < LINE_TWO_LENGTH - 1; i++){
+                setUpEditText(mEditTextArrayList.get(i), solutionInTypeArray.get(solutionCursor), solutionCursor);
+                solutionCursor ++;
+            }
+            setUpEditText(mEditTextArrayList.get(LINE_TWO_LENGTH - 1), SPECIAL_OFFSET, 0);
+            // LINE THREE
+            if (numberOfLine > 2) configureEditTextLineThree(solutionCursor);
+
+        } else {
+            // LINE TWO
+            if (numberOfLine > 2) {
+                for (int i = LINE_ONE_LENGTH; i < solutionInTypeArray.size() + offsetCountOne; i++) {
+                    setUpEditText(mEditTextArrayList.get(i), solutionInTypeArray.get(solutionCursor), solutionCursor);
+                    solutionCursor++;
+                }
+                // LINE THREE
+                configureEditTextLineThree(solutionCursor);
+            } else {
+                for (int i = LINE_ONE_LENGTH; i < solutionInTypeArray.size() + offsetCountOne; i++) {
+                    setUpEditText(mEditTextArrayList.get(i), solutionInTypeArray.get(solutionCursor), solutionCursor);
+                    solutionCursor++;
+                }
+            }
+        }
+    }
+
+    private void configureEditTextLineThree(int solutionCursor){
+        int editTextCursor = LINE_TWO_LENGTH;
+        while (solutionCursor < (solutionInTypeArray.size() + offsetCountOne + offsetCountTwo) || solutionCursor < NUMBER_MAX_OF_CHAR){
+            setUpEditText(mEditTextArrayList.get(editTextCursor), solutionInTypeArray.get(solutionCursor), solutionCursor);
+            editTextCursor ++;
+            solutionCursor ++;
+        }
+    }
+
+    public int getFirstAlphaNum(){
+        boolean firstAlphaNumIsFind = false;
+        int solutionTypeCursor = 0;
+        while (!firstAlphaNumIsFind ){
+            if (solutionInTypeArray.get(solutionTypeCursor) == ALPHA_OR_NUM){
+                firstAlphaNumIsFind = true;
+            } else {
+                solutionTypeCursor ++;
+            }
+        }
+        return solutionTypeCursor;
+    }
+
+    public String getAnswerFromAllEditText() {
+        StringBuilder charToResponseBuilder = new StringBuilder();
+        for (EditText et : mEditTextArrayList){
+            if(et.getVisibility() == View.VISIBLE) charToResponseBuilder.append(et.getText());
+        }
+        return charToResponseBuilder.toString();
+    }
+
+    public void createEditTextArrayForHintOne() {
+        mEditTextArrayList = new ArrayList<>();
+        mEditTextArrayList.add(editText_1_1);mEditTextArrayList.add(editText_1_2);mEditTextArrayList.add(editText_1_3);mEditTextArrayList.add(editText_1_4);mEditTextArrayList.add(editText_1_5);mEditTextArrayList.add(editText_1_6);mEditTextArrayList.add(editText_1_7);mEditTextArrayList.add(editText_1_8);mEditTextArrayList.add(editText_1_9);mEditTextArrayList.add(editText_1_10);mEditTextArrayList.add(editText_1_11);mEditTextArrayList.add(editText_1_12);mEditTextArrayList.add(editText_1_13);mEditTextArrayList.add(editText_1_14);mEditTextArrayList.add(editText_1_15);mEditTextArrayList.add(editText_1_16);mEditTextArrayList.add(editText_2_1);mEditTextArrayList.add(editText_2_2);mEditTextArrayList.add(editText_2_3);mEditTextArrayList.add(editText_2_4);mEditTextArrayList.add(editText_2_5);mEditTextArrayList.add(editText_2_6);mEditTextArrayList.add(editText_2_7);mEditTextArrayList.add(editText_2_8);mEditTextArrayList.add(editText_2_9);mEditTextArrayList.add(editText_2_10);mEditTextArrayList.add(editText_2_11);mEditTextArrayList.add(editText_2_12);mEditTextArrayList.add(editText_2_13);mEditTextArrayList.add(editText_2_14);mEditTextArrayList.add(editText_2_15);mEditTextArrayList.add(editText_2_16);mEditTextArrayList.add(editText_3_1);mEditTextArrayList.add(editText_3_2);mEditTextArrayList.add(editText_3_3);mEditTextArrayList.add(editText_3_4);mEditTextArrayList.add(editText_3_5);mEditTextArrayList.add(editText_3_6);mEditTextArrayList.add(editText_3_7);mEditTextArrayList.add(editText_3_8);mEditTextArrayList.add(editText_3_9);mEditTextArrayList.add(editText_3_10);mEditTextArrayList.add(editText_3_11);mEditTextArrayList.add(editText_3_12);mEditTextArrayList.add(editText_3_13);mEditTextArrayList.add(editText_3_14);mEditTextArrayList.add(editText_3_15);mEditTextArrayList.add(editText_3_16);
+    }
+
+    private void editTextGetFocusable(final int position) {
+        if (position >= mEditTextArrayList.size()) return;
+        if (mEditTextArrayList.get(position).isEnabled()) {
+            mEditTextArrayList.get(position).requestFocus();
+            mEditTextArrayList.get(position).setFilters(new InputFilter[]{new InputFilter.AllCaps()});
+            mEditTextArrayList.get(position).addTextChangedListener(new TextWatcher() {
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    if (mEditTextArrayList.get(position).getText() != null && mEditTextArrayList.get(position).getText().toString().length() > 0) {
+                        editTextGetFocusable(position + 1);
+                    }
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                }
+            });
+        } else {
+            editTextGetFocusable(position + 1);
+        }
+    }
+
+
 
 
 // --------------------
@@ -438,18 +514,26 @@ public class SolveEnigmaActivity extends BaseActivity{
         enigmaHasHintOne = dbManager.convertIntToBoolean(enigmaDb.getEnigmaHasHintOne());
         enigmaHasHintTwo = dbManager.convertIntToBoolean(enigmaDb.getEnigmaHasHintTwo());
         if (enigmaHasHintTwo){
-            enigmaHintPositionsList = new ArrayList<>();
             enigmaHintPositions = enigmaDb.getHintTwoPositions();
-
-            String[] hintPositionsTempList = enigmaHintPositions.split("/");
-            for (String st : hintPositionsTempList) {
-               if (!st.equals("")) enigmaHintPositionsList.add(Integer.parseInt(st));
-            }
         }
         dbManager.close();
     }
 
+    private ArrayList<Character> convertHintTwoStringToSolutionTypeArray() {
+        ArrayList<Character> result = new ArrayList<>();
+        for (int i = 0; i < enigmaHintPositions.length(); i++){
+            result.add(enigmaHintPositions.charAt(i));
+        }
+        return result;
+    }
 
+    private String convertSolutionTypeArrayToHintTwoString(ArrayList<Character> solutionInTypeArray){
+        StringBuilder stBuilder = new StringBuilder();
+        for (char c : solutionInTypeArray){
+            stBuilder.append(c);
+        }
+        return stBuilder.toString();
+    }
 
     // --------------------
     //       ACTION
@@ -477,7 +561,7 @@ public class SolveEnigmaActivity extends BaseActivity{
             ft.addToBackStack(null);
 
             // Create and show the dialog.
-            DialogFragment newFragment = HintTwoDialogFragment.newInstance(enigmaUid, mPositionOfSolutionCharListOnlyLetter);
+            DialogFragment newFragment = HintTwoDialogFragment.newInstance(enigmaUid, enigmaHintPositions );
             newFragment.show(ft, Constants.HINT_TWO_DIALOG_FRAGMENT_TAG);
         } else {
             Toast toast = Toast.makeText(SolveEnigmaActivity.this, getString(R.string.toast_hint_one_mandatory), Toast.LENGTH_LONG);
@@ -600,35 +684,6 @@ public class SolveEnigmaActivity extends BaseActivity{
                     toast.show();
                 }
             }
-
-            private String getAnswerFromAllEditText() {
-                StringBuilder allCharToString = new StringBuilder();
-                int loopPositionEnableEditText = 0;
-                int loopPositionDisableEditText = 0;
-                for (int i = 0; i < characterArray.size() ; i++) {
-                    switch (characterArray.get(i)){
-                        case 'Y' :
-                            if (!mEnabledEditTextList.get(loopPositionEnableEditText).getText().toString().equals("")) allCharToString.append(mEnabledEditTextList.get(loopPositionEnableEditText).getText().toString());
-                            loopPositionEnableEditText++;
-                            break;
-                        case 'L' :
-                            if (!mDisabledEditTextList.get(loopPositionDisableEditText).getText().toString().equals("")) allCharToString.append(mDisabledEditTextList.get(loopPositionDisableEditText).getText().toString());
-                            loopPositionDisableEditText++;
-                            break;
-                        case 'N' :
-                            allCharToString.append(" ");
-                            break;
-                        case 'G' :
-                            break;
-                        case '~' :
-                            break;
-                        default:
-                            allCharToString.append(characterArray.get(i).toString());
-                            break;
-                    }
-                }
-                return allCharToString.toString();
-            }
         });
     }
 
@@ -643,5 +698,57 @@ public class SolveEnigmaActivity extends BaseActivity{
                 currentUser = documentSnapshot.toObject(User.class);
             }
         });
+    }
+
+    // --------------------
+    //      UTILS
+    // --------------------
+
+
+    private void loadInterstitialAd(){
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(Constants.ADD_MOBS_INTERSTITIAL_ENIGMA_RESOLVED);
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+    }
+
+    private void showInterstitialAd() {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        }
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                // Code to be executed when an ad request fails.
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when the ad is displayed.
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when the interstitial ad is closed.
+                Intent intent = new Intent(SolveEnigmaActivity.this, PlayActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+
+    @Override
+    public void onDismiss(DialogInterface dialogInterface) {
+        showInterstitialAd();
     }
 }

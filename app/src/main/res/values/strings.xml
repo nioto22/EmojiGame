@@ -22,8 +22,8 @@
 
     <!-- PROFILE ACTIVITY -->
     <string name="profile_activity_username_hint">Username</string>
-    <string name="profile_activity_number_enigma_created_text">Enigme créées</string>
-    <string name="profile_activity_number_enigma_solved_text">Enigme résolues</string>
+    <string name="profile_activity_number_enigma_created_text">Enigmes créées</string>
+    <string name="profile_activity_number_enigma_solved_text">Enigmes résolues</string>
     <string name="profile_activity_user_picture_image_content_description">user picture</string>
     <string name="popup_title_permission_files_access">Cette application a besoin de permission pour fonctionner.</string>
     <string name="toast_title_no_image_chosen">Aucune image choisie&#8230;</string>
@@ -57,7 +57,7 @@
     <string name="solve_activity_send_button">ENVOYER</string>
     <string name="solve_activity_edit_button_text">EDITER</string>
     <string name="solve_activity_podium_no_solve_text">Persone n\'a résolu cet énigme pour l\'instant !   A vous de jouer …</string>
-    <string name="solve_activity_podium_number_enigma_solved">Cet énigme a été résolue :</string>
+    <string name="solve_activity_podium_number_enigma_solved">Cette énigme a été résolue :</string>
     <string name="solve_activity_podium_first_place_text">Première place :</string>
     <string name="solve_activity_podium_second_place_text">Seconde place :</string>
     <string name="solve_activity_nothing_text">_</string>
@@ -98,10 +98,10 @@
     <!-- SNACKBAR MESSAGES -->
     <string name="snackbar_message_no_enough_coins">Vous n\'avez pas assez d\'EmojiCoins pour acheter une vie !!</string>
     <string name="snackbar_message_life_at_maximum">Vous avez atteint le nombre maximum de vie !!</string>
-    <string name="snackbar_message_win_new_life">Félicitation, vous gagnez une vie supplémentaire !!</string>
-    <string name="snackbar_message_win_new_coins">Félicitation, vous remportez 50 EmojiCoins !!</string>
-    <string name="snackbar_message_activate_hint_one">Félicitation, vous avez activé le coup de pouce \"Nombre de lettre\" !!</string>
-    <string name="snackbar_message_activate_hint_two">Félicitation, vous avez activé le coup de pouce \"Obtenir une lettre\" !!</string>
+    <string name="snackbar_message_win_new_life">Félicitations, vous gagnez une vie supplémentaire !!</string>
+    <string name="snackbar_message_win_new_coins">Félicitations, vous remportez 50 EmojiCoins !!</string>
+    <string name="snackbar_message_activate_hint_one">Félicitations, vous avez débloqué le Coup de pouce : \n Nombre de Lettres</string>
+    <string name="snackbar_message_activate_hint_two">Félicitations, vous avez activez le coup de pouce 2 : \n Obtenir une Lettre</string>
 
     <!--  FRAGMENT DIALOG -->
     <string name="fragment_dialog_emoji_coins_create_enigma_text">Créez une énigme</string>
@@ -119,9 +119,9 @@
     <string name="dialog_hint_two_second_title">Coup de pouce 2 :</string>
     <string name="dialog_hint_one_text">Regardez une vidéo pour obtenir le nombre de lettres de l\'énigme</string>
     <string name="dialog_hint_two_text">Regardez une vidéo pour faire apparaître une lettre de l\'énigme</string>
-    <string name="fragment_dialog_solve_activity_solved_tv_congratulation">Réponse correct, félicitations !!</string>
+    <string name="fragment_dialog_solve_activity_solved_tv_congratulation">Réponse correcte, félicitations !!</string>
     <string name="fragment_dialog_emoji_coins_text_view_question_text">Besoin de plus d\'EmojiCoins ?</string>
-    <string name="hint_two_no_more_hint_text"><![CDATA[Vous avez atteint le nombre maximum de lettres pour ce coup de pouce \n (&#189; du nombre total)]]></string>
+    <string name="hint_two_no_more_hint_text">Vous avez atteint le nombre maximum de lettres pour ce coup de pouce \n (1/2 du nombre total)</string>
 
     <!-- OTHER LAYOUT -->
     <string name="download_text">Chargement …</string>
@@ -136,7 +136,7 @@
     <string name="popup_help_solution_text">Porte-Feuille</string>
     <string name="popup_help_solution_help">Inscrire ici la réponse.</string>
     <string name="popup_help_solution_second_help">Attention à votre orthographe !!!</string>
-    <string name="popup_help_category_title">Category :</string>
+    <string name="popup_help_category_title">Catégorie :</string>
     <string name="popup_help_category_help">Utilisez la liste déroulante pour choisir la catégorie de votre énigme.</string>
     <string name="popup_help_explanation_title">Explication :</string>
     <string name="popup_help_explanation_text">Porte_Feuille</string>
@@ -193,6 +193,8 @@
     <string name="image_example_content_description">Image Example</string>
     <string name="user_enigma_image_content_description">user enigma</string>
     <string name="history_enigma_image_content_description">history button</string>
+    <string name="fragment_dialog_updated_username_title">Comment voulez-vous que l\'on vous appelle ?</string>
+    <string name="validate">Valider</string>
 
 
 </resources>

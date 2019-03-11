@@ -11,12 +11,13 @@ public class Constants {
     public static final String ADD_MOBS_VIDEO_ID_HINT_ONE = "ca-app-pub-3940256099942544/5224354917"; // FOR REAL TO CHANGE WITH : ca-app-pub-7652009776235513/7820661768
     public static final String ADD_MOBS_VIDEO_ID_HINT_TWO = "ca-app-pub-3940256099942544/5224354917"; // FOR REAL TO CHANGE WITH : ca-app-pub-7652009776235513/9680538343
     public static final String ADD_MOBS_INTERSTITIAL_ENIGMA_CREATED = "ca-app-pub-3940256099942544/1033173712"; // FOR REAL TO CHANGE WITH : ca-app-pub-7652009776235513/8369429866
+    public static final String ADD_MOBS_INTERSTITIAL_ENIGMA_RESOLVED = "ca-app-pub-3940256099942544/1033173712"; // FOR REAL TO CHANGE WITH : ca-app-pub-7652009776235513/5342390395
     //PLAY ACTIVITY
     // TOOLBAR TITLES
     public static final String PLAY_ACTIVITY_TITLE = "EmojiGame";
     public static final String TOOLBAR_TITLE_IN_PLAY = "Enigmes en Jeu";
     public static final String TOOLBAR_TITLE_HISTORIC = "Enigmes Jouées";
-    public static final String TOOLBAR_TITLE_OWN = "Enigmes Crées";
+    public static final String TOOLBAR_TITLE_OWN = "Enigmes Créées";
     // SORT / FILTER OPTIONS
     public static final String FILTER_CATEGORY_ALL = "CATEGORIE";
     public static final String FILTER_CATEGORY_PERSONAGE = "PERSONNAGE";
@@ -26,8 +27,8 @@ public class Constants {
     public static final String FILTER_CATEGORY_OBJECT = "OBJET";
     public static final String FILTER_CATEGORY_WORD = "NOM COMMUN";
     public static final String FILTER_CATEGORY_OTHER = "AUTRE";
-    public static final String SORT_DIFICULTY_ASC = "Dificulty Asc.";
-    public static final String SORT_DIFICULTY_DESC = "Dificulty Desc.";
+    public static final String SORT_DIFICULTY_ASC = "Difficulté Asc.";
+    public static final String SORT_DIFICULTY_DESC = "Difficulté Desc.";
     public static final String SORT_DATE_ASC = "Date Asc.";
     public static final String SORT_DATE_DESC = "Date Desc.";
     public static final String SORT_PLAYER_ASC = "Joueur A-Z";
@@ -76,13 +77,14 @@ public class Constants {
     public static final String HINT_TWO_DIALOG_FRAGMENT_TAG = "hintTwoDialog";
     public static final String SOLVED_DIALOG_FRAGMENT_TAG = "solvedDialog";
     public static final String ENIGMA_CREATED_DIALOG_FRAGMENT_TAG = "enigmaCreatedDialog";
+    public static final String UPDATED_USERNAME_DIALOG_FRAGMENT_TAG = "updatedUsernameDialog";
     public static final String PODIUM_DIALOG_ARG_ENIGMA = "enigma";
     public static final String LIFE_DIALOG_ARG_USER = "user";
     public static final String LIFE_DIALOG_ARG_END_TIME = "endTime";
     public static final String LIFE_DIALOG_ARG_TIMER_RUNNING = "timmerRunning";
     public static final String HINT_ONE_DIALOG_ARG_ENIGMA = "enigma";
     public static final String HINT_TWO_DIALOG_ARG_ENIGMA = "enigma";
-    public static final String HINT_TWO_DIALOG_ARG_POSITION_CHAR_LIST = "positionCharList";
+    public static final String HINT_TWO_DIALOG_ARG_SOLUTION_TYPE_LIST = "solutionInTypeArray";
     public static final String SOLVED_DIALOG_ARG_POINTS = "points";
     public static final String SOLVED_DIALOG_ARG_ENIGMA = "solvedEnigma";
     public static final String SOLVED_DIALOG_ARG_RESOLVED_TIMES = "numberOfResolvedTimes";
@@ -90,5 +92,7 @@ public class Constants {
     public static final String COINS_DIALOG_ARG_USER = "userUid";
     public static final String ENIGMA_CREATED_DIALOG_ARG_ENIGMA = "enigmaCreatedEnigma";
     public static final String ENIGMA_CREATED_DIALOG_ARG_CATEGORY = "enigmaCreatedCategory";
+    public static final String UPDATED_USERNAME_DIALOG_ARG_USER_UID = "updatedUsernameUserUid";
+    public static final String UPDATED_USERNAME_DIALOG_ARG_USER_USERNAME = "updatedUsernameUserUsername";
 
 }

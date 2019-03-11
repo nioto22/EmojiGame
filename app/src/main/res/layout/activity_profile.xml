@@ -117,7 +117,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center"
-        android:layout_weight="1">
+        android:layout_weight="0.5">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="160dp">
@@ -137,8 +137,8 @@
                 android:visibility="invisible"
                 android:layout_marginEnd="30dp"/>
         </RelativeLayout>
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/profile_activity_edit_text_username"
+        <TextView
+            android:id="@+id/profile_activity_tv_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/text_view_main_blue_color"
@@ -255,7 +255,7 @@
             android:layout_margin="@dimen/default_margin"
             android:padding="@dimen/default_margin"/>
 
-        <!-- BUTTON SIGN OUT -->
+        <!-- BUTTON SIGN OUT
         <Button
             android:id="@+id/profile_activity_button_sign_out"
             android:layout_width="match_parent"
@@ -268,7 +268,7 @@
             android:layout_margin="@dimen/default_margin"
             android:padding="@dimen/default_margin"/>
 
-        <!-- BUTTON DELETE ACCOUNT -->
+
         <Button
             android:id="@+id/profile_activity_button_delete"
             android:layout_width="match_parent"
@@ -280,6 +280,6 @@
             style="?android:attr/borderlessButtonStyle"
             android:layout_margin="@dimen/default_margin"
             android:padding="@dimen/default_margin"/>
-
+        -->
     </LinearLayout>
 </LinearLayout>

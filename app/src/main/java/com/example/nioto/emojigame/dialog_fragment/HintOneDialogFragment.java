@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.database.EnigmaPlayed;
@@ -33,6 +34,7 @@ public class HintOneDialogFragment extends DialogFragment implements RewardedVid
 
     // FOR DESIGN
     private ConstraintLayout rootView;
+    private TextView informationText;
     private ImageButton imageButtonRewardedVideo;
     private Button okButton;
     // FOR REWARDED VIDEO AD
@@ -65,12 +67,14 @@ public class HintOneDialogFragment extends DialogFragment implements RewardedVid
 
     }
 
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_dialog_hint_one, container, false);
         Objects.requireNonNull(getDialog().getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         rootView = v.findViewById(R.id.fragment_dialog_hint_one_global_constraint_layout);
+        informationText = v.findViewById(R.id.fragment_dialog_hint_one_text);
         imageButtonRewardedVideo = v.findViewById(R.id.fragment_dialog_hint_one_video_button);
         okButton = v.findViewById(R.id.fragment_dialog_hint_one_button_validate);
 
@@ -123,7 +127,6 @@ public class HintOneDialogFragment extends DialogFragment implements RewardedVid
     public void onRewardedVideoStarted() {}
     @Override
     public void onRewardedVideoAdClosed() {
-
         loadRewardedVideoAd();
         if (videoIsRewarded) {
             EnigmaPlayedManager dbManager = new EnigmaPlayedManager(getActivity().getBaseContext());
@@ -132,14 +135,15 @@ public class HintOneDialogFragment extends DialogFragment implements RewardedVid
             EnigmaPlayed ep = dbManager.getEnigmaPlayed(enigmaUid);
             dbManager.close();
 
-            dismissDialog();
+            imageButtonRewardedVideo.setVisibility(View.GONE);
+            informationText.setText(getString(R.string.snackbar_message_activate_hint_one));
+
         }
     }
 
     @Override
     public void onRewarded(RewardItem rewardItem) {
         videoIsRewarded = true;
-        showSnackBar(rootView, getString(R.string.snackbar_message_activate_hint_one));
     }
     @Override
     public void onRewardedVideoAdLeftApplication() {}

@@ -1,5 +1,7 @@
 package com.example.nioto.emojigame.dialog_fragment;
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -131,6 +133,15 @@ public class SolvedDialogFragment extends DialogFragment {
 
     public void dismissDialog(){
         this.dismiss();
+    }
+
+    @Override
+    public void onDismiss(final DialogInterface dialog) {
+        super.onDismiss(dialog);
+        final Activity activity = getActivity();
+        if (activity instanceof DialogInterface.OnDismissListener) {
+            ((DialogInterface.OnDismissListener) activity).onDismiss(dialog);
+        }
     }
 
 }

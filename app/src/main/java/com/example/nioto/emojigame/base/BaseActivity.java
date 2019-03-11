@@ -12,6 +12,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageButton;
@@ -27,6 +28,7 @@ import com.example.nioto.emojigame.models.User;
 import com.example.nioto.emojigame.utils.Constants;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AdditionalUserInfo;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseUserMetadata;
@@ -44,6 +46,8 @@ import butterknife.ButterKnife;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
+    private static final String TAG = "BaseActivity";
+    
     // DATA
     protected Context context;
     private static User[] currentUser = new User[1];
@@ -230,6 +234,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     UserHelper.updateUserSmileys(smiles, Objects.requireNonNull(getCurrentUser()).getUid()).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
+                            Log.e(TAG, "onFailure: ", e );
                         }
                     });
                     if (smiles < 5) {
@@ -289,8 +294,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         boolean result;
         FirebaseUserMetadata metadata = Objects.requireNonNull(this.getCurrentUser()).getMetadata();
         // It's a new user
-        result = metadata != null && metadata.getCreationTimestamp() == metadata.getLastSignInTimestamp();
-        return result;
+        result =  Objects.requireNonNull(metadata).getCreationTimestamp() == metadata.getLastSignInTimestamp();
+       return result;
     }
 
     protected Boolean isCurrentUserLogged(){

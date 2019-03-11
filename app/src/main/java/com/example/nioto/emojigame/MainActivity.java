@@ -54,7 +54,7 @@ public class MainActivity extends BaseActivity {
     // FOR DATA
     public static final int INTENT_CREATE_ACTIVITY_KEY = 10;
     public static final int INTENT_PLAY_ACTIVITY_KEY = 11;
-    // FOR INTERSTITIAL ADS
+
 
 
     @Override

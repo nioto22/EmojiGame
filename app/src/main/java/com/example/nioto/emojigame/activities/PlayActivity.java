@@ -9,6 +9,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -52,6 +53,8 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemClickListener  {
+
+    private static final String TAG = "PlayActivity";
 
     public static final String EXTRA_ENIGMA_PATH = "EXTRA_ENIGMA_PATH";
     public static final int INTENT_SOLVE_ACTIVITY_KEY = 12;
@@ -137,6 +140,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
         query.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                getUserHistoryEnigmaArray();
                 setUpRecyclerView();
             }
         });
@@ -145,6 +149,9 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
 
 
     }
+
+
+
     @Override
     public void setContext() { this.context = this; }
     @Override
@@ -174,6 +181,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     // ------------------
 
     public void getUserHistoryEnigmaArray() {
+        userEnigmaHistoryList = new ArrayList<>();
         EnigmaPlayedManager dbManager = new EnigmaPlayedManager(this);
         dbManager.open();
 
@@ -181,6 +189,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
         if (cursor.moveToFirst()) {
             do {
                 userEnigmaHistoryList.add(cursor.getString(cursor.getColumnIndex(EnigmaPlayedManager.ENIGMA_UID)));
+                Log.d(TAG, "getUserHistoryEnigmaArray: enigma " + cursor.getString(cursor.getColumnIndex(EnigmaPlayedManager.ENIGMA_UID)));
             }
             while (cursor.moveToNext());
         }
@@ -214,20 +223,26 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
         previousTab = tabTag;
         tabTag = TAB_UNSOLVED_ENIGMA_TAG;
         if (tabTag != previousTab) {
+            initializeFilters();
             setUpEnigmaFilterButton(tabTag);
             displayTabsBottomStroke();
+            getUserHistoryEnigmaArray();
             setUpRecyclerView();
             previousTab = tabTag;
         }
     }
+
+
 
     @OnClick (R.id.play_enigma_activity_history_button)
     public void onClickButton(View v){
         previousTab = tabTag;
         tabTag = TAB_HISTORY_ENIGMA_TAG;
         if (tabTag != previousTab) {
+            initializeFilters();
             setUpEnigmaFilterButton(tabTag);
             displayTabsBottomStroke();
+            getUserHistoryEnigmaArray();
             setUpRecyclerView();
             previousTab = tabTag;
         }
@@ -237,8 +252,10 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
         previousTab = tabTag;
         tabTag = TAB_USER_ENIGMA_TAG;
         if (tabTag != previousTab) {
+            initializeFilters();
             setUpEnigmaFilterButton(tabTag);
             displayTabsBottomStroke();
+            getUserHistoryEnigmaArray();
             setUpRecyclerView();
             previousTab = tabTag;
         }
@@ -390,6 +407,15 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
             }
         });
 
+    }
+
+    private void initializeFilters() {
+        filterEnigma = Constants.FILTER_ENIGMA_ALL;
+        setUpButtonsTitle(FILTER_ENIGMA_POPUP_MENU_SELECTED);
+        setUpFilterChecked(FILTER_ENIGMA_POPUP_MENU_SELECTED);
+        filterCategory = Constants.FILTER_CATEGORY_ALL;
+        setUpButtonsTitle(FILTER_POPUP_MENU_SELECTED);
+        setUpFilterChecked(FILTER_POPUP_MENU_SELECTED);
     }
 
     public void displayTabsBottomStroke(){
@@ -622,14 +648,14 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                 itemEnigmaResolved.setChecked(false);
                 break;
             case FILTER_POPUP_MENU_SELECTED :
-                itemAll.setChecked(true);
-                itemPersonage.setChecked(true);
-                itemCinema.setChecked(true);
-                itemMusic.setChecked(true);
-                itemExpressions.setChecked(true);
-                itemObject.setChecked(true);
-                itemWord.setChecked(true);
-                itemOther.setChecked(true);
+                itemAll.setChecked(false);
+                itemPersonage.setChecked(false);
+                itemCinema.setChecked(false);
+                itemMusic.setChecked(false);
+                itemExpressions.setChecked(false);
+                itemObject.setChecked(false);
+                itemWord.setChecked(false);
+                itemOther.setChecked(false);
                 break;
             case SORT_POPUP_MENU_SELECTED :
                 itemEnigmaDifficultyAsc.setChecked(false);
@@ -705,6 +731,7 @@ public class PlayActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
                                                     }
                                                 });
                                                 Intent solveEnigmaIntent = new Intent(PlayActivity.this, SolveEnigmaActivity.class);
+
                                                 solveEnigmaIntent.putExtra(EXTRA_ENIGMA_PATH, enigma.getUid());
                                                 startActivityForResult(solveEnigmaIntent, INTENT_SOLVE_ACTIVITY_KEY);
                                             } else if (userEnigmaHistoryList.contains(enigma.getUid())) {

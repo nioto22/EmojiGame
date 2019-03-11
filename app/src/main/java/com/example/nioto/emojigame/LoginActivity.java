@@ -9,6 +9,8 @@ import com.example.nioto.emojigame.base.BaseActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.firebase.auth.AdditionalUserInfo;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -99,7 +101,7 @@ public class LoginActivity extends BaseActivity {
     // 1 - Http request that create user in firestore
     private void createUserInFirestore(){
 
-        if (isCurrentUserLogged() && isNewUser()){ // && isNewUser
+        if (isCurrentUserLogged()){ // && isNewUser()
             String urlPicture = (Objects.requireNonNull(this.getCurrentUser()).getPhotoUrl() != null) ? Objects.requireNonNull(this.getCurrentUser().getPhotoUrl()).toString() : null;
             String username = this.getCurrentUser().getDisplayName();
             String uid = this.getCurrentUser().getUid();

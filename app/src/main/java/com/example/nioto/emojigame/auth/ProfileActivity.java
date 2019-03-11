@@ -9,9 +9,13 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -23,6 +27,8 @@ import com.example.nioto.emojigame.LoginActivity;
 import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.api.UserHelper;
 import com.example.nioto.emojigame.base.BaseActivity;
+import com.example.nioto.emojigame.dialog_fragment.EnigmaCreatedDialogFragment;
+import com.example.nioto.emojigame.dialog_fragment.UpdatedUsernameDialogFragment;
 import com.example.nioto.emojigame.models.User;
 import com.example.nioto.emojigame.utils.Constants;
 import com.firebase.ui.auth.AuthUI;
@@ -62,7 +68,7 @@ public class ProfileActivity extends BaseActivity {
 
     // FOR DESIGN
     @BindView(R.id.profile_activity_image_view_profile) ImageView imageViewProfile;
-    @BindView(R.id.profile_activity_edit_text_username) TextInputEditText textInputEditTextUsername;
+    @BindView(R.id.profile_activity_tv_username) TextView textViewUsername;
     @BindView(R.id.profile_activity_progress_bar) ProgressBar progressBar;
     @BindView(R.id.profile_activity_tv_nb_enigma_create) TextView tvUserEnigmaCreationNumber;
     @BindView(R.id.profile_activity_tv_nb_enigma_resolved) TextView tvUserEnigmaResolvedNumber;
@@ -125,6 +131,7 @@ public class ProfileActivity extends BaseActivity {
     @AfterPermissionGranted(RC_IMAGE_PERMS)
     public void onClickUpdatePhotoButton() { this.updatePhotoInFirebase(); }
 
+  /*
     @OnClick(R.id.profile_activity_button_sign_out)
     public void onClickSignOutButton() { this.signOutUserFromFirebase(); }
 
@@ -141,6 +148,7 @@ public class ProfileActivity extends BaseActivity {
                 .setNegativeButton(R.string.popup_message_choice_no, null)
                 .show();
     }
+    */
 
     // --------------------
     // REST REQUESTS
@@ -150,7 +158,6 @@ public class ProfileActivity extends BaseActivity {
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnSuccessListener(this, this.updateUIAfterRESTRequestsCompleted(SIGN_OUT_TASK));
-
     }
 
     private void deleteUserFromFirebase(){
@@ -165,15 +172,17 @@ public class ProfileActivity extends BaseActivity {
 
     private void updateUsernameInFirebase(){
 
-        this.progressBar.setVisibility(View.VISIBLE);
-        String username = this.textInputEditTextUsername.getText().toString();
+        String username = this.textViewUsername.getText().toString();
 
-        if (this.getCurrentUser() != null){
-            if (!username.isEmpty() &&  !username.equals(getString(R.string.info_no_username_found))){
-                UserHelper.updateUsername(username, this.getCurrentUser().getUid()).addOnFailureListener(this.onFailureListener())
-                        .addOnSuccessListener(this.updateUIAfterRESTRequestsCompleted(UPDATE_USERNAME));
-            }
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(Constants.UPDATED_USERNAME_DIALOG_FRAGMENT_TAG);
+        if (prev != null) {
+            ft.remove(prev);
         }
+        ft.addToBackStack(null);
+        // Create and show the dialog.
+        DialogFragment newFragment = UpdatedUsernameDialogFragment.newInstance(Objects.requireNonNull(this.getCurrentUser()).getUid(), username);
+        newFragment.show(ft, Constants.UPDATED_USERNAME_DIALOG_FRAGMENT_TAG);
     }
 
     private void updatePhotoInFirebase(){
@@ -206,7 +215,7 @@ public class ProfileActivity extends BaseActivity {
                         String username = TextUtils.isEmpty(currentUser.getUsername())
                                 ? getString(R.string.info_no_username_found)
                                 : currentUser.getUsername();
-                        textInputEditTextUsername.setText(username);
+                        textViewUsername.setText(username);
 
                         // Set Photo
                         String photoFirebaseUrl = currentUser.getUrlPicture();
@@ -287,6 +296,7 @@ public class ProfileActivity extends BaseActivity {
                         .into(this.imageViewProfile);
                 uploadPhotoInFirebase();
             } else {
+                progressBar.setVisibility(View.INVISIBLE);
                 Toast.makeText(this, getString(R.string.toast_title_no_image_chosen), Toast.LENGTH_SHORT).show();
             }
         }

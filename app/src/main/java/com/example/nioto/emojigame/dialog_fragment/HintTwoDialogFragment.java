@@ -5,7 +5,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.nioto.emojigame.R;
-import com.example.nioto.emojigame.database.EnigmaPlayed;
 import com.example.nioto.emojigame.database.EnigmaPlayedManager;
 import com.example.nioto.emojigame.utils.Constants;
 import com.google.android.gms.ads.AdRequest;
@@ -26,19 +24,20 @@ import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Random;
-import java.util.Set;
 
 public class HintTwoDialogFragment extends DialogFragment implements RewardedVideoAdListener {
 
     // FOR DATA
     private String enigmaUid;
-    private ArrayList<Integer> positions;
-    private ArrayList<Integer> mPositionOfSolutionCharListOnlyLetter;
+    private ArrayList<Integer> hintTwoAvailablePositions;
+    private String solutionInTypeString;
+    private ArrayList<Character> solutionInTypeArray;
     private int numberOfHint;
     private int numberOfHintMax;
+    private static final char ALPHA_OR_NUM = 'A', HINT_LETTER = 'B';
+    public static final int ARG_HINT = 112, ARG_ALPHA_AND_HINT = 121;
 
     // FOR DESIGN
     private ConstraintLayout rootView;
@@ -54,12 +53,12 @@ public class HintTwoDialogFragment extends DialogFragment implements RewardedVid
 
 
 
-    public static HintTwoDialogFragment newInstance(String enigmaUid, ArrayList<Integer> mPositionOfSolutionCharListOnlyLetter){
+    public static HintTwoDialogFragment newInstance(String enigmaUid, String solutionInTypeString){
         HintTwoDialogFragment dialogFragment = new HintTwoDialogFragment();
 
         Bundle args = new Bundle();
         args.putString(Constants.HINT_TWO_DIALOG_ARG_ENIGMA, enigmaUid);
-        args.putIntegerArrayList(Constants.HINT_TWO_DIALOG_ARG_POSITION_CHAR_LIST, mPositionOfSolutionCharListOnlyLetter);
+        args.putString(Constants.HINT_TWO_DIALOG_ARG_SOLUTION_TYPE_LIST, solutionInTypeString);
         dialogFragment.setArguments(args);
 
         return dialogFragment;
@@ -75,10 +74,10 @@ public class HintTwoDialogFragment extends DialogFragment implements RewardedVid
 
         if (getArguments() != null) {
             enigmaUid = getArguments().getString(Constants.HINT_TWO_DIALOG_ARG_ENIGMA);
-            mPositionOfSolutionCharListOnlyLetter = getArguments().getIntegerArrayList(Constants.HINT_TWO_DIALOG_ARG_POSITION_CHAR_LIST);
+            solutionInTypeString = getArguments().getString(Constants.HINT_TWO_DIALOG_ARG_SOLUTION_TYPE_LIST);
         }
-
-
+        solutionInTypeArray = convertHintTwoStringToSolutionTypeArray(Objects.requireNonNull(solutionInTypeString));
+        hintTwoAvailablePositions = convertSolutionTypeArrayToHintTwoAvailablePositionArray(solutionInTypeArray);
     }
 
     @Override
@@ -94,45 +93,18 @@ public class HintTwoDialogFragment extends DialogFragment implements RewardedVid
         okButton = v.findViewById(R.id.fragment_dialog_hint_two_button_validate);
 
 
-        // IS HINT MAX REACHED
-        EnigmaPlayedManager dbManager = new EnigmaPlayedManager(Objects.requireNonNull(getActivity()).getBaseContext());
-        dbManager.open();
-
-        // Get enigmaPlayed
-        EnigmaPlayed enigmaPlayed = dbManager.getEnigmaPlayed(enigmaUid);
-        Boolean enigmaHasHintTwo = dbManager.convertIntToBoolean(enigmaPlayed.getEnigmaHasHintTwo());
-
-
-        // GET HINT TWO POSITIONS
-        if (enigmaHasHintTwo) {
-            String hintTwoPositions = enigmaPlayed.getHintTwoPositions();
-            String[] stPositions = hintTwoPositions.split("/");
-            positions = new ArrayList<>();
-            for (String st : stPositions) {
-               if (!st.equals("")) positions.add(Integer.parseInt(st));
-            }
-            numberOfHint = positions.size();
-        } else {
-            dbManager.updateEnigmaHasHintTwo(enigmaUid, true);
-            positions = new ArrayList<>();
-            numberOfHint = 0;
-        }
-
         // IS NUMBER OF HINT MAX IS REACHED
-        numberOfHintMax = mPositionOfSolutionCharListOnlyLetter.size()/ 2;
-        if (numberOfHint < numberOfHintMax) {
-            tvTextNoMoreHint.setVisibility(View.GONE);
-
-            tvTextMoreHint.setVisibility(View.VISIBLE);
-            linearLayoutMoreHint.setVisibility(View.VISIBLE);
-        } else {
+        if (numberOfHintMaxReached(solutionInTypeArray)) {
             tvTextMoreHint.setVisibility(View.GONE);
             linearLayoutMoreHint.setVisibility(View.GONE);
-
             tvTextNoMoreHint.setVisibility(View.VISIBLE);
+
+        } else {
+            tvTextNoMoreHint.setVisibility(View.GONE);
+            tvTextMoreHint.setVisibility(View.VISIBLE);
+            linearLayoutMoreHint.setVisibility(View.VISIBLE);
         }
 
-        dbManager.close();
 
 
         imageButtonRewardedVideo.setOnClickListener(new View.OnClickListener() {
@@ -150,7 +122,6 @@ public class HintTwoDialogFragment extends DialogFragment implements RewardedVid
                 dismissDialog();
             }
         });
-
         return v;
     }
 
@@ -158,41 +129,67 @@ public class HintTwoDialogFragment extends DialogFragment implements RewardedVid
         this.dismiss();
     }
 
-    // Show Snack Bar with a message
-    protected void showSnackBar(ConstraintLayout constraintLayout, String message){
-        Snackbar.make(constraintLayout, message, Snackbar.LENGTH_SHORT).show();
-    }
+    // --------------------
+    //    UTILS
+    // --------------------
 
     private void enigmaHintTwoUpdate() {
-        String newHintTwoPositions;
         if (numberOfHint == 0){
-            newHintTwoPositions = "1/";
+            solutionInTypeArray.set(0, HINT_LETTER);
         } else {
-            int numberOfLetters = mPositionOfSolutionCharListOnlyLetter.size();
+            int numberOfLetters = hintTwoAvailablePositions.size();
             Random rng = new Random();
-            Set<Integer> generated = new LinkedHashSet<>(positions);
-            while (generated.size() < positions.size() + 1) {
-                Integer next = rng.nextInt(numberOfLetters) + 1;
-                generated.add(next);
-            }
-            newHintTwoPositions = convertSetToString(generated);
+            int next = rng.nextInt(numberOfLetters) + 1;
+            solutionInTypeArray.set(hintTwoAvailablePositions.get(next), HINT_LETTER);
         }
+        solutionInTypeString = convertSolutionTypeArrayToHintTwoString(solutionInTypeArray);
 
         EnigmaPlayedManager bdManager = new EnigmaPlayedManager(Objects.requireNonNull(getActivity()).getBaseContext());
         bdManager.open();
-        bdManager.updateEnigmaHintTwoPositions(enigmaUid, newHintTwoPositions);
+        bdManager.updateEnigmaHasHintTwo(enigmaUid, true);
+        bdManager.updateEnigmaHintTwoPositions(enigmaUid, solutionInTypeString);
         bdManager.close();
-
     }
 
-    private String convertSetToString(Set<Integer> set){
-        StringBuilder builder = new StringBuilder();
-        for (Integer i : set) {
-            builder.append(i);
-            builder.append('/');
+    private ArrayList<Character> convertHintTwoStringToSolutionTypeArray(String solutionInTypeString) {
+        ArrayList<Character> result = new ArrayList<>();
+        for (int i = 0; i < solutionInTypeString.length(); i++){
+            result.add(i, solutionInTypeString.charAt(i));
         }
-        return builder.toString();
+        return result;
     }
+
+    private String convertSolutionTypeArrayToHintTwoString(ArrayList<Character> solutionInTypeArray) {
+        StringBuilder stBuilder = new StringBuilder();
+        for (char c : solutionInTypeArray) {
+            stBuilder.append(c);
+        }
+        return stBuilder.toString();
+    }
+
+    private ArrayList<Integer> convertSolutionTypeArrayToHintTwoAvailablePositionArray(ArrayList<Character> solutionInTypeArray) {
+        ArrayList<Integer> hintTwoAvailablePositions = new ArrayList<>();
+        for (int i = 0; i < solutionInTypeArray.size(); i++){
+            if (solutionInTypeArray.get(i).equals(ALPHA_OR_NUM)) hintTwoAvailablePositions.add(i);
+        }
+        return hintTwoAvailablePositions;
+    }
+
+    private int getNumberOf(int arg, ArrayList<Character> solutionInTypeArray) {
+        int numberOfCharacter = 0;
+        for (char c : solutionInTypeArray){
+            if (c == ALPHA_OR_NUM && arg == ARG_ALPHA_AND_HINT ) numberOfCharacter ++;
+            else if (c == HINT_LETTER) numberOfCharacter ++;
+        }
+        return numberOfCharacter;
+    }
+
+    private boolean numberOfHintMaxReached(ArrayList<Character> solutionInTypeArray) {
+        numberOfHint = getNumberOf(ARG_HINT, solutionInTypeArray);
+        numberOfHintMax = getNumberOf(ARG_ALPHA_AND_HINT, solutionInTypeArray) / 2;
+        return (numberOfHint > numberOfHintMax );
+    }
+
 
     // --------------------
     // Rewarded Video Add
@@ -214,9 +211,9 @@ public class HintTwoDialogFragment extends DialogFragment implements RewardedVid
     public void onRewardedVideoAdClosed() {
         loadRewardedVideoAd();
         if (videoIsRewarded) {
-            showSnackBar(rootView, getString(R.string.snackbar_message_activate_hint_two));
             enigmaHintTwoUpdate();
-            dismissDialog();
+            imageButtonRewardedVideo.setVisibility(View.GONE);
+            tvTextMoreHint.setText(getString(R.string.snackbar_message_activate_hint_two));
         }
     }
 
@@ -241,6 +238,7 @@ public class HintTwoDialogFragment extends DialogFragment implements RewardedVid
     @Override
     public void onResume() {
         mVideoAd.resume(getActivity());
+
         super.onResume();
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
