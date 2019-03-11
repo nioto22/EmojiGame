@@ -214,6 +214,7 @@ public class HintTwoDialogFragment extends DialogFragment implements RewardedVid
             enigmaHintTwoUpdate();
             imageButtonRewardedVideo.setVisibility(View.GONE);
             tvTextMoreHint.setText(getString(R.string.snackbar_message_activate_hint_two));
+            okButton.setText(getString(R.string.ok));
         }
     }
 

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/help_popu_create_enigma_activity_rl_global"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/help_explanation_activity_rl_global"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/default_large_margin"
     android:orientation="vertical"
-    tools:context=".activities.CreateEnigmaActivity"
-    android:background="@color/blue_point_dark">
+    tools:context="com.example.nioto.emojigame.activities.CreateEnigmaActivity"
+    android:background="@color/primaryDarkColor">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -22,7 +23,7 @@
             android:textStyle="bold"
             android:padding="@dimen/default_margin"/>
         <Button
-            android:id="@+id/help_popup_close"
+            android:id="@+id/help_explanation_popup_close"
             android:layout_width="38dp"
             android:layout_height="38dp"
             android:layout_gravity="top|end"
@@ -30,46 +31,36 @@
             android:layout_margin="@dimen/default_margin"
             android:layout_alignParentEnd="true"/>
     </RelativeLayout>
+
     <!-- ENIGMA LAYOUT  -->
-    <android.support.design.widget.TextInputLayout
+    <RelativeLayout
+        android:id="@+id/activity_help_enigma_relative_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1">
-        <LinearLayout
+        android:layout_weight="2"
+        android:background="@color/primaryDarkColor">
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginEnd="@dimen/default_margin"
-            android:orientation="vertical"
-            android:weightSum="100"
-            android:background="@drawable/text_view_response_background">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="20"
-                android:gravity="center"
-                android:text="@string/popup_help_enigma_help"
-                android:textColor="@color/primaryTextColor"/>
+            android:layout_height="match_parent">
             <ImageView
-                android:id="@+id/help_popup_enigma_image_view"
+                android:id="@+id/create_activity_image_enigma"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="80"
-                android:contentDescription="@string/image_example_content_description"
+                android:layout_height="match_parent"
                 android:gravity="center"
-                android:src="@drawable/enigma_example"
-                android:padding="@dimen/default_extra_large_margin"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
-        </LinearLayout>
-    </android.support.design.widget.TextInputLayout>
+                android:src="@drawable/example"/>
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/create_activity_et_enigma"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </FrameLayout>
+    </RelativeLayout>
     <!-- Text Inputs Layout  -->
-    <LinearLayout
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_weight="1"
-        android:gravity="center">
+        android:background="@color/primaryDarkColor">
         <!-- SOLUTION LAYOUT  -->
         <RelativeLayout
             android:layout_width="match_parent"
@@ -99,7 +90,7 @@
                 android:textColor="@color/secondaryTextColor"/>
             <TextView
                 android:id="@+id/help_popup_et_solution_explanation"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:layout_marginStart="10dp"
@@ -188,7 +179,7 @@
                 android:text="@string/popup_help_explanation_help"
                 android:textColor="@color/primaryTextColor"/>
         </RelativeLayout>
-    </LinearLayout>
+    </android.support.design.widget.TextInputLayout>
 
 
 </LinearLayout>

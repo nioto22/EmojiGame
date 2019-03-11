@@ -27,6 +27,7 @@ import com.example.nioto.emojigame.base.BaseActivity;
 import com.example.nioto.emojigame.database.EnigmaPlayed;
 import com.example.nioto.emojigame.database.EnigmaPlayedManager;
 import com.example.nioto.emojigame.dialog_fragment.HintOneDialogFragment;
+import com.example.nioto.emojigame.dialog_fragment.HintOneMandatoryDialogFragment;
 import com.example.nioto.emojigame.dialog_fragment.HintTwoDialogFragment;
 import com.example.nioto.emojigame.dialog_fragment.PodiumDialogFragment;
 import com.example.nioto.emojigame.dialog_fragment.SolvedDialogFragment;
@@ -564,9 +565,18 @@ public class SolveEnigmaActivity extends BaseActivity implements DialogInterface
             DialogFragment newFragment = HintTwoDialogFragment.newInstance(enigmaUid, enigmaHintPositions );
             newFragment.show(ft, Constants.HINT_TWO_DIALOG_FRAGMENT_TAG);
         } else {
-            Toast toast = Toast.makeText(SolveEnigmaActivity.this, getString(R.string.toast_hint_one_mandatory), Toast.LENGTH_LONG);
+            /*Toast toast = Toast.makeText(SolveEnigmaActivity.this, getString(R.string.toast_hint_one_mandatory), Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
+            */
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            Fragment prev = getSupportFragmentManager().findFragmentByTag(Constants.HINT_ONE_MANDATORY_DIALOG_FRAGMENT_TAG);
+            if (prev != null) { ft.remove(prev);}
+            ft.addToBackStack(null);
+
+            // Create and show the dialog.
+            DialogFragment newFragment = HintOneMandatoryDialogFragment.newInstance();
+            newFragment.show(ft, Constants.HINT_ONE_MANDATORY_DIALOG_FRAGMENT_TAG);
         }
     }
 

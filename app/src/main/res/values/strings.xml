@@ -101,7 +101,7 @@
     <string name="snackbar_message_win_new_life">Félicitations, vous gagnez une vie supplémentaire !!</string>
     <string name="snackbar_message_win_new_coins">Félicitations, vous remportez 50 EmojiCoins !!</string>
     <string name="snackbar_message_activate_hint_one">Félicitations, vous avez débloqué le Coup de pouce : \n Nombre de Lettres</string>
-    <string name="snackbar_message_activate_hint_two">Félicitations, vous avez activez le coup de pouce 2 : \n Obtenir une Lettre</string>
+    <string name="snackbar_message_activate_hint_two">Félicitations, vous avez activez le coup de pouce : \n Obtenir une Lettre</string>
 
     <!--  FRAGMENT DIALOG -->
     <string name="fragment_dialog_emoji_coins_create_enigma_text">Créez une énigme</string>
@@ -132,16 +132,18 @@
     <string name="enigma_item_create_by_title_text">Créée par :</string>
     <string name="popup_help_example_title">EXEMPLE</string>
     <string name="popup_help_enigma_help">Entrez ici votre énigme sous forme d\'émoji !!   Attention chaque syllabe doit être représentée !</string>
+    <string name="activity_help_text_explanation_enigma_two">Entre parenthèse signifie plusieurs Emojis pour un mot</string>
     <string name="popup_help_solution_title">Solution :</string>
-    <string name="popup_help_solution_text">Porte-Feuille</string>
+    <string name="popup_help_solution_text">Cannibale</string>
     <string name="popup_help_solution_help">Inscrire ici la réponse.</string>
     <string name="popup_help_solution_second_help">Attention à votre orthographe !!!</string>
     <string name="popup_help_category_title">Catégorie :</string>
     <string name="popup_help_category_help">Utilisez la liste déroulante pour choisir la catégorie de votre énigme.</string>
     <string name="popup_help_explanation_title">Explication :</string>
-    <string name="popup_help_explanation_text">Porte_Feuille</string>
+    <string name="popup_help_explanation_text">K_Nid_Balle</string>
     <string name="popup_help_explanation_help">Entrez ici la signification de chaque Emoji séparée par un _</string>
     <string name="ok">OK</string>
+    <string name="back">RETOUR</string>
     <string name="enigma_grid_item_points_example">25</string>
     <string name="enigma_grid_item_user_title">Créé par :</string>
 
@@ -195,6 +197,10 @@
     <string name="history_enigma_image_content_description">history button</string>
     <string name="fragment_dialog_updated_username_title">Comment voulez-vous que l\'on vous appelle ?</string>
     <string name="validate">Valider</string>
+    <string name="fragment_dialog_emoji_lifes_new_life_ok">Félicitations, vous avez obtenu une vie supplémentaire</string>
+    <string name="fragment_dialog_hint_one_mandatory_text_one">Vous devez activer le coup de pouce : Nombre de Lettre :</string>
+    <string name="fragment_dialog_hint_one_mandatory_text_two">avant de pouvoir utiliser le coup de pouce : Obtenir une lettre</string>
+
 
 
 </resources>

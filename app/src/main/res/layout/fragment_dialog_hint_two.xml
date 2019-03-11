@@ -105,7 +105,7 @@
         android:id="@+id/fragment_dialog_hint_two_button_validate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/ok"
+        android:text="@string/back"
         android:textStyle="bold"
         android:textColor="@color/primaryTextColor"
         android:background="@drawable/button_fragment_dialog"

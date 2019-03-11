@@ -78,6 +78,7 @@ public class Constants {
     public static final String SOLVED_DIALOG_FRAGMENT_TAG = "solvedDialog";
     public static final String ENIGMA_CREATED_DIALOG_FRAGMENT_TAG = "enigmaCreatedDialog";
     public static final String UPDATED_USERNAME_DIALOG_FRAGMENT_TAG = "updatedUsernameDialog";
+    public static final String HINT_ONE_MANDATORY_DIALOG_FRAGMENT_TAG = "hintOneMandatoryDialog";
     public static final String PODIUM_DIALOG_ARG_ENIGMA = "enigma";
     public static final String LIFE_DIALOG_ARG_USER = "user";
     public static final String LIFE_DIALOG_ARG_END_TIME = "endTime";

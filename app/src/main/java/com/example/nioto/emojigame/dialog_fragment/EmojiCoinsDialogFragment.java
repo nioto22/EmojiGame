@@ -9,6 +9,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.activities.CreateEnigmaActivity;
@@ -177,7 +179,12 @@ public class EmojiCoinsDialogFragment extends DialogFragment implements Rewarded
     public void onRewardedVideoAdClosed() {
         loadRewardedVideoAd();
 
-        if (videoIsRewarded) showSnackBar(globalConstraintLayout, getString(R.string.snackbar_message_win_new_coins));
+        if (videoIsRewarded) {
+            Toast toast = Toast.makeText(getActivity(), getString(R.string.snackbar_message_win_new_coins), Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+
+        }
     }
 
     @Override

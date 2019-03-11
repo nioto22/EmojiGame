@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.nioto.emojigame.R;
 import com.example.nioto.emojigame.api.UserHelper;
@@ -191,6 +193,7 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
                                     mTimeLeftInMillis = Constants.TIMES_UP_UNTIL_NEW_LIFE;
                                     mTimerRunning = false;
                                 }
+                                displayFragmentCaseNewLifeOk();
                             } else {
                                 showSnackBar(globalConstraintLayout, getString(R.string.snackbar_message_no_enough_coins));
                             }
@@ -219,6 +222,12 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
             }
         });
         return v;
+    }
+
+    private void displayFragmentCaseNewLifeOk() {
+        Toast toast = Toast.makeText(getActivity(), getString(R.string.snackbar_message_win_new_life), Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
     }
 
     public void dismissDialog(){
@@ -331,7 +340,7 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
     @Override
     public void onRewarded(RewardItem rewardItem) {
         mRewardedVideoIsDone = true;
-        showSnackBar(globalConstraintLayout, getString(R.string.snackbar_message_win_new_life));
+       // showSnackBar(globalConstraintLayout, getString(R.string.snackbar_message_win_new_life));
 
 
         UserHelper.getUser(userUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -357,7 +366,7 @@ public class EmojiLifeDialogFragment extends DialogFragment implements RewardedV
                 }
             }
         });
-
+        displayFragmentCaseNewLifeOk();
     }
     @Override
     public void onRewardedVideoAdLeftApplication() {}

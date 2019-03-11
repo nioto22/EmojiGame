@@ -43,4 +43,10 @@
         <item name="android:paddingBottom">5dp</item>
     </style>
 
+    <!-- POPUP ANIMATION STYLE -->
+    <style name="PopupAnimation">
+        <item name="android:windowEnterAnimation">@anim/right_to_left_for_rv</item>
+        <item name="android:windowExitAnimation">@android:anim/slide_out_right</item>
+    </style>
+
 </resources>

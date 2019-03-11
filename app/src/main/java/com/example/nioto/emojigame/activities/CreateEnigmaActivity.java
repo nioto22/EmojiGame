@@ -63,7 +63,8 @@ public class CreateEnigmaActivity extends BaseActivity  {
     @BindView(R.id.create_activity_update_button) Button updateButton;
     @BindView(R.id.create_activity_enigma_help) ImageButton enigmaHelp;
 
-    PopupWindow helpPopUpWindow;
+    PopupWindow helpPopUpWindowEnigma;
+    PopupWindow helpPopUpWindowExplanation;
 
     // FOR CATEGORY LIST VIEW
     ExpandableListView expandableListView;
@@ -78,6 +79,10 @@ public class CreateEnigmaActivity extends BaseActivity  {
     private String mMessage;
     private String enigmaUid;
     public static final int RESULT_OK_UPDATED = 118;
+
+    // FOR HELP POPUP
+    public static final int HELP_FOR_ENIGMA = 252;
+    public static final int HELP_FOR_EXPLANATION = 525;
 
     // FOR INTERSTITIAL ADS
     private InterstitialAd mInterstitialAd;
@@ -184,37 +189,66 @@ public class CreateEnigmaActivity extends BaseActivity  {
         });
     }
 
-    private void showSortPopup(final Activity context)
+    private void showSortPopup(final Activity context, int helpType)
     {
         hideKeyboardWithoutPopulate(CreateEnigmaActivity.this);
 
         // Inflate the popup_layout.xml
-        LinearLayout viewGroup = context.findViewById(R.id.help_popu_create_enigma_activity_rl_global);
+        LinearLayout helpPopupEnigmaRootView = context.findViewById(R.id.help_enigma_activity_rl_global);
+        LinearLayout helpPopupExplanationRootView = context.findViewById(R.id.help_explanation_activity_rl_global);
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_help_create_enigma, viewGroup);
+        final View helpPopupEnigmaView = Objects.requireNonNull(layoutInflater).inflate(R.layout.activity_help_enigma, helpPopupEnigmaRootView);
+        View helpPopupExplanationView = Objects.requireNonNull(layoutInflater).inflate(R.layout.activity_help_explanation, helpPopupExplanationRootView);
 
-        // Creating the PopupWindow
-        helpPopUpWindow = new PopupWindow(context);
-        helpPopUpWindow.setContentView(layout);
-        helpPopUpWindow.setWidth(LinearLayout.LayoutParams.WRAP_CONTENT);
-        helpPopUpWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
-        helpPopUpWindow.setFocusable(true);
+        // Creating the PopupWindow Enigma
+        helpPopUpWindowEnigma = new PopupWindow(context);
+        helpPopUpWindowEnigma.setContentView(helpPopupEnigmaView);
+        helpPopUpWindowEnigma.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
+        helpPopUpWindowEnigma.setHeight(LinearLayout.LayoutParams.MATCH_PARENT);
+        helpPopUpWindowEnigma.setAnimationStyle(R.style.PopupAnimation);
+        helpPopUpWindowEnigma.setFocusable(true);
+        //helpPopUpWindowEnigma.setBackgroundDrawable(new BitmapDrawable());
 
-        // Clear the default translucent background
-        helpPopUpWindow.setBackgroundDrawable(new BitmapDrawable());
+        // Creating the PopupWindow Enigma
+        helpPopUpWindowExplanation = new PopupWindow(context);
+        helpPopUpWindowExplanation.setContentView(helpPopupExplanationView);
+        helpPopUpWindowExplanation.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
+        helpPopUpWindowExplanation.setHeight(LinearLayout.LayoutParams.MATCH_PARENT);
+        helpPopUpWindowExplanation.setAnimationStyle(R.style.PopupAnimation);
+        helpPopUpWindowExplanation.setFocusable(true);
+        //helpPopUpWindowExplanation.setBackgroundDrawable(new BitmapDrawable());
 
-        // Displaying the popup at the specified location, + offsets.
-        helpPopUpWindow.showAtLocation(layout, Gravity.CENTER, 0,0);
+        switch (helpType){
+            case HELP_FOR_ENIGMA :
+                // Displaying the popup at the specified location, + offsets.
+                helpPopUpWindowEnigma.showAtLocation(helpPopupEnigmaView, Gravity.CENTER, 0,0);
 
-        // Getting a reference to Close button, and close the popup when clicked.
-        Button close = layout.findViewById(R.id.help_popup_close);
-        close.setOnClickListener(new View.OnClickListener() {
+                // Getting a reference to Close button, and close the popup when clicked.
+                Button closeEnigmaHelp = helpPopupEnigmaView.findViewById(R.id.help_enigma_popup_close);
+                closeEnigmaHelp.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                helpPopUpWindow.dismiss();
-            }
-        });
+                    @Override
+                    public void onClick(View v) {
+                        helpPopUpWindowEnigma.dismiss();
+                    }
+                });
+                break;
+            case HELP_FOR_EXPLANATION :
+                // Displaying the popup at the specified location, + offsets.
+                helpPopUpWindowExplanation.showAtLocation(helpPopupExplanationView, Gravity.CENTER, 0,0);
+
+                // Getting a reference to Close button, and close the popup when clicked.
+                Button closeExplanationHelp = helpPopupExplanationView.findViewById(R.id.help_explanation_popup_close);
+                closeExplanationHelp.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        helpPopUpWindowExplanation.dismiss();
+                    }
+                });
+                break;
+        }
+
 
     }
 
@@ -275,20 +309,13 @@ public class CreateEnigmaActivity extends BaseActivity  {
 
     @OnClick (R.id.create_activity_enigma_help)
     public void onClickEnigmaHelpButton(){
-        showSortPopup(this);
+        showSortPopup(this, HELP_FOR_ENIGMA );
     }
     @OnClick (R.id.create_activity_solution_help)
     public void onClickSolutionHelpButton(){
-        showSortPopup(this);
+        showSortPopup(this, HELP_FOR_EXPLANATION);
     }
-    @OnClick (R.id.create_activity_category_help)
-    public void onClickCategoryHelpButton(){
-        showSortPopup(this);
-    }
-    @OnClick (R.id.create_activity_message_help)
-    public void onClickMessageHelpButton(){
-        showSortPopup(this);
-    }
+
 
 
     // --------------------

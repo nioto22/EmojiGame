@@ -132,11 +132,11 @@ public class HintOneDialogFragment extends DialogFragment implements RewardedVid
             EnigmaPlayedManager dbManager = new EnigmaPlayedManager(getActivity().getBaseContext());
             dbManager.open();
             dbManager.updateEnigmaHasHintOne(enigmaUid,true);
-            EnigmaPlayed ep = dbManager.getEnigmaPlayed(enigmaUid);
             dbManager.close();
 
             imageButtonRewardedVideo.setVisibility(View.GONE);
             informationText.setText(getString(R.string.snackbar_message_activate_hint_one));
+            okButton.setText(getString(R.string.ok));
 
         }
     }

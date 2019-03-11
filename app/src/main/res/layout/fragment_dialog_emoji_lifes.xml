@@ -167,7 +167,6 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:gravity="center"
             android:visibility="gone" />
-
     </RelativeLayout>
 
 
@@ -175,7 +174,7 @@
         android:id="@+id/fragment_dialog_emoji_lifes_button_validate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/ok"
+        android:text="@string/back"
         android:textStyle="bold"
         android:textColor="@color/primaryTextColor"
         android:background="@drawable/button_fragment_dialog"
