@@ -16,6 +16,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,6 +55,8 @@ import static com.example.nioto.emojigame.activities.CreateEnigmaActivity.RESULT
 public class SolveEnigmaActivity extends BaseActivity implements DialogInterface.OnDismissListener {
 
     // FOR DESIGN
+    // TOOLBAR
+    @BindView(R.id.solve_enigma_activity_toolbar_title) TextView mTvTitle;
     // ENIGMA UI
     @BindView(R.id.solve_enigma_activity_enigma_layout_category) TextView enigmaCategory;
     @BindView(R.id.solve_enigma_activity_enigma_layout_tv_enigma)
@@ -71,6 +74,10 @@ public class SolveEnigmaActivity extends BaseActivity implements DialogInterface
     @BindView(R.id.solve_enigma_activity_linear_layout_hint_one_second) LinearLayout linearLayoutHintOneSecond;
     @BindView(R.id.solve_enigma_activity_linear_layout_hint_one_third) LinearLayout linearLayoutHintOneThird;
     @BindView(R.id.hint_one_1_1) EditText editText_1_1; @BindView(R.id.hint_one_1_2) EditText editText_1_2; @BindView(R.id.hint_one_1_3) EditText editText_1_3; @BindView(R.id.hint_one_1_4) EditText editText_1_4;@BindView(R.id.hint_one_1_5) EditText editText_1_5;@BindView(R.id.hint_one_1_6) EditText editText_1_6;@BindView(R.id.hint_one_1_7) EditText editText_1_7;@BindView(R.id.hint_one_1_8) EditText editText_1_8;@BindView(R.id.hint_one_1_9) EditText editText_1_9;@BindView(R.id.hint_one_1_10) EditText editText_1_10;@BindView(R.id.hint_one_1_11) EditText editText_1_11;@BindView(R.id.hint_one_1_12) EditText editText_1_12;@BindView(R.id.hint_one_1_13) EditText editText_1_13;@BindView(R.id.hint_one_1_14) EditText editText_1_14;@BindView(R.id.hint_one_1_15) EditText editText_1_15;@BindView(R.id.hint_one_1_16) EditText editText_1_16;@BindView(R.id.hint_one_2_1) EditText editText_2_1; @BindView(R.id.hint_one_2_2) EditText editText_2_2;@BindView(R.id.hint_one_2_3) EditText editText_2_3;@BindView(R.id.hint_one_2_4) EditText editText_2_4;@BindView(R.id.hint_one_2_5) EditText editText_2_5;@BindView(R.id.hint_one_2_6) EditText editText_2_6;@BindView(R.id.hint_one_2_7) EditText editText_2_7;@BindView(R.id.hint_one_2_8) EditText editText_2_8;@BindView(R.id.hint_one_2_9) EditText editText_2_9;@BindView(R.id.hint_one_2_10) EditText editText_2_10;@BindView(R.id.hint_one_2_11) EditText editText_2_11;@BindView(R.id.hint_one_2_12) EditText editText_2_12;@BindView(R.id.hint_one_2_13) EditText editText_2_13;@BindView(R.id.hint_one_2_14) EditText editText_2_14;@BindView(R.id.hint_one_2_15) EditText editText_2_15;@BindView(R.id.hint_one_2_16) EditText editText_2_16;    @BindView(R.id.hint_one_3_1) EditText editText_3_1;    @BindView(R.id.hint_one_3_2) EditText editText_3_2;    @BindView(R.id.hint_one_3_3) EditText editText_3_3;@BindView(R.id.hint_one_3_4) EditText editText_3_4;@BindView(R.id.hint_one_3_5) EditText editText_3_5;@BindView(R.id.hint_one_3_6) EditText editText_3_6;@BindView(R.id.hint_one_3_7) EditText editText_3_7;@BindView(R.id.hint_one_3_8) EditText editText_3_8;@BindView(R.id.hint_one_3_9) EditText editText_3_9;@BindView(R.id.hint_one_3_10) EditText editText_3_10;@BindView(R.id.hint_one_3_11) EditText editText_3_11;@BindView(R.id.hint_one_3_12) EditText editText_3_12;@BindView(R.id.hint_one_3_13) EditText editText_3_13;@BindView(R.id.hint_one_3_14) EditText editText_3_14;@BindView(R.id.hint_one_3_15) EditText editText_3_15;@BindView(R.id.hint_one_3_16) EditText editText_3_16;
+    // HINT BUTTONS
+    @BindView(R.id.solve_enigma_activity_bottom_button_hint_one) ImageButton imageButtonHintOne;
+    @BindView(R.id.solve_enigma_activity_bottom_button_hint_two) ImageButton imageButtonHintTwo;
+
 
     // FOR UI
     private ArrayList<Character> solutionInCharArray;
@@ -172,11 +179,14 @@ public class SolveEnigmaActivity extends BaseActivity implements DialogInterface
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 User user = documentSnapshot.toObject(User.class);
                 if (Objects.requireNonNull(user).getUserEnigmaUidList().contains(enigmaUid)){
+                    mTvTitle.setText(Constants.SOLVE_ACTIVITY_TITLE_OWN_ENIGMA);
                     enigmaResponseTitle.setText(getString(R.string.solve_activity_enigma_response_title));
                     enigmaResponse.setVisibility(View.GONE);
                     enigmaEditResponse.setVisibility(View.VISIBLE);
                     enigmaResolveSendButton.setVisibility(View.GONE);
                     enigmaResolveEditButton.setVisibility(View.VISIBLE);
+                    imageButtonHintOne.setVisibility(View.GONE);
+                    imageButtonHintTwo.setVisibility(View.GONE);
                 }
                 EnigmaHelper.getEnigma(enigmaUid).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override

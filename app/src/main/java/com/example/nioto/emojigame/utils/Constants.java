@@ -49,12 +49,14 @@ public class Constants {
 
     // SOLVE ACTIVITY
     public static final String SOLVE_ACTIVITY_TITLE = "Résoudre l\'énigme";
+    public static final String SOLVE_ACTIVITY_TITLE_OWN_ENIGMA = "Enigme créée";
     // EXTRA_BUNDLE
     public static final String EXTRA_BUNDLE_EDIT_ENIGMA_ACTIVITY = "EXTRA_BUNDLE_EDIT_ENIGMA_ACTIVITY";
     public static final int INTENT_UPDATE_ACTIVITY_KEY = 14;
 
     // CREATE ACTIVITY
     public static final String CREATE_ACTIVITY_TITLE = "Créer votre énigme";
+    public static final String CREATE_ACTIVITY_TITLE_UPDATE_ENIGMA = "Modifier énigme";
     public static final String EXTRA_BUNDLE_ENIGMA_CREATED_ENIGMA = "EXTRA_BUNDLE_ENIGMA_CREATED_ENIGMA";
     public static final String EXTRA_BUNDLE_ENIGMA_CREATED_CATEGORY = "EXTRA_BUNDLE_ENIGMA_CREATED_CATEGORY";
     // PROFILE ACTIVITY

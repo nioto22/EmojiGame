@@ -55,7 +55,7 @@
     <string name="solve_activity_answer_hint">Entrer votre réponse ici</string>
     <string name="solve_activity_already_solved_answer_title_text">Réponse</string>
     <string name="solve_activity_send_button">ENVOYER</string>
-    <string name="solve_activity_edit_button_text">EDITER</string>
+    <string name="solve_activity_edit_button_text">MODIFIER</string>
     <string name="solve_activity_podium_no_solve_text">Persone n\'a résolu cet énigme pour l\'instant !   A vous de jouer …</string>
     <string name="solve_activity_podium_number_enigma_solved">Cette énigme a été résolue :</string>
     <string name="solve_activity_podium_first_place_text">Première place :</string>
@@ -121,7 +121,12 @@
     <string name="dialog_hint_two_text">Regardez une vidéo pour faire apparaître une lettre de l\'énigme</string>
     <string name="fragment_dialog_solve_activity_solved_tv_congratulation">Réponse correcte, félicitations !!</string>
     <string name="fragment_dialog_emoji_coins_text_view_question_text">Besoin de plus d\'EmojiCoins ?</string>
-    <string name="hint_two_no_more_hint_text">Vous avez atteint le nombre maximum de lettres pour ce coup de pouce \n (1/2 du nombre total)</string>
+    <string name="hint_two_no_more_hint_text" tools:ignore="TypographyFractions">Vous avez atteint le nombre maximum de lettres pour ce coup de pouce \n (1/2 du nombre total)</string>
+    <string name="fragment_dialog_updated_username_title">Comment voulez-vous que l\'on vous appelle ?</string>
+    <string name="validate">Valider</string>
+    <string name="fragment_dialog_emoji_lifes_new_life_ok">Félicitations, vous avez obtenu une vie supplémentaire</string>
+    <string name="fragment_dialog_hint_one_mandatory_text_one">Vous devez activer le coup de pouce : Nombre de Lettre :</string>
+    <string name="fragment_dialog_hint_one_mandatory_text_two">avant de pouvoir utiliser le coup de pouce : Obtenir une lettre</string>
 
     <!-- OTHER LAYOUT -->
     <string name="download_text">Chargement …</string>
@@ -195,12 +200,7 @@
     <string name="image_example_content_description">Image Example</string>
     <string name="user_enigma_image_content_description">user enigma</string>
     <string name="history_enigma_image_content_description">history button</string>
-    <string name="fragment_dialog_updated_username_title">Comment voulez-vous que l\'on vous appelle ?</string>
-    <string name="validate">Valider</string>
-    <string name="fragment_dialog_emoji_lifes_new_life_ok">Félicitations, vous avez obtenu une vie supplémentaire</string>
-    <string name="fragment_dialog_hint_one_mandatory_text_one">Vous devez activer le coup de pouce : Nombre de Lettre :</string>
-    <string name="fragment_dialog_hint_one_mandatory_text_two">avant de pouvoir utiliser le coup de pouce : Obtenir une lettre</string>
-
+    <string name="enigma_example_content_description">enigma_example</string>
 
 
 </resources>

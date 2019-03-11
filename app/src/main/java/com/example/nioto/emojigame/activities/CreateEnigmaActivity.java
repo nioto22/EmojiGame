@@ -3,7 +3,6 @@ package com.example.nioto.emojigame.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.view.Gravity;
@@ -63,8 +62,12 @@ public class CreateEnigmaActivity extends BaseActivity  {
     @BindView(R.id.create_activity_update_button) Button updateButton;
     @BindView(R.id.create_activity_enigma_help) ImageButton enigmaHelp;
 
+    @BindView(R.id.create_activity_toolbar_title) TextView mTvTitle;
+
     PopupWindow helpPopUpWindowEnigma;
     PopupWindow helpPopUpWindowExplanation;
+
+
 
     // FOR CATEGORY LIST VIEW
     ExpandableListView expandableListView;
@@ -183,8 +186,10 @@ public class CreateEnigmaActivity extends BaseActivity  {
                 assert enigma != null;
                 etEnigma.setText(enigma.getEnigma());
                 etSolution.setText(enigma.getSolution());
+                etSolution.setEnabled(false);
                 etMessage.setText(enigma.getMessage());
                 textViewCategoryChosen.setText(enigma.getCategory());
+                mTvTitle.setText(Constants.CREATE_ACTIVITY_TITLE_UPDATE_ENIGMA);
             }
         });
     }
